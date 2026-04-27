@@ -1,0 +1,187 @@
+@extends('backend.layouts.app')
+@section('title', 'Edit Hot Deal')
+
+@section('content')
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h4 class="fw-bold py-3 mb-0">
+    <span class="text-muted fw-light">Hot Deals /</span> Edit: {{ $hotdeal->name }}
+  </h4>
+  <a href="{{ route('backend.hotdeals.index') }}" class="btn btn-outline-secondary">
+    <i class="bx bx-arrow-back me-1"></i> Back to List
+  </a>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="mb-0"><i class="bx bx-edit me-2"></i>Edit Hot Deal</h5>
+      </div>
+      <div class="card-body">
+        <form action="{{ route('backend.hotdeals.update', $hotdeal->id) }}" method="POST" enctype="multipart/form-data">
+          @csrf
+          @method('PUT')
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Product Name <span class="text-danger">*</span></label>
+            <input type="text" name="name"
+                   class="form-control @error('name') is-invalid @enderror"
+                   value="{{ old('name', $hotdeal->name) }}">
+            @error('name')<div class="invalid-feedback">{{ $message }}</div>@enderror
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Category</label>
+            <select name="category" class="form-select">
+              <option value="">— Category Select করুন —</option>
+              @foreach(['clothing','electronics','food','accessories','other'] as $cat)
+                <option value="{{ $cat }}" {{ old('category', $hotdeal->category) == $cat ? 'selected' : '' }}>
+                  {{ ucfirst($cat) }}
+                </option>
+              @endforeach
+            </select>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-semibold">Sale Price (৳) <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text">৳</span>
+                <input type="number" name="price" step="0.01" min="0"
+                       class="form-control @error('price') is-invalid @enderror"
+                       value="{{ old('price', $hotdeal->price) }}">
+                @error('price')<div class="invalid-feedback">{{ $message }}</div>@enderror
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-semibold">Original Price (৳)</label>
+              <div class="input-group">
+                <span class="input-group-text">৳</span>
+                <input type="number" name="old_price" step="0.01" min="0"
+                       class="form-control" value="{{ old('old_price', $hotdeal->old_price) }}">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-semibold">Stock <span class="text-danger">*</span></label>
+              <input type="number" name="stock" min="0"
+                     class="form-control @error('stock') is-invalid @enderror"
+                     value="{{ old('stock', $hotdeal->stock) }}">
+              @error('stock')<div class="invalid-feedback">{{ $message }}</div>@enderror
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-semibold">Low Stock Alert</label>
+              <input type="number" name="low_stock_threshold" min="0"
+                     class="form-control" value="{{ old('low_stock_threshold', $hotdeal->low_stock_threshold) }}">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">
+              <i class="bx bx-timer text-danger"></i> Deal End Date & Time
+            </label>
+            <input type="datetime-local" name="deal_ends_at"
+                   class="form-control @error('deal_ends_at') is-invalid @enderror"
+                   value="{{ old('deal_ends_at', $hotdeal->deal_ends_at?->format('Y-m-d\TH:i')) }}">
+            @error('deal_ends_at')<div class="invalid-feedback">{{ $message }}</div>@enderror
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Description</label>
+            <textarea name="description" class="form-control" rows="3">{{ old('description', $hotdeal->description) }}</textarea>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label fw-semibold">Product Image</label>
+            @if($hotdeal->image)
+              <div class="mb-2">
+                <img src="{{ asset('storage/' . $hotdeal->image) }}"
+                     height="100" style="border-radius:8px; border:1px solid #ddd;">
+                <small class="text-muted d-block mt-1">নতুন upload করলে replace হবে</small>
+              </div>
+            @endif
+            <input type="file" name="image"
+                   class="form-control @error('image') is-invalid @enderror"
+                   accept="image/jpg,image/jpeg,image/png,image/webp"
+                   onchange="previewImage(this)">
+            @error('image')<div class="invalid-feedback">{{ $message }}</div>@enderror
+            <div id="imagePreview" class="mt-2 d-none">
+              <img id="previewImg" src="" style="max-height:150px; border-radius:8px;">
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" name="is_best_sale"
+                       id="is_best_sale" {{ old('is_best_sale', $hotdeal->is_best_sale) ? 'checked' : '' }}>
+                <label class="form-check-label" for="is_best_sale">
+                  <i class="bx bx-trophy text-warning"></i> Best Sale Badge
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" name="is_active"
+                       id="is_active" {{ old('is_active', $hotdeal->is_active) ? 'checked' : '' }}>
+                <label class="form-check-label" for="is_active">
+                  <i class="bx bx-check-circle text-success"></i> Active
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">
+              <i class="bx bx-save me-1"></i> Update করুন
+            </button>
+            <a href="{{ route('backend.hotdeals.index') }}" class="btn btn-outline-secondary">Cancel</a>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header"><h6 class="mb-0">Deal Info</h6></div>
+      <div class="card-body">
+        <p class="mb-1"><strong>Created:</strong><br>
+          <small class="text-muted">{{ $hotdeal->created_at->format('d M Y, h:i A') }}</small>
+        </p>
+        <p class="mb-1"><strong>Last Updated:</strong><br>
+          <small class="text-muted">{{ $hotdeal->updated_at->format('d M Y, h:i A') }}</small>
+        </p>
+        @if($hotdeal->deal_ends_at)
+        <p class="mb-0"><strong>Deal Status:</strong>
+          @if($hotdeal->isExpired())
+            <span class="badge bg-danger">Expired</span>
+          @else
+            <span class="badge bg-success">Active Deal</span>
+          @endif
+        </p>
+        @endif
+      </div>
+    </div>
+  </div>
+</div>
+
+@endsection
+
+@push('scripts')
+<script>
+function previewImage(input) {
+  const preview = document.getElementById('imagePreview');
+  const img = document.getElementById('previewImg');
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = e => { img.src = e.target.result; preview.classList.remove('d-none'); };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+</script>
+@endpush

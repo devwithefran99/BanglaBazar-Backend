@@ -16,7 +16,7 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
 
-    <title> BanglaBazar | DAshboard </title>
+    <title> BanglaBazar | Dashboard </title>
 
     <meta name="description" content="" />
 
@@ -51,7 +51,7 @@
             <div class="card-body">
               <!-- Logo -->
               <div class="app-brand justify-content-center">
-                <a href="index.html" class="app-brand-link gap-2">
+                <a href="{{ route('home') }}" class="app-brand-link gap-2">
               <img src="{{ asset ('frontend/image/Logo.png') }}" alt="">
                 </a>
               </div>

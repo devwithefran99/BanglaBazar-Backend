@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <link rel="stylesheet" href="{{ asset ('frontend/css/common.css')}}">
-  <link rel="stylesheet" href="./assets/css/pages.css">
+   <link rel="stylesheet" href="{{ asset ('frontend/css/pages.css')}}">
   <link rel="stylesheet" href="{{ asset ('frontend/css/responsive.css')}}">
 <!-- shop link ends -->
 
@@ -20,7 +20,7 @@
 
   <div id="preloader">
   <div class="loader">
-    <img src="./assets/image/Logo.png" alt="Logo">  
+    <img src="{{asset('frontend/image/Logo.png')}}" alt="Logo">  
     <p>Loading...</p>   
   </div>
 </div>
@@ -43,8 +43,8 @@
       </div>
       <div class="d-flex align-items-center gap-2">
         <span class="sep">|</span>
-        <a href="signIn.html"><i class="bi bi-person me-1"></i>Sign In /</a>
-        <a href="createAccount.html"><i class="bi bi-person me-1"></i>Sign Up</a>
+        <a href="{{ route('signin') }}"><i class="bi bi-person me-1"></i>Sign In /</a>
+        <a href="{{ route('register') }}"><i class="bi bi-person me-1"></i>Sign Up</a>
       </div>
     </div>
   </div>
@@ -59,7 +59,7 @@
  
       <!-- Logo -->
       <a href="#" class="logo-slot">
-        <img src="./assets/image/Logo.png" height="35" alt="logo">
+        <img src="{{asset('frontend/image/Logo.png')}}" height="35" alt="logo">
        
       </a>
       <div class="d-lg-none ms-auto">   
@@ -77,7 +77,7 @@
  
       <!-- Icons -->
       <div class="d-none d-lg-flex align-items-center gap-2">
-        <a href="wishlist.html" class="icon-btn">
+        <a href="{{ route('wishlist') }}" class="icon-btn">
           <i class="bi bi-heart"></i>
           <span class="badge-dot">3</span>
         </a>
@@ -102,13 +102,13 @@
       <ul class="nav d-none d-lg-flex">
  
         <li class="nav-item">
-          <a class="nav-link " href="index.html" >
+          <a class="nav-link " href="{{ route('home') }}" >
             <i class="bi bi-house-door-fill me-1"></i> Home
           </a>
         </li>
  
         <li class="nav-item">
-          <a class="nav-link" href="shop.html">
+          <a class="nav-link" href="{{ route('shop') }}">
             <i class="bi bi-shop me-1"></i> Shop
           </a>
         </li>
@@ -118,13 +118,13 @@
     <i class="bi bi-file-earmark-text me-1"></i> Pages
   </a>
   <ul class="submenu">
-    <li><a href="wishlist.html">Wishlist</a></li>
-    <li><a href="userdashboard.html">Order History</a></li>
-    <li><a href="singleProduct.html">CheckOut</a></li>
-     <li><a href="signIn.html">Sign In</a></li>
-   <li><a href="createAccount.html">Sign Up</a></li>
-    <li><a href="faq.html">FAQS</a></li>
-      <li><a href="userdashboard.html">My Account</a></li>
+    <li><a href="{{ route('wishlist') }}">Wishlist</a></li>
+    <li><a href="{{ route('userdashboard') }}">Order History</a></li>
+    <li><a href="{{ route('product') }}">CheckOut</a></li>
+     <li><a href="{{ route('signin') }}">Sign In</a></li>
+   <li><a href="{{ route('register') }}">Sign Up</a></li>
+    <li><a href="{{ route('faq') }}">FAQS</a></li>
+      <li><a href="{{ route('userdashboard') }}">My Account</a></li>
   </ul>
 </li>
 
@@ -133,11 +133,11 @@
        
  
         <li class="nav-item">
-             <a class="nav-link" href="about.html"><i class="bi bi-info-circle me-1"></i> About Us</a>
+             <a class="nav-link" href="{{ route('about') }}"><i class="bi bi-info-circle me-1"></i> About Us</a>
         </li>
  
         <li class="nav-item">
-          <a class="nav-link" href="contact.html"><i class="bi bi-telephone me-1"></i> Contact Us</a>
+          <a class="nav-link" href="{{ route('contact') }}"><i class="bi bi-telephone me-1"></i> Contact Us</a>
         </li>
       </ul>
  
@@ -159,7 +159,7 @@
 ════════════════════════════════════════ -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileNav">
   <div class="offcanvas-header">
-    <img src="./assets/image/Logo.png" alt="">
+    <img src="{{asset('frontend/image/Logo.png')}}" alt="">
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
   </div>
   <div class="offcanvas-body">
@@ -177,14 +177,14 @@
     <nav class="d-flex flex-column">
  
       <!-- Home -->
-      <a class="nav-link" href="index.html">
+      <a class="nav-link" href="{{ route('home') }}">
         <span><i class="bi bi-house-door-fill me-2 text-success"></i>Home</span>
         <i class="bi bi-chevron-down arrow"></i>
       </a>
  
       <!-- Shop -->
        
-      <a class="nav-link"  href="shop.html">
+      <a class="nav-link"  href="{{ route('shop') }}">
         <span><i class="bi bi-shop me-2 text-success"></i>Shop</span>
         <i class="bi bi-chevron-down arrow"></i>
       </a>
@@ -200,21 +200,21 @@
   </a>
 
   <ul class="mobile-submenu">
-     <li><a href="wishlist.html">Wishlist</a></li>
-     <li><a href="userdashboard.html">Order History</a></li>
-    <li><a href="singleProduct.html">CheckOut</a></li>
-     <li><a href="signIn.html">Sign In</a></li>
-   <li><a href="createAccount.html">Sign Up</a></li>
-     <li><a href="faq.html">FAQS</a></li>
-      <li><a href="userdashboard.html">My Account</a></li>
+     <li><a href="{{ route('wishlist') }}">Wishlist</a></li>
+     <li><a href="{{ route('userdashboard') }}">Order History</a></li>
+    <li><a href="{{ route('product') }}">CheckOut</a></li>
+     <li><a href="{{ route('signin') }}">Sign In</a></li>
+   <li><a href="{{ route('register') }}">Sign Up</a></li>
+     <li><a href="{{ route('faq') }}">FAQS</a></li>
+      <li><a href="{{ route('userdashboard') }}">My Account</a></li>
   </ul>
 </div>
       
-      <a class="nav-link" href="about.html">
+      <a class="nav-link" href="{{ route('about') }}">
        <span><i class="bi bi-info-circle me-2 text-success"></i>About Us</span>
       </a>
  
-      <a class="nav-link" href="contact.html">
+      <a class="nav-link" href="{{ route('contact') }}">
         <span><i class="bi bi-telephone me-2 text-success"></i>Contact Us</span>
       </a>
  
@@ -336,7 +336,7 @@
 
         <!-- Right Side: Image Placeholder -->
         <div class="col-lg-6">
-          <img src="./assets/image/faqs.png" alt="">
+          <img src="{{asset('frontend/image/faqs.png')}}" alt="">
         </div>
 
       </div>
@@ -358,7 +358,7 @@
   <div class="cp-header">
     <div class="cp-title">
       
-      <img src="./assets/image/Logo.png" alt="">
+      <img src="{{asset('frontend/image/Logo.png')}}" alt="">
      
     </div>
     <button class="cp-close" id="cpClose" aria-label="Close cart">
@@ -370,7 +370,7 @@
   <div class="cp-items" id="cpItems">
  
     <div class="cp-item" data-id="1">
-      <div class="cp-item-img"><img src="./assets/image/hotProduct1 (2).png" alt=""></div>
+      <div class="cp-item-img"><img src="{{asset('frontend/image/hotProduct1 (2).png')}}" alt=""></div>
       <div class="cp-item-info">
         <div class="cp-item-name">Fresh Indian Orange</div>
         <div class="cp-item-meta">1 kg × <strong>$12.00</strong></div>
@@ -381,7 +381,7 @@
     </div>
  
     <div class="cp-item" data-id="2">
-      <div class="cp-item-img"><img src="./assets/image/hotProduct1 (1).png" alt=""></div>
+      <div class="cp-item-img"><img src="{{asset('frontend/image/hotProduct1 (1).png')}}" alt=""></div>
       <div class="cp-item-info">
         <div class="cp-item-name">Green Apple</div>
         <div class="cp-item-meta">1 kg × <strong>$14.00</strong></div>
@@ -397,7 +397,7 @@
   <div class="cp-empty" id="cpEmpty">
     <i class="bi bi-bag-x"></i>
     <p>Your cart is empty</p>
-    <a href="shop.html" class="cp-shop-link">Browse Products →</a>
+    <a href="{{ route('shop') }}" class="cp-shop-link">Browse Products →</a>
   </div>
  
   <!-- Footer -->
@@ -427,7 +427,7 @@
  
       <!-- Brand Column -->
       <div class="col-lg-3 col-md-6 anim-fade-up d1">
-        <img src="./assets/image/logoLight.png" alt="">
+        <img src="{{asset('frontend/image/logoLight.png')}}" alt="">
  
         <p class="footer-desc">
           Morbi cursus porttitor enim lobortis molestie. Duis gravida turpis dui, eget bibendum magna congue nec.
@@ -444,10 +444,10 @@
       <div class="col-lg-2 col-md-3 col-6 anim-fade-up d2">
         <h6 class="footer-col-title">My Account</h6>
         <ul class="footer-links">
-           <li><a href="userdashboard.html">My Account</a></li>
-           <li><a href="userdashboard.html">Order History</a></li>
+           <li><a href="{{ route('userdashboard') }}">My Account</a></li>
+           <li><a href="{{ route('userdashboard') }}">Order History</a></li>
           <li><a href="#" class="active">Shoping Cart</a></li>
-          <li><a href="wishlist.html">Wishlist</a></li>
+          <li><a href="{{ route('wishlist') }}">Wishlist</a></li>
         </ul>
       </div>
  
@@ -455,8 +455,8 @@
       <div class="col-lg-2 col-md-3 col-6 anim-fade-up d3">
         <h6 class="footer-col-title">Helps</h6>
         <ul class="footer-links">
-            <li><a href="contact.html">Contact</a></li>
-           <li><a href="faq.html">FAQS</a></li>
+            <li><a href="{{ route('contact') }}">Contact</a></li>
+           <li><a href="{{ route('faq') }}">FAQS</a></li>
           <li><a href="#">Terms &amp; Condition</a></li>
           <li><a href="#">Privacy Policy</a></li>
         </ul>
@@ -466,8 +466,8 @@
       <div class="col-lg-2 col-md-3 col-6 anim-fade-up d4">
         <h6 class="footer-col-title">Proxy</h6>
         <ul class="footer-links">
-         <li><a href="about.html">About</a></li>
-          <li><a href="shop.html">Shop</a></li>
+         <li><a href="{{ route('about') }}">About</a></li>
+          <li><a href="{{ route('shop') }}">Shop</a></li>
           <li><a href="#">Product</a></li>
           
         </ul>
@@ -477,10 +477,10 @@
       <div class="col-lg-3 col-md-3 col-6 anim-fade-up d5">
         <h6 class="footer-col-title">Categories</h6>
         <ul class="footer-links">
-          <li><a href="shop.html">Fruit &amp; Vegetables</a></li>
-          <li><a href="shop.html">Meat &amp; Fish</a></li>
-          <li><a href="shop.html">Bread &amp; Bakery</a></li>
-          <li><a href="shop.html">Beauty &amp; Health</a></li>
+          <li><a href="{{ route('shop') }}">Fruit &amp; Vegetables</a></li>
+          <li><a href="{{ route('shop') }}">Meat &amp; Fish</a></li>
+          <li><a href="{{ route('shop') }}">Bread &amp; Bakery</a></li>
+          <li><a href="{{ route('shop') }}">Beauty &amp; Health</a></li>
         </ul>
       </div>
  
@@ -512,6 +512,6 @@
     <script src="https://cdn.jsdelivr.net/npm/mixitup@3/dist/mixitup.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{{ asset ('frontend/js/common.js') }}"></script>
-<script src="./assets/js/pages.js"></script>
+<script src="{{ asset ('frontend/js/pages.js') }}"></script>
 </body>
 </html>

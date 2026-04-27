@@ -37,19 +37,7 @@ $(document).ready(function(){
 // hero part js ends
 
 // hotDeals starts
- let total = 60*86400 + 23*3600 + 34*60 + 57;
-  setInterval(() => {
-    if(total <= 0) return;
-    total--;
-    const d = Math.floor(total/86400);
-    const h = Math.floor((total%86400)/3600);
-    const m = Math.floor((total%3600)/60);
-    const s = total%60;
-    document.getElementById('cd-days').textContent  = String(d).padStart(2,'0');
-    document.getElementById('cd-hours').textContent = String(h).padStart(2,'0');
-    document.getElementById('cd-mins').textContent  = String(m).padStart(2,'0');
-    document.getElementById('cd-secs').textContent  = String(s).padStart(2,'0');
-  }, 1000);
+
 
 // hot deals ends
 

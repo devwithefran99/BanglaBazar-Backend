@@ -12,7 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         then: function () {
             Route::middleware('web')
-            ->name('backend.')
+            // ->name('backend.')
             ->group(base_path('routes/admin.php'));
         }
     )

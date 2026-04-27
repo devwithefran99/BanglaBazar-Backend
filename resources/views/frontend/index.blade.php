@@ -47,8 +47,8 @@
       </div>
       <div class="d-flex align-items-center gap-2">
         <span class="sep">|</span>
-        <a href="signIn.html"><i class="bi bi-person me-1"></i>Sign In /</a>
-        <a href="createAccount.html"><i class="bi bi-person me-1"></i>Sign Up</a>
+        <a href="{{ route('signin') }}"><i class="bi bi-person me-1"></i>Sign In /</a>
+        <a href="{{ route('register') }}"><i class="bi bi-person me-1"></i>Sign Up</a>
       </div>
     </div>
   </div>
@@ -81,7 +81,7 @@
  
       <!-- Icons -->
      <div class="d-none d-lg-flex align-items-center gap-2">
-        <a href="wishlist.html" class="icon-btn">
+        <a href="{{ route('wishlist') }}" class="icon-btn">
           <i class="bi bi-heart"></i>
           <span class="badge-dot">3</span>
         </a>
@@ -105,13 +105,13 @@
       <ul class="nav d-none d-lg-flex">
  
         <li class="nav-item">
-          <a class="nav-link " href="index.html" >
+          <a class="nav-link " href="{{ route('home') }}" >
             <i class="bi bi-house-door-fill me-1"></i> Home
           </a>
         </li>
  
         <li class="nav-item">
-          <a class="nav-link" href="shop.html">
+          <a class="nav-link" href="{{ route('shop') }}">
             <i class="bi bi-shop me-1"></i> Shop
           </a>
         </li>
@@ -121,23 +121,23 @@
     <i class="bi bi-file-earmark-text me-1"></i> Pages
   </a>
   <ul class="submenu">
-    <li><a href="wishlist.html">Wishlist</a></li>
-     <li><a href="userdashboard.html">Order History</a></li>
-    <li><a href="singleProduct.html">CheckOut</a></li>
-     <li><a href="signIn.html">Sign In</a></li>
-   <li><a href="createAccount.html">Sign Up</a></li>
-     <li><a href="faq.html">FAQS</a></li>
-      <li><a href="userdashboard.html">My Account</a></li>
+    <li><a href="{{ route('wishlist') }}">Wishlist</a></li>
+     <li><a href="{{ route('userdashboard') }}">Order History</a></li>
+    <li><a href="{{ route('product') }}">CheckOut</a></li>
+     <li><a href="{{ route('signin') }}">Sign In</a></li>
+   <li><a href="{{ route('register') }}">Sign Up</a></li>
+     <li><a href="{{ route('faq') }}">FAQS</a></li>
+      <li><a href="{{ route('userdashboard') }}">My Account</a></li>
   </ul>
 </li>
 
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="about.html"><i class="bi bi-info-circle me-1"></i> About Us</a>
+            <a class="nav-link" href="{{ route('about') }}"><i class="bi bi-info-circle me-1"></i> About Us</a>
         </li>
  
         <li class="nav-item">
-          <a class="nav-link" href="contact.html"><i class="bi bi-telephone me-1"></i> Contact Us</a>
+          <a class="nav-link" href="{{ route('contact') }}"><i class="bi bi-telephone me-1"></i> Contact Us</a>
         </li>
       </ul>
  
@@ -177,14 +177,14 @@
     <nav class="d-flex flex-column">
  
       <!-- Home -->
-      <a class="nav-link" href="index.html">
+      <a class="nav-link" href="{{ route('home') }}">
         <span><i class="bi bi-house-door-fill me-2 text-success"></i>Home</span>
         <i class="bi bi-chevron-down arrow"></i>
       </a>
  
       <!-- Shop -->
        
-      <a class="nav-link"  href="shop.html">
+      <a class="nav-link"  href="{{ route('shop') }}">
         <span><i class="bi bi-shop me-2 text-success"></i>Shop</span>
         <i class="bi bi-chevron-down arrow"></i>
       </a>
@@ -200,20 +200,20 @@
   </a>
 
   <ul class="mobile-submenu">
-     <li><a href="wishlist.html">Wishlist</a></li>
-     <li><a href="userdashboard.html">Order History</a></li>
-    <li><a href="singleProduct.html">CheckOut</a></li>
-     <li><a href="signIn.html">Sign In</a></li>
-   <li><a href="createAccount.html">Sign Up</a></li>
-     <li><a href="faq.html">FAQS</a></li>
-      <li><a href="userdashboard.html">My Account</a></li>
+     <li><a href="{{ route('wishlist') }}">Wishlist</a></li>
+     <li><a href="{{ route('userdashboard') }}">Order History</a></li>
+    <li><a href="{{ route('product') }}">CheckOut</a></li>
+     <li><a href="{{ route('signin') }}">Sign In</a></li>
+   <li><a href="{{ route('register') }}">Sign Up</a></li>
+     <li><a href="{{ route('faq') }}">FAQS</a></li>
+      <li><a href="{{ route('userdashboard') }}">My Account</a></li>
   </ul>
 </div>
-      <a class="nav-link" href="about.html">
+      <a class="nav-link" href="{{ route('about') }}">
         <span><i class="bi bi-info-circle me-2 text-success"></i>About Us</span>
       </a>
  
-      <a class="nav-link" href="contact.html">
+      <a class="nav-link" href="{{ route('contact') }}">
         <span><i class="bi bi-telephone me-2 text-success"></i>Contact Us</span>
       </a>
  
@@ -245,17 +245,17 @@
 
             <!-- Slide 1 -->
             <div class="slide active">
-              <a href="shop.html"><img src="{{ asset ('frontend/image/Bannar Big.png')}} " class="w-100 " alt=""></a>
+              <a href="{{ route('shop') }}"><img src="{{ asset ('frontend/image/Bannar Big.png')}} " class="w-100 " alt=""></a>
             </div>
 
             <!-- Slide 2 -->
             <div class="slide">
-              <a href="shop.html"><img src="{{ asset ('frontend/image/Bannar.png')}} " class="w-100 " alt=""></a>
+              <a href="{{ route('shop') }}"><img src="{{ asset ('frontend/image/Bannar.png')}} " class="w-100 " alt=""></a>
             </div>
 
             <!-- Slide 3 -->
             <div class="slide">
-              <a href="shop.html"><img src="{{ asset ('frontend/image/Bannar (1).png')}} " class="w-100 " alt=""></a>
+              <a href="{{ route('shop') }}"><img src="{{ asset ('frontend/image/Bannar (1).png')}} " class="w-100 " alt=""></a>
             </div>
 
           </div>
@@ -272,11 +272,11 @@
         <div class="row g-2 h-100">
 
           <div class="col-6 col-md-12">
-           <a href="shop.html"> <img src="{{ asset('frontend/image/Bannar.png')}}" class="w-100 h-100 rounded object-fit-cover" alt=""></a>
+           <a href="{{ route('shop') }}"> <img src="{{ asset('frontend/image/Bannar.png')}}" class="w-100 h-100 rounded object-fit-cover" alt=""></a>
           </div>
 
           <div class="col-6 col-md-12">
-           <a href="shop.html"> <img src="{{ asset('frontend/image/Bannar (1).png')}}" class="w-100 h-100 rounded object-fit-cover" alt=""></a>
+           <a href="{{ route('shop') }}"> <img src="{{ asset('frontend/image/Bannar (1).png')}}" class="w-100 h-100 rounded object-fit-cover" alt=""></a>
           </div>
 
         </div>
@@ -321,7 +321,7 @@
     <div class="section-wrapper">
   <div class="section-header">
     <h2 class="section-title">Popular <span>Categories</span></h2>
-    <a href="shop.html" class="view-all">
+    <a href="{{ route('shop') }}" class="view-all">
       View All
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
         <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -333,7 +333,7 @@
   <div class="col-6 col-md-3 col-lg-2 cat-col">
       <div class="cat-card">
         <div class="img-box">
-          <a href="shop.html"><img src="{{ asset ('frontend/image/image 1 (1).png')}}" alt="Fresh Fruit"></a>
+          <a href="{{ route('shop') }}"><img src="{{ asset ('frontend/image/image 1 (1).png')}}" alt="Fresh Fruit"></a>
         </div>
         <span class="cat-name">Fresh Fruit</span>
       </div>
@@ -342,7 +342,7 @@
   <div class="col-6 col-md-3 col-lg-2 cat-col">
       <div class="cat-card">
         <div class="img-box">
-          <a href="shop.html"><img src="{{ asset ('frontend/image/image 1 (2).png')}}" alt="Fresh Vegetables"></a>
+          <a href="{{ route('shop') }}"><img src="{{ asset ('frontend/image/image 1 (2).png')}}" alt="Fresh Vegetables"></a>
         </div>
         <span class="cat-name">Fresh Vegetables</span>
       </div>
@@ -351,7 +351,7 @@
   <div class="col-6 col-md-3 col-lg-2 cat-col">
       <div class="cat-card">
         <div class="img-box">
-          <a href="shop.html"><img src="{{ asset ('frontend/image/image 1 (3).png')}}" alt="Fresh Vegetables"></a>
+          <a href="{{ route('shop') }}"><img src="{{ asset ('frontend/image/image 1 (3).png')}}" alt="Fresh Vegetables"></a>
         </div>
         <span class="cat-name">Fresh Vegetables</span>
       </div>
@@ -360,7 +360,7 @@
   <div class="col-6 col-md-3 col-lg-2 cat-col">
       <div class="cat-card">
         <div class="img-box">
-          <a href="shop.html"><img src="{{ asset ('frontend/image/image 1 (4).png')}}" alt="Fresh Vegetables"></a>
+          <a href="{{ route('shop') }}"><img src="{{ asset ('frontend/image/image 1 (4).png')}}" alt="Fresh Vegetables"></a>
         </div>
         <span class="cat-name">Fresh Vegetables</span>
       </div>
@@ -369,7 +369,7 @@
   <div class="col-6 col-md-3 col-lg-2 cat-col">
       <div class="cat-card">
         <div class="img-box">
-          <a href="shop.html"><img src="{{ asset ('frontend/image/image 1 (5).png')}}" alt="Fresh Vegetables"></a>
+          <a href="{{ route('shop') }}"><img src="{{ asset ('frontend/image/image 1 (5).png')}}" alt="Fresh Vegetables"></a>
         </div>
         <span class="cat-name">Fresh Vegetables</span>
       </div>
@@ -378,7 +378,7 @@
   <div class="col-6 col-md-3 col-lg-2 cat-col">
       <div class="cat-card">
         <div class="img-box">
-         <a href="shop.html"> <img src="{{ asset ('frontend/image/image 1 (1).png')}}" alt="Fresh Vegetables"></a>
+         <a href="{{ route('shop') }}"> <img src="{{ asset ('frontend/image/image 1 (1).png')}}" alt="Fresh Vegetables"></a>
         </div>
         <span class="cat-name">Fresh Vegetables</span>
       </div>
@@ -387,7 +387,7 @@
   <div class="col-6 col-md-3 col-lg-2 cat-col">
       <div class="cat-card">
         <div class="img-box">
-         <a href="shop.html"> <img src="{{ asset ('frontend/image/image 1 (2).png')}}" alt="Fresh Vegetables"></a>
+         <a href="{{ route('shop') }}"> <img src="{{ asset ('frontend/image/image 1 (2).png')}}" alt="Fresh Vegetables"></a>
         </div>
         <span class="cat-name">Fresh Vegetables</span>
       </div>
@@ -396,7 +396,7 @@
   <div class="col-6 col-md-3 col-lg-2 cat-col">
       <div class="cat-card">
         <div class="img-box">
-         <a href="shop.html"> <img src="{{ asset ('frontend/image/image 1 (3).png')}}" alt="Fresh Vegetables"></a>
+         <a href="{{ route('shop') }}"> <img src="{{ asset ('frontend/image/image 1 (3).png')}}" alt="Fresh Vegetables"></a>
         </div>
         <span class="cat-name">Fresh Vegetables</span>
       </div>
@@ -405,7 +405,7 @@
   <div class="col-6 col-md-3 col-lg-2 cat-col">
       <div class="cat-card">
         <div class="img-box">
-         <a href="shop.html"> <img src="{{ asset ('frontend/image/image 1 (4).png')}}" alt="Fresh Vegetables"></a>
+         <a href="{{ route('shop') }}"> <img src="{{ asset ('frontend/image/image 1 (4).png')}}" alt="Fresh Vegetables"></a>
         </div>
         <span class="cat-name">Fresh Vegetables</span>
       </div>
@@ -414,7 +414,7 @@
   <div class="col-6 col-md-3 col-lg-2 cat-col">
       <div class="cat-card">
         <div class="img-box">
-         <a href="shop.html"> <img src="{{ asset ('frontend/image/image 1 (4).png')}}" alt="Fresh Vegetables"></a>
+         <a href="{{ route('shop') }}"> <img src="{{ asset ('frontend/image/image 1 (4).png')}}" alt="Fresh Vegetables"></a>
         </div>
         <span class="cat-name">Fresh Vegetables</span>
       </div>
@@ -423,7 +423,7 @@
   <div class="col-6 col-md-3 col-lg-2 cat-col">
       <div class="cat-card">
         <div class="img-box">
-         <a href="shop.html"> <img src="{{ asset ('frontend/image/image 1 (4).png')}}" alt="Fresh Vegetables"></a>
+         <a href="{{ route('shop') }}"> <img src="{{ asset ('frontend/image/image 1 (4).png')}}" alt="Fresh Vegetables"></a>
         </div>
         <span class="cat-name">Fresh Vegetables</span>
       </div>
@@ -432,7 +432,7 @@
   <div class="col-6 col-md-3 col-lg-2 cat-col">
       <div class="cat-card">
         <div class="img-box">
-          <a href="shop.html"><img src="{{ asset ('frontend/image/image 1 (2).png')}}" alt="Fresh Vegetables"></a>
+          <a href="{{ route('shop') }}"><img src="{{ asset ('frontend/image/image 1 (2).png')}}" alt="Fresh Vegetables"></a>
         </div>
         <span class="cat-name">Fresh Vegetables</span>
       </div>
@@ -447,33 +447,40 @@
 <section id="populer">
 <div class="container px-3 py-4">
   <div class="section-header">
-    <h2 style="font-size:30px; font-weight:700; margin:0;">Popular <span style="color: #22c55e;">Products</span> </h2>
-    <a href="shop.html" class="view-all">View All <i class="bi bi-arrow-right"></i></a>
+    <h2 style="font-size:30px; font-weight:700; margin:0;">
+      Popular <span style="color: #22c55e;">Products</span>
+    </h2>
+    <a href="{{ route('shop') }}" class="view-all">View All <i class="bi bi-arrow-right"></i></a>
   </div>
 
-  <!-- row-cols-2 = mobile e 2 column, md e 3, lg e 5 -->
   <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3">
 
-    <!-- একটি card এর template — বাকিগুলো copy করে নাম/price/img বদলাও -->
+    @forelse($popularProducts as $product)
     <div class="col">
       <div class="product-card h-100">
-        <!-- Sale badge (optional) -->
-        <div class="sale-badge">Sale 50%</div>
+
+        {{-- Sale badge --}}
+        @if($product->hasSale())
+          <div class="sale-badge">Sale {{ $product->salePercent() }}%</div>
+        @endif
 
         <div class="product-img-wrap">
-          <!-- Overlay: top-right থেকে slide করে আসবে -->
           <div class="img-overlay">
             <div class="overlay-icons">
               <button title="Wishlist"><i class="bi bi-heart"></i></button>
               <button title="Quick View"><i class="bi bi-eye"></i></button>
             </div>
           </div>
-          <!-- img src এখানে বসাও -->
-          <img src="{{ asset ('frontend/image/Product Image (1).png')}}" alt="Product Name">
+          {{-- Image --}}
+          @if($product->image)
+            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}">
+          @else
+            <img src="{{ asset('frontend/image/Product Image.png') }}" alt="{{ $product->name }}">
+          @endif
         </div>
 
         <div class="card-body-custom">
-          <div class="product-name">Green Apple</div>
+          <div class="product-name">{{ $product->name }}</div>
           <div class="stars">
             <i class="bi bi-star-fill"></i>
             <i class="bi bi-star-fill"></i>
@@ -483,338 +490,24 @@
           </div>
           <div class="price-row">
             <div>
-              <span class="price-main">$14.99</span>
-              <span class="price-old">$20.99</span>
+              <span class="price-main">৳{{ number_format($product->price, 2) }}</span>
+              @if($product->hasSale())
+                <span class="price-old">৳{{ number_format($product->old_price, 2) }}</span>
+              @endif
             </div>
-            <a href="#" class="cart-btn"><i class="bi bi-bag"></i></a>
+            <a href="{{ route('product', $product->id) }}" class="cart-btn">
+              <i class="bi bi-bag"></i>
+            </a>
           </div>
         </div>
+
       </div>
     </div>
-
-     <div class="col">
-      <div class="product-card h-100">
-        <div class="product-img-wrap">
-          <!-- Overlay: top-right থেকে slide করে আসবে -->
-          <div class="img-overlay">
-            <div class="overlay-icons">
-              <button title="Wishlist"><i class="bi bi-heart"></i></button>
-              <button title="Quick View"><i class="bi bi-eye"></i></button>
-            </div>
-          </div>
-          <!-- img src এখানে বসাও -->
-          <img src="{{ asset ('frontend/image/Product Image (2).png')}}" alt="Product Name">
-        </div>
-
-        <div class="card-body-custom">
-          <div class="product-name">Green Apple</div>
-          <div class="stars">
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star empty"></i>
-          </div>
-          <div class="price-row">
-            <div>
-              <span class="price-main">$14.99</span>
-              <span class="price-old">$20.99</span>
-            </div>
-             <button href="singleProduct.html"  class="cart-btn"><i class="bi bi-bag"></i></button>
-          </div>
-        </div>
+    @empty
+      <div class="col-12 text-center py-5 text-muted">
+        No featured products yet.
       </div>
-    </div>
-
-     <div class="col">
-      <div class="product-card h-100">
-        <!-- Sale badge (optional) -->
-        <div class="sale-badge">Sale 50%</div>
-
-        <div class="product-img-wrap">
-          <!-- Overlay: top-right থেকে slide করে আসবে -->
-          <div class="img-overlay">
-            <div class="overlay-icons">
-              <button title="Wishlist"><i class="bi bi-heart"></i></button>
-              <button title="Quick View"><i class="bi bi-eye"></i></button>
-            </div>
-          </div>
-          <!-- img src এখানে বসাও -->
-          <img src="{{ asset ('frontend/image/Product Image (3).png')}}" alt="Product Name">
-        </div>
-
-        <div class="card-body-custom">
-          <div class="product-name">Green Apple</div>
-          <div class="stars">
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star empty"></i>
-          </div>
-          <div class="price-row">
-            <div>
-              <span class="price-main">$14.99</span>
-              <span class="price-old">$20.99</span>
-            </div>
-             <button href="singleProduct.html"  class="cart-btn"><i class="bi bi-bag"></i></button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-     <div class="col">
-      <div class="product-card h-100">
-      
-        <div class="product-img-wrap">
-          <!-- Overlay: top-right থেকে slide করে আসবে -->
-          <div class="img-overlay">
-            <div class="overlay-icons">
-              <button title="Wishlist"><i class="bi bi-heart"></i></button>
-              <button title="Quick View"><i class="bi bi-eye"></i></button>
-            </div>
-          </div>
-          <!-- img src এখানে বসাও -->
-          <img src="{{ asset ('frontend/image/Product Image (4).png')}}" alt="Product Name">
-        </div>
-
-        <div class="card-body-custom">
-          <div class="product-name">Green Apple</div>
-          <div class="stars">
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star empty"></i>
-          </div>
-          <div class="price-row">
-            <div>
-              <span class="price-main">$14.99</span>
-              <span class="price-old">$20.99</span>
-            </div>
-             <button href="singleProduct.html"  class="cart-btn"><i class="bi bi-bag"></i></button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-     <div class="col">
-      <div class="product-card h-100">
-        <!-- Sale badge (optional) -->
-        <div class="sale-badge">Sale 50%</div>
-
-        <div class="product-img-wrap">
-          <!-- Overlay: top-right থেকে slide করে আসবে -->
-          <div class="img-overlay">
-            <div class="overlay-icons">
-              <button title="Wishlist"><i class="bi bi-heart"></i></button>
-              <button title="Quick View"><i class="bi bi-eye"></i></button>
-            </div>
-          </div>
-          <!-- img src এখানে বসাও -->
-          <img src="{{ asset ('frontend/image/Product Image (1).png')}}" alt="Product Name">
-        </div>
-
-        <div class="card-body-custom">
-          <div class="product-name">Green Apple</div>
-          <div class="stars">
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star empty"></i>
-          </div>
-          <div class="price-row">
-            <div>
-              <span class="price-main">$14.99</span>
-              <span class="price-old">$20.99</span>
-            </div>
-             <button href="singleProduct.html"  class="cart-btn"><i class="bi bi-bag"></i></button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-     <div class="col">
-      <div class="product-card h-100">
-        <!-- Sale badge (optional) -->
-        
-        <div class="product-img-wrap">
-          <!-- Overlay: top-right থেকে slide করে আসবে -->
-          <div class="img-overlay">
-            <div class="overlay-icons">
-              <button title="Wishlist"><i class="bi bi-heart"></i></button>
-              <button title="Quick View"><i class="bi bi-eye"></i></button>
-            </div>
-          </div>
-          <!-- img src এখানে বসাও -->
-          <img src="{{ asset ('frontend/image/Product Image.png')}}" alt="Product Name">
-        </div>
-
-        <div class="card-body-custom">
-          <div class="product-name">Green Apple</div>
-          <div class="stars">
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star empty"></i>
-          </div>
-          <div class="price-row">
-            <div>
-              <span class="price-main">$14.99</span>
-              <span class="price-old">$20.99</span>
-            </div>
-             <button href="singleProduct.html"  class="cart-btn"><i class="bi bi-bag"></i></button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-     <div class="col">
-      <div class="product-card h-100">
-        <!-- Sale badge (optional) -->
-        <div class="sale-badge">Sale 50%</div>
-
-        <div class="product-img-wrap">
-          <!-- Overlay: top-right থেকে slide করে আসবে -->
-          <div class="img-overlay">
-            <div class="overlay-icons">
-              <button title="Wishlist"><i class="bi bi-heart"></i></button>
-              <button title="Quick View"><i class="bi bi-eye"></i></button>
-            </div>
-          </div>
-          <!-- img src এখানে বসাও -->
-          <img src="{{ asset ('frontend/image/Product Image (1).png')}}" alt="Product Name">
-        </div>
-
-        <div class="card-body-custom">
-          <div class="product-name">Green Apple</div>
-          <div class="stars">
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star empty"></i>
-          </div>
-          <div class="price-row">
-            <div>
-              <span class="price-main">$14.99</span>
-              <span class="price-old">$20.99</span>
-            </div>
-             <button href="singleProduct.html"  class="cart-btn"><i class="bi bi-bag"></i></button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-     <div class="col">
-      <div class="product-card h-100">
-        
-    
-        <div class="product-img-wrap">
-          <!-- Overlay: top-right থেকে slide করে আসবে -->
-          <div class="img-overlay">
-            <div class="overlay-icons">
-              <button title="Wishlist"><i class="bi bi-heart"></i></button>
-              <button title="Quick View"><i class="bi bi-eye"></i></button>
-            </div>
-          </div>
-          <!-- img src এখানে বসাও -->
-          <img src="{{ asset ('frontend/image/Image.png')}}" alt="Product Name">
-        </div>
-
-        <div class="card-body-custom">
-          <div class="product-name">Green Apple</div>
-          <div class="stars">
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star empty"></i>
-          </div>
-          <div class="price-row">
-            <div>
-              <span class="price-main">$14.99</span>
-              <span class="price-old">$20.99</span>
-            </div>
-             <button href="singleProduct.html"  class="cart-btn"><i class="bi bi-bag"></i></button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-     <div class="col">
-      <div class="product-card h-100">
-
-        <div class="product-img-wrap">
-          <!-- Overlay: top-right থেকে slide করে আসবে -->
-          <div class="img-overlay">
-            <div class="overlay-icons">
-              <button title="Wishlist"><i class="bi bi-heart"></i></button>
-              <button title="Quick View"><i class="bi bi-eye"></i></button>
-            </div>
-          </div>
-          <!-- img src এখানে বসাও -->
-          <img src="{{ asset ('frontend/image/Product Image (2).png')}}" alt="Product Name">
-        </div>
-
-        <div class="card-body-custom">
-          <div class="product-name">Green Apple</div>
-          <div class="stars">
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star empty"></i>
-          </div>
-          <div class="price-row">
-            <div>
-              <span class="price-main">$14.99</span>
-              <span class="price-old">$20.99</span>
-            </div>
-             <button href="singleProduct.html"  class="cart-btn"><i class="bi bi-bag"></i></button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-     <div class="col">
-      <div class="product-card h-100">
-        <!-- Sale badge (optional) -->
-        <div class="sale-badge">Sale 50%</div>
-
-        <div class="product-img-wrap">
-          <!-- Overlay: top-right থেকে slide করে আসবে -->
-          <div class="img-overlay">
-            <div class="overlay-icons">
-              <button title="Wishlist"><i class="bi bi-heart"></i></button>
-              <button title="Quick View"><i class="bi bi-eye"></i></button>
-            </div>
-          </div>
-          <!-- img src এখানে বসাও -->
-          <img src="{{ asset ('frontend/image/Product Image (3).png')}}"\ alt="Product Name">
-        </div>
-
-        <div class="card-body-custom">
-          <div class="product-name">Green Apple</div>
-          <div class="stars">
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star empty"></i>
-          </div>
-          <div class="price-row">
-            <div>
-              <span class="price-main">$14.99</span>
-              <span class="price-old">$20.99</span>
-            </div>
-             <button href="singleProduct.html"  class="cart-btn"><i class="bi bi-bag"></i></button>
-          </div>
-        </div>
-      </div>
-    </div>
+    @endforelse
 
   </div>
 </div>
@@ -836,197 +529,240 @@
   <!-- discount banner ends -->
 
   <!-- hot deals starts -->
- <section id="hotDeals">
-  <div class="container" style= padding:24px 16px;">
-  <!-- Header -->
-  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;">
-    <h2 style="font-size:30px; font-weight:700; margin-top:30px;">Hot  <span style="color: #22c55e;">Deals</span></h2>
-    <a href="shop.html" style="color:#22c55e; font-size:14px; font-weight:500; text-decoration:none;">
-      View All <i class="bi bi-arrow-right"></i>
-    </a>
-  </div>
-
-  <div class="row g-3">
-
-    <!-- FEATURED BIG CARD: col-12 mobile, col-6 md, col-4 lg -->
-    <div class="col-12 col-md-6 col-lg-4">
-      <div class="featured-card">
-        <div class="sale-badge">Sale 50%</div>
-        <div class="best-badge">Best Sale</div>
-        <div class="featured-img-wrap">
-          <img src="{{ asset ('frontend/image/bigApple.png')}}" alt="Featured Product">
-        </div>
-        <div class="featured-action-row">
-          <a href="wishlist.html" class="icon-btn"><i class="bi bi-heart"></i></a>
-          <button href="#" class="add-to cart-btn" >
-            <i class="bi bi-bag">Add to Cart</i> 
-            
-          </button>
-          <button title="Quick View" class="icon-btn"><i class="bi bi-eye"></i></button>
-        </div>
-        <div class="featured-info">
-          <div class="name">Chinese cabbage</div>
-          <div class="prices">$12.00 <span class="old">$24.00</span></div>
-          <div class="feedback">
-            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-half"></i>
-            <span>(524 Feedback)</span>
-          </div>
-          <div class="hurry">Hurry up! Offer ends in:</div>
-          <div class="countdown">
-            <div class="cd-box"><span class="num" id="cd-days">01</span><span class="lbl">Days</span></div>
-            <span class="cd-sep">:</span>
-            <div class="cd-box"><span class="num" id="cd-hours">23</span><span class="lbl">Hours</span></div>
-            <span class="cd-sep">:</span>
-            <div class="cd-box"><span class="num" id="cd-mins">34</span><span class="lbl">Mins</span></div>
-            <span class="cd-sep">:</span>
-            <div class="cd-box"><span class="num" id="cd-secs">57</span><span class="lbl">Secs</span></div>
-          </div>
-        </div>
-      </div>
+<!-- hot deals starts -->
+<section id="hotDeals">
+  <div class="container" style="padding:24px 16px;">
+    <!-- Header -->
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;">
+      <h2 style="font-size:30px; font-weight:700; margin-top:30px;">
+        Hot <span style="color: #22c55e;">Deals</span>
+      </h2>
+      <a href="{{ route('shop') }}" style="color:#22c55e; font-size:14px; font-weight:500; text-decoration:none;">
+        View All <i class="bi bi-arrow-right"></i>
+      </a>
     </div>
 
-    <!-- RIGHT GRID: 6 small cards -->
-    <div class="col-12 col-md-6 col-lg-8">
-      <div class="row g-3">
+    <div class="row g-3">
 
-        <!-- Card template — 6 বার repeat করো name/price/img বদলে -->
-        <div class="col-6 col-lg-4">
-          <div class="hotProduct-card">
-             <div class="sale-badge">Sale 50%</div>
-            <div class="product-img-wrap">
-              <div class="img-overlay">
-                <div class="overlay-icons">
-                  <button><i class="bi bi-heart"></i></button>
-                  <button title="Quick View"><i class="bi bi-eye"></i></button>
+      {{-- ===== FEATURED BIG CARD (প্রথম deal) ===== --}}
+      @if($hotDeals->isNotEmpty())
+        @php $featured = $hotDeals->first(); @endphp
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="featured-card">
+            @if($featured->hasSale())
+              <div class="sale-badge">Sale {{ $featured->salePercent() }}%</div>
+            @endif
+            <div class="best-badge">Best Sale</div>
+            <div class="featured-img-wrap">
+              @if($featured->image)
+                <img src="{{ asset('storage/' . $featured->image) }}" alt="{{ $featured->name }}">
+              @else
+                <img src="{{ asset('frontend/image/bigApple.png') }}" alt="{{ $featured->name }}">
+              @endif
+            </div>
+            <div class="featured-action-row">
+              <a href="{{ route('wishlist') }}" class="icon-btn"><i class="bi bi-heart"></i></a>
+              <button class="add-to cart-btn">
+                <i class="bi bi-bag"></i> Add to Cart
+              </button>
+              <button title="Quick View" class="icon-btn"><i class="bi bi-eye"></i></button>
+            </div>
+            <div class="featured-info">
+              <div class="name">{{ $featured->name }}</div>
+              <div class="prices">
+                ৳{{ number_format($featured->price, 2) }}
+                @if($featured->hasSale())
+                  <span class="old">৳{{ number_format($featured->old_price, 2) }}</span>
+                @endif
+              </div>
+              <div class="feedback">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-half"></i>
+              </div>
+              @if($featured->deal_ends_at && $featured->isLive())
+                <div class="hurry">Hurry up! Offer ends in:</div>
+                <div class="countdown" data-ends="{{ $featured->deal_ends_at->timestamp * 1000 }}">
+                  <div class="cd-box"><span class="num cd-days">00</span><span class="lbl">Days</span></div>
+                  <span class="cd-sep">:</span>
+                  <div class="cd-box"><span class="num cd-hours">00</span><span class="lbl">Hours</span></div>
+                  <span class="cd-sep">:</span>
+                  <div class="cd-box"><span class="num cd-mins">00</span><span class="lbl">Mins</span></div>
+                  <span class="cd-sep">:</span>
+                  <div class="cd-box"><span class="num cd-secs">00</span><span class="lbl">Secs</span></div>
                 </div>
-              </div>
-              <img src="{{ asset ('frontend/image/Product Image (1).png')}}" alt="Product">
-            </div>
-            <div class="card-body-custom">
-              <div class="product-name">Product Name</div>
-              <div class="stars">
-                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                <i class="bi bi-star empty"></i>
-              </div>
-              <div class="price-row">
-                <span class="price-main">$12.00</span>
-                  <button href="singleProduct.html"  class="cart-btn"><i class="bi bi-bag"></i></button>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="col-6 col-lg-4">
-          <div class="hotProduct-card">
-            <div class="product-img-wrap">
-              <div class="img-overlay">
-                <div class="overlay-icons">
-                  <button><i class="bi bi-heart"></i></button>
-                  <button title="Quick View"><i class="bi bi-eye"></i></button>
-                </div>
-              </div>
-              <img src="{{ asset ('frontend/image/Product Image (2).png')}}" alt="Product">
-            </div>
-            <div class="card-body-custom">
-              <div class="product-name">Product Name</div>
-              <div class="stars">
-                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                <i class="bi bi-star empty"></i>
-              </div>
-              <div class="price-row">
-                <span class="price-main">$12.00</span>
-                 <button href="singleProduct.html"  class="cart-btn"><i class="bi bi-bag"></i></button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-6 col-lg-4">
-          <div class="hotProduct-card">
-            <div class="product-img-wrap">
-              <div class="img-overlay">
-                <div class="overlay-icons">
-                  <button><i class="bi bi-heart"></i></button>
-                  <button title="Quick View"><i class="bi bi-eye"></i></button>
-                </div>
-              </div>
-              <img src="{{ asset ('frontend/image/Product Image (4).png')}}" alt="Product">
-            </div>
-            <div class="card-body-custom">
-              <div class="product-name">Product Name</div>
-              <div class="stars">
-                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                <i class="bi bi-star empty"></i>
-              </div>
-              <div class="price-row">
-                <span class="price-main">$12.00</span>
-                 <button href="singleProduct.html"  class="cart-btn"><i class="bi bi-bag"></i></button>
-              </div>
+              @endif
             </div>
           </div>
         </div>
 
-        <div class="col-6 col-lg-4">
-          <div class="hotProduct-card">
-            
-            <div class="product-img-wrap">
-              <div class="img-overlay">
-                <div class="overlay-icons">
-                  <button><i class="bi bi-heart"></i></button>
-                  <button><i class="bi bi-eye "></i></button>
+        {{-- ===== RIGHT GRID: 2 থেকে 7 নম্বর deal (6টা small card) ===== --}}
+        <div class="col-12 col-md-6 col-lg-8">
+          <div class="row g-3">
+            @foreach($hotDeals->skip(1)->take(6) as $deal)
+            <div class="col-6 col-lg-4">
+              <div class="hotProduct-card">
+                @if($deal->hasSale())
+                  <div class="sale-badge">Sale {{ $deal->salePercent() }}%</div>
+                @endif
+                <div class="product-img-wrap">
+                  <div class="img-overlay">
+                    <div class="overlay-icons">
+                      <button><i class="bi bi-heart"></i></button>
+                      <button title="Quick View"><i class="bi bi-eye"></i></button>
+                    </div>
+                  </div>
+                  @if($deal->image)
+                    <img src="{{ asset('storage/' . $deal->image) }}" alt="{{ $deal->name }}">
+                  @else
+                    <img src="{{ asset('frontend/image/Product Image (1).png') }}" alt="{{ $deal->name }}">
+                  @endif
+                </div>
+                <div class="card-body-custom">
+                  <div class="product-name">{{ $deal->name }}</div>
+                  <div class="stars">
+                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star empty"></i>
+                  </div>
+                  <div class="price-row">
+                    <div>
+                      <span class="price-main">৳{{ number_format($deal->price, 2) }}</span>
+                      @if($deal->hasSale())
+                        <span class="price-old">৳{{ number_format($deal->old_price, 2) }}</span>
+                      @endif
+                    </div>
+                    <button class="cart-btn"><i class="bi bi-bag"></i></button>
+                  </div>
+                  @if($deal->deal_ends_at && $deal->isLive())
+                    <div class="countdown mt-1" data-ends="{{ $deal->deal_ends_at->timestamp * 1000 }}">
+                      <div class="cd-box"><span class="num cd-days">00</span><span class="lbl">D</span></div>
+                      <span class="cd-sep">:</span>
+                      <div class="cd-box"><span class="num cd-hours">00</span><span class="lbl">H</span></div>
+                      <span class="cd-sep">:</span>
+                      <div class="cd-box"><span class="num cd-mins">00</span><span class="lbl">M</span></div>
+                      <span class="cd-sep">:</span>
+                      <div class="cd-box"><span class="num cd-secs">00</span><span class="lbl">S</span></div>
+                    </div>
+                  @endif
                 </div>
               </div>
-              <img src="{{ asset ('frontend/image/hotProduct1 (1).png')}}" alt="Product">
             </div>
-            <div class="card-body-custom">
-              <div class="product-name">Product Name</div>
-              <div class="stars">
-                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                <i class="bi bi-star empty"></i>
-              </div>
-              <div class="price-row">
-                <span class="price-main">$12.00</span>
-                 <button href="singleProduct.html"  class="cart-btn"><i class="bi bi-bag"></i></button>
-              </div>
-            </div>
+            @endforeach
           </div>
         </div>
 
-        <div class="col-6 col-lg-4">
-          <div class="hotProduct-card">
+        {{-- ===== BOTTOM ROW: 8 থেকে 12 নম্বর deal (5টা) ===== --}}
+        @foreach($hotDeals->skip(7)->take(5) as $index => $deal)
+          <div class="bottom-col {{ $loop->last ? 'd-none d-lg-block' : '' }}">
+            <div class="hotProduct-card">
+              @if($deal->hasSale())
+                <div class="sale-badge">Sale {{ $deal->salePercent() }}%</div>
+              @endif
+              <div class="product-img-wrap">
+                <div class="img-overlay">
+                  <div class="overlay-icons">
+                    <button><i class="bi bi-heart"></i></button>
+                    <button title="Quick View"><i class="bi bi-eye"></i></button>
+                  </div>
+                </div>
+                @if($deal->image)
+                  <img src="{{ asset('storage/' . $deal->image) }}" alt="{{ $deal->name }}">
+                @else
+                  <img src="{{ asset('frontend/image/hotProduct1 (4).png') }}" alt="{{ $deal->name }}">
+                @endif
+              </div>
+              <div class="card-body-custom">
+                <div class="product-name">{{ $deal->name }}</div>
+                <div class="stars">
+                  <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star empty"></i><i class="bi bi-star empty"></i>
+                </div>
+                <div class="price-row">
+                  <span class="price-main">৳{{ number_format($deal->price, 2) }}</span>
+                  <button class="cart-btn"><i class="bi bi-bag"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        @endforeach
+
+      @else
+        {{-- ===== কোনো deal না থাকলে static fallback ===== --}}
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="featured-card">
             <div class="sale-badge">Sale 50%</div>
-            <div class="product-img-wrap">
-              <div class="img-overlay">
-                <div class="overlay-icons">
-                  <button><i class="bi bi-heart"></i></button>
-                  <button title="Quick View"><i class="bi bi-eye"></i></button>
-                </div>
-              </div>
-              <img src="{{ asset ('frontend/image/Product Image (3).png')}}" alt="Product">
+            <div class="best-badge">Best Sale</div>
+            <div class="featured-img-wrap">
+              <img src="{{ asset('frontend/image/bigApple.png') }}" alt="Featured Product">
             </div>
-            <div class="card-body-custom">
-              <div class="product-name">Product Name</div>
-              <div class="stars">
+            <div class="featured-action-row">
+              <a href="{{ route('wishlist') }}" class="icon-btn"><i class="bi bi-heart"></i></a>
+              <button class="add-to cart-btn"><i class="bi bi-bag"></i> Add to Cart</button>
+              <button title="Quick View" class="icon-btn"><i class="bi bi-eye"></i></button>
+            </div>
+            <div class="featured-info">
+              <div class="name">Chinese cabbage</div>
+              <div class="prices">$12.00 <span class="old">$24.00</span></div>
+              <div class="feedback">
                 <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
                 <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                <i class="bi bi-star empty"></i>
+                <i class="bi bi-star-half"></i>
+                <span>(524 Feedback)</span>
               </div>
-              <div class="price-row">
-                <span class="price-main">$12.00</span>
-                 <button href="singleProduct.html"  class="cart-btn"><i class="bi bi-bag"></i></button>
+              <div class="hurry">Hurry up! Offer ends in:</div>
+              <div class="countdown" data-ends="{{ (now()->addDays(1)->timestamp) * 1000 }}">
+                <div class="cd-box"><span class="num cd-days">01</span><span class="lbl">Days</span></div>
+                <span class="cd-sep">:</span>
+                <div class="cd-box"><span class="num cd-hours">23</span><span class="lbl">Hours</span></div>
+                <span class="cd-sep">:</span>
+                <div class="cd-box"><span class="num cd-mins">34</span><span class="lbl">Mins</span></div>
+                <span class="cd-sep">:</span>
+                <div class="cd-box"><span class="num cd-secs">57</span><span class="lbl">Secs</span></div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="col-6 col-lg-4">
+        <div class="col-12 col-md-6 col-lg-8">
+          <div class="row g-3">
+            @foreach([
+              'Product Image (1).png','Product Image (2).png','Product Image (4).png',
+              'hotProduct1 (1).png','Product Image (3).png','hotProduct1 (3).png'
+            ] as $img)
+            <div class="col-6 col-lg-4">
+              <div class="hotProduct-card">
+                <div class="product-img-wrap">
+                  <div class="img-overlay">
+                    <div class="overlay-icons">
+                      <button><i class="bi bi-heart"></i></button>
+                      <button title="Quick View"><i class="bi bi-eye"></i></button>
+                    </div>
+                  </div>
+                  <img src="{{ asset('frontend/image/' . $img) }}" alt="Product">
+                </div>
+                <div class="card-body-custom">
+                  <div class="product-name">Product Name</div>
+                  <div class="stars">
+                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star empty"></i>
+                  </div>
+                  <div class="price-row">
+                    <span class="price-main">$12.00</span>
+                    <button class="cart-btn"><i class="bi bi-bag"></i></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            @endforeach
+          </div>
+        </div>
+
+        @foreach(['hotProduct1 (4).png','hotProduct1 (4).png','hotProduct1 (4).png','hotProduct1 (4).png'] as $i => $img)
+        <div class="bottom-col">
           <div class="hotProduct-card">
-           
             <div class="product-img-wrap">
               <div class="img-overlay">
                 <div class="overlay-icons">
@@ -1034,142 +770,80 @@
                   <button title="Quick View"><i class="bi bi-eye"></i></button>
                 </div>
               </div>
-              <img src="{{ asset ('frontend/image/hotProduct1 (3).png')}}" alt="Product">
+              <img src="{{ asset('frontend/image/' . $img) }}" alt="Product">
             </div>
             <div class="card-body-custom">
               <div class="product-name">Product Name</div>
               <div class="stars">
                 <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                <i class="bi bi-star empty"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star empty"></i><i class="bi bi-star empty"></i>
               </div>
               <div class="price-row">
                 <span class="price-main">$12.00</span>
-                 <button href="singleProduct.html"  class="cart-btn"><i class="bi bi-bag"></i></button>
+                <button class="cart-btn"><i class="bi bi-bag"></i></button>
               </div>
             </div>
           </div>
         </div>
-
-      </div>
-    </div>
-
-    <!-- BOTTOM ROW: 5 cards, mobile-এ col-6 (2 করে) -->
-    <div class="bottom-col">
-      <div class="hotProduct-card">
-        <div class="product-img-wrap">
-          <div class="img-overlay">
-            <div class="overlay-icons">
-              <button><i class="bi bi-heart"></i></button>
-              <button title="Quick View"><i class="bi bi-eye"></i></button>
+        @endforeach
+        <div class="bottom-col d-none d-lg-block">
+          <div class="hotProduct-card">
+            <div class="product-img-wrap">
+              <div class="img-overlay">
+                <div class="overlay-icons">
+                  <button><i class="bi bi-heart"></i></button>
+                  <button title="Quick View"><i class="bi bi-eye"></i></button>
+                </div>
+              </div>
+              <img src="{{ asset('frontend/image/hotProduct1 (4).png') }}" alt="Product">
+            </div>
+            <div class="card-body-custom">
+              <div class="product-name">Product Name</div>
+              <div class="stars">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star empty"></i><i class="bi bi-star empty"></i>
+              </div>
+              <div class="price-row">
+                <span class="price-main">$12.00</span>
+                <button class="cart-btn"><i class="bi bi-bag"></i></button>
+              </div>
             </div>
           </div>
-          <img src="{{ asset ('frontend/image/hotProduct1 (4).png')}}" alt="Product">
         </div>
-        <div class="card-body-custom">
-          <div class="product-name">Product Name</div>
-          <div class="stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star empty"></i><i class="bi bi-star empty"></i></div>
-          <div class="price-row">
-            <span class="price-main">$12.00</span>
-             <button href="singleProduct.html"  class="cart-btn"><i class="bi bi-bag"></i></button>
-          </div>
-        </div>
-      </div>
-    </div>
+      @endif
 
-    <div class="bottom-col">
-      <div class="hotProduct-card">
-        <div class="product-img-wrap">
-          <div class="img-overlay">
-            <div class="overlay-icons">
-              <button><i class="bi bi-heart"></i></button>
-              <button title="Quick View"><i class="bi bi-eye"></i></button>
-            </div>
-          </div>
-          <img src="{{ asset ('frontend/image/hotProduct1 (4).png')}}" alt="Product">
-        </div>
-        <div class="card-body-custom">
-          <div class="product-name">Product Name</div>
-          <div class="stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star empty"></i><i class="bi bi-star empty"></i></div>
-          <div class="price-row">
-            <span class="price-main">$12.00</span>
-             <button href="singleProduct.html"  class="cart-btn"><i class="bi bi-bag"></i></button>
-          </div>
-        </div>
-      </div>
     </div>
-
-    <div class="bottom-col">
-      <div class="hotProduct-card">
-        <div class="product-img-wrap">
-          <div class="img-overlay">
-            <div class="overlay-icons">
-              <button><i class="bi bi-heart"></i></button>
-              <button title="Quick View"><i class="bi bi-eye"></i></button>
-            </div>
-          </div>
-          <img src="{{ asset ('frontend/image/hotProduct1 (4).png')}}" alt="Product">
-        </div>
-        <div class="card-body-custom">
-          <div class="product-name">Product Name</div>
-          <div class="stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star empty"></i><i class="bi bi-star empty"></i></div>
-          <div class="price-row">
-            <span class="price-main">$12.00</span>
-             <button href="singleProduct.html"  class="cart-btn"><i class="bi bi-bag"></i></button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="bottom-col">
-      <div class="hotProduct-card">
-        <div class="product-img-wrap">
-          <div class="img-overlay">
-            <div class="overlay-icons">
-              <button><i class="bi bi-heart"></i></button>
-              <button title="Quick View"><i class="bi bi-eye"></i></button>
-            </div>
-          </div>
-          <img src="{{ asset ('frontend/image/hotProduct1 (4).png')}}" alt="Product">
-        </div>
-        <div class="card-body-custom">
-          <div class="product-name">Product Name</div>
-          <div class="stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star empty"></i><i class="bi bi-star empty"></i></div>
-          <div class="price-row">
-            <span class="price-main">$12.00</span>
-             <button href="singleProduct.html"  class="cart-btn"><i class="bi bi-bag"></i></button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="bottom-col d-none d-lg-block">
-      <div class="hotProduct-card">
-        <div class="product-img-wrap">
-          <div class="img-overlay">
-            <div class="overlay-icons">
-              <button><i class="bi bi-heart"></i></button>
-              <button title="Quick View"><i class="bi bi-eye"></i></button>
-            </div>
-          </div>
-          <img src="{{ asset ('frontend/image/hotProduct1 (4).png')}}" alt="Product">
-        </div>
-        <div class="card-body-custom">
-          <div class="product-name">Product Name</div>
-          <div class="stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star empty"></i><i class="bi bi-star empty"></i></div>
-          <div class="price-row">
-            <span class="price-main">$12.00</span>
-             <button href="singleProduct.html"  class="cart-btn"><i class="bi bi-bag"></i></button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- ...আরো 4টা bottom-col card... -->
-
   </div>
-</div>
+</section>
+<!-- hot deals ends -->
 
- </section>
+{{-- Countdown Timer Script --}}
+@push('scripts')
+<script>
+document.querySelectorAll('.countdown[data-ends]').forEach(function(el) {
+  const endTime = parseInt(el.dataset.ends);
+  function tick() {
+    const diff = endTime - Date.now();
+    if (diff <= 0) {
+      el.innerHTML = '<span style="color:#ef4444;font-size:12px;">Deal Ended</span>';
+      return;
+    }
+    const days  = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins  = Math.floor((diff % 3600000) / 60000);
+    const secs  = Math.floor((diff % 60000) / 1000);
+    el.querySelector('.cd-days').textContent  = String(days).padStart(2,'0');
+    el.querySelector('.cd-hours').textContent = String(hours).padStart(2,'0');
+    el.querySelector('.cd-mins').textContent  = String(mins).padStart(2,'0');
+    el.querySelector('.cd-secs').textContent  = String(secs).padStart(2,'0');
+  }
+  tick();
+  setInterval(tick, 1000);
+});
+</script>
+@endpush
   <!-- hot deals ends -->
 
   <!-- feature product starts -->
@@ -1643,7 +1317,7 @@ Phasellus imperdiet elit eu magna dictum.
   <div class="cp-empty" id="cpEmpty">
     <i class="bi bi-bag-x"></i>
     <p>Your cart is empty</p>
-    <a href="shop.html" class="cp-shop-link">Browse Products →</a>
+    <a href="{{ route('shop') }}" class="cp-shop-link">Browse Products →</a>
   </div>
  
   <!-- Footer -->
@@ -1690,10 +1364,10 @@ Phasellus imperdiet elit eu magna dictum.
       <div class="col-lg-2 col-md-3 col-6 anim-fade-up d2">
         <h6 class="footer-col-title">My Account</h6>
         <ul class="footer-links">
-           <li><a href="userdashboard.html">My Account</a></li>
-          <li><a href="userdashboard.html">Order History</a></li>
+           <li><a href="{{ route('userdashboard') }}">My Account</a></li>
+          <li><a href="{{ route('userdashboard') }}">Order History</a></li>
           <li><a href="#" class="active">Shoping Cart</a></li>
-          <li><a href="wishlist.html">Wishlist</a></li>
+          <li><a href="{{ route('wishlist') }}">Wishlist</a></li>
         </ul>
       </div>
  
@@ -1701,8 +1375,8 @@ Phasellus imperdiet elit eu magna dictum.
       <div class="col-lg-2 col-md-3 col-6 anim-fade-up d3">
         <h6 class="footer-col-title">Helps</h6>
         <ul class="footer-links">
-          <li><a href="contact.html">Contact</a></li>
-           <li><a href="faq.html">FAQS</a></li>
+          <li><a href="{{ route('contact') }}">Contact</a></li>
+           <li><a href="{{ route('faq') }}">FAQS</a></li>
           <li><a href="#">Terms &amp; Condition</a></li>
           <li><a href="#">Privacy Policy</a></li>
         </ul>
@@ -1712,9 +1386,9 @@ Phasellus imperdiet elit eu magna dictum.
       <div class="col-lg-2 col-md-3 col-6 anim-fade-up d4">
         <h6 class="footer-col-title">Proxy</h6>
         <ul class="footer-links">
-          <li><a href="about.html">About</a></li>
-          <li><a href="shop.html">Shop</a></li>
-          <li><a href="shop.html">Product</a></li>
+          <li><a href="{{ route('about') }}">About</a></li>
+          <li><a href="{{ route('shop') }}">Shop</a></li>
+          <li><a href="{{ route('shop') }}">Product</a></li>
         </ul>
       </div>
  
@@ -1722,10 +1396,10 @@ Phasellus imperdiet elit eu magna dictum.
       <div class="col-lg-3 col-md-3 col-6 anim-fade-up d5">
         <h6 class="footer-col-title">Categories</h6>
         <ul class="footer-links">
-          <li><a href="shop.html">Fruit &amp; Vegetables</a></li>
-          <li><a href="shop.html">Meat &amp; Fish</a></li>
-          <li><a href="shop.html">Bread &amp; Bakery</a></li>
-          <li><a href="shop.html">Beauty &amp; Health</a></li>
+          <li><a href="{{ route('shop') }}">Fruit &amp; Vegetables</a></li>
+          <li><a href="{{ route('shop') }}">Meat &amp; Fish</a></li>
+          <li><a href="{{ route('shop') }}">Bread &amp; Bakery</a></li>
+          <li><a href="{{ route('shop') }}">Beauty &amp; Health</a></li>
         </ul>
       </div>
  
@@ -1798,6 +1472,7 @@ Phasellus imperdiet elit eu magna dictum.
 <script src="navbar-active.js"></script>
 <script src="{{ asset ('frontend/js/common.js') }}"></script>
 <script src="{{ asset ('frontend/js/app.js') }}"></script >
+  @stack('scripts')
     <!-- javascripts link ends -->
 </body>
 </html>

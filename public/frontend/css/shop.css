@@ -1,11 +1,11 @@
 
     /* Breadcrumbs css starts */
 #shopBanner .shopBnr{
-    background-image: url(../image/Header.png);
+    background-image: url(../image/bannerfinal.png);
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
-    height: 400px;
+    height: 600px;
     border-radius: 10px ;
     margin-bottom: 20px;
     margin-top: 30px;
