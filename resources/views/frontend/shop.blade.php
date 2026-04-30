@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<meta name="wishlist-url" content="{{ route('wishlist.toggle') }}">
     <title>Shop | BanglaBazar</title>
 <!-- shop link part starts -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -79,11 +81,15 @@
       <div class="d-none d-lg-flex align-items-center gap-2">
         <a href="{{ route('wishlist') }}" class="icon-btn">
           <i class="bi bi-heart"></i>
-          <span class="badge-dot">3</span>
+           <span class="badge-dot" id="wishlistCount">
+    {{ Auth::check() ? Auth::user()->wishlists()->count() : 0 }}
+  </span>
         </a>
         <a href="#" class="icon-btn cart-btn ">
           <i class="bi bi-bag"></i>
-          <span class="badge-dot">3</span>
+           <span class="badge-dot" id="wishlistCount">
+    {{ Auth::check() ? Auth::user()->wishlists()->count() : 0 }}
+  </span>
         </a>
       </div>
  
@@ -323,7 +329,19 @@
                   <div class="product-img-wrap">
                     <div class="img-overlay">
                       <div class="overlay-icons">
-                        <button><i class="bi bi-heart"></i></button>
+                       @php
+  $inWishlist = Auth::check() 
+    ? Auth::user()->wishlists->pluck('product_id')->contains($product->id)
+    : false;
+@endphp
+<button 
+  class="wishlist-btn"
+  data-product-id="{{ $product->id }}"
+  data-product-type="product"
+  title="Wishlist">
+  <i class="bi bi-heart{{ $inWishlist ? '-fill' : '' }}"
+     style="{{ $inWishlist ? 'color:#e74c3c;' : '' }}"></i>
+</button>
                         <button title="Quick View"><i class="bi bi-eye"></i></button>
                       </div>
                     </div>
@@ -372,7 +390,14 @@
                   <div class="product-img-wrap">
                     <div class="img-overlay">
                       <div class="overlay-icons">
-                        <button><i class="bi bi-heart"></i></button>
+                       <button 
+  class="wishlist-btn"
+  data-product-id="{{ $product->id }}"
+  data-product-type="product"
+  title="Wishlist">
+  <i class="bi bi-heart{{ $inWishlist ? '-fill' : '' }}"
+     style="{{ $inWishlist ? 'color:#e74c3c;' : '' }}"></i>
+</button>
                         <button title="Quick View"><i class="bi bi-eye"></i></button>
                       </div>
                     </div>
@@ -633,6 +658,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="navbar-active.js"></script>
 <script src="{{ asset ('frontend/js/common.js') }}"></script>
+<script src="{{ asset ('frontend/js/wishlist.js') }}"></script>
 <script src="{{ asset ('frontend/js/shop.js') }}"></script>
 </body>
 </html>

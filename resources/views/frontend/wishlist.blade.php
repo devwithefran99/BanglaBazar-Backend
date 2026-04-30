@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<meta name="wishlist-url" content="{{ route('wishlist.toggle') }}">
     <title>about | BanglaBazar</title>
 <!-- shop link part starts -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -82,11 +84,15 @@
       <div class="d-none d-lg-flex align-items-center gap-2">
         <a href="{{ route('wishlist') }}" class="icon-btn">
           <i class="bi bi-heart"></i>
-          <span class="badge-dot">3</span>
+           <span class="badge-dot" id="wishlistCount">
+    {{ Auth::check() ? Auth::user()->wishlists()->count() : 0 }}
+  </span>
         </a>
         <a href="#" class="icon-btn cart-btn ">
           <i class="bi bi-bag"></i>
-          <span class="badge-dot">3</span>
+           <span class="badge-dot" id="wishlistCount">
+    {{ Auth::check() ? Auth::user()->wishlists()->count() : 0 }}
+  </span>
         </a>
       </div>
  
@@ -254,8 +260,8 @@
 
   <div class="mt-3">
     <span class="wl-badge">
-      <i class="bi bi-collection-fill"></i> 3 items saved
-    </span>
+  <i class="bi bi-collection-fill"></i> {{ $wishlists->count() }} items saved
+</span>
   </div>
 </div>
  
@@ -264,102 +270,116 @@
   <div class="container">
  
     <!-- Summary strip -->
-    <div class="summary-strip mt-5">
-      <div class="summary-stat">
-        <span class="val">3</span>
-        <span class="lbl">Total Items</span>
-      </div>
-      <div class="summary-divider"></div>
-      <div class="summary-stat">
-        <span class="val">2</span>
-        <span class="lbl">In Stock</span>
-      </div>
-      <div class="summary-divider"></div>
-      <div class="summary-stat">
-        <span class="val">$68.99</span>
-        <span class="lbl">Available Total</span>
-      </div>
-      <div class="ms-auto">
-        <button class="btn-buy" style="font-size:0.8rem; padding:9px 18px;" onclick="showToast('✓ All available items added!')">
-          <a style="text-decoration: none; color: #fff;" href="checkOut.html"><i class="bi bi-bag-check-fill">Buy All Available</i></a> 
-        </button>
-      </div>
-    </div>
+    @php
+    $availableTotal = $wishlists->filter(function($item) {
+        return $item->product && ($item->product->stock ?? 1) > 0;
+    })->sum(function($item) {
+        return $item->product->price ?? 0;
+    });
+
+    $inStockCount = $wishlists->filter(function($item) {
+        return $item->product && ($item->product->stock ?? 1) > 0;
+    })->count();
+@endphp
+
+<div class="summary-strip mt-5">
+  <div class="summary-stat">
+    <span class="val">{{ $wishlists->count() }}</span>
+    <span class="lbl">Total Items</span>
+  </div>
+  <div class="summary-divider"></div>
+  <div class="summary-stat">
+    <span class="val">{{ $inStockCount }}</span>
+    <span class="lbl">In Stock</span>
+  </div>
+  <div class="summary-divider"></div>
+  <div class="summary-stat">
+    <span class="val">৳{{ number_format($availableTotal, 2) }}</span>
+    <span class="lbl">Available Total</span>
+  </div>
+  <div class="ms-auto">
+    <button class="btn-buy" style="font-size:0.8rem; padding:9px 18px;">
+      <a style="text-decoration:none; color:#fff;" href="{{ route('shop') }}">
+        <i class="bi bi-bag-check-fill"></i> Buy All Available
+      </a>
+    </button>
+  </div>
+</div>
  
-    <!-- ── Card 1: Green Capsicum ── -->
-    <div class="product-card" id="card-1">
-      <div class="img-box">
-        <img src="{{ asset('frontend/image/hotProduct1 (3).png')}}" alt="">
-      </div>
-      <div class="product-info">
-        <p class="product-name">Green Capsicum</p>
-        <span class="product-category">Vegetables</span>
-      </div>
-      <div class="price-block">
-        <span class="price-now">$14.99</span>
+   @forelse($wishlists as $item)
+  @if($item->product)
+  <div class="product-card" id="card-{{ $item->id }}">
+    <div class="img-box">
+      <img src="{{ asset('storage/'.$item->product->image) }}"
+           onerror="this.src='{{ asset('frontend/image/hotProduct1 (3).png') }}'"
+           alt="{{ $item->product->name }}">
+    </div>
+    <div class="product-info">
+      <p class="product-name">{{ $item->product->name }}</p>
+      <span class="product-category">{{ $item->product->category ?? 'Product' }}</span>
+    </div>
+    <div class="price-block">
+      <span class="price-now">৳{{ number_format($item->product->price, 2) }}</span>
+      @if($item->product->old_price)
         <div class="mt-1">
-          <span class="price-old">$20.99</span>
-          <span class="price-discount">-29%</span>
+          <span class="price-old">৳{{ number_format($item->product->old_price, 2) }}</span>
+          <span class="price-discount">
+            -{{ round((($item->product->old_price - $item->product->price) / $item->product->old_price) * 100) }}%
+          </span>
         </div>
-      </div>
-      <span class="stock-badge in"><i class="bi bi-check-circle-fill me-1"></i>In Stock</span>
-      <div class="card-actions">
-        <button class="btn-buy" onclick="showToast('🛒 Green Capsicum — Order placed!')">
-          <a style="text-decoration: none; color: #fff;" href="checkOut.html"><i class="bi bi-lightning-charge-fill">Buy Now</i></a> 
-        </button>
-        <button class="btn-remove" title="Remove" onclick="removeCard('card-1')">
-          <i class="bi bi-x-lg"></i>
-        </button>
-      </div>
+      @endif
     </div>
- 
-    <!-- ── Card 2: Chinese Cabbage ── -->
-    <div class="product-card" id="card-2">
-      <div class="img-box">
-        <img src="{{ asset('frontend/image/Product Image (1).png')}}" alt="">
-      </div>
-      <div class="product-info">
-        <p class="product-name">Chinese Cabbage</p>
-        <span class="product-category">Vegetables</span>
-      </div>
-      <div class="price-block">
-        <span class="price-now">$45.00</span>
-        <div class="mt-1" style="height:18px;"></div>
-      </div>
-      <span class="stock-badge in"><i class="bi bi-check-circle-fill me-1"></i>In Stock</span>
+
+    @if(($item->product->stock ?? 1) > 0)
+      <span class="stock-badge in">
+        <i class="bi bi-check-circle-fill me-1"></i>In Stock
+      </span>
       <div class="card-actions">
-        <button class="btn-buy" onclick="showToast('🛒 Chinese Cabbage — Order placed!')">
-        <a style="text-decoration: none; color: #fff;" href="checkOut.html"><i class="bi bi-lightning-charge-fill">Buy Now</i></a> 
+        <button class="btn-buy">
+          <a href="{{ route('product', $item->product->id) }}"
+             style="text-decoration:none;color:#fff;">
+            <i class="bi bi-lightning-charge-fill"></i> Buy Now
+          </a>
         </button>
-        <button class="btn-remove" title="Remove" onclick="removeCard('card-2')">
-          <i class="bi bi-x-lg"></i>
-        </button>
+        <form action="{{ route('wishlist.remove', $item->id) }}"
+              method="POST" style="display:inline;">
+          @csrf @method('DELETE')
+          <button type="submit" class="btn-remove" title="Remove">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </form>
       </div>
-    </div>
- 
-    <!-- ── Card 3: Fresh Mango (Out of Stock) ── -->
-    <div class="product-card out-of-stock" id="card-3">
-      <div class="img-box">
-        <img src="{{ asset('frontend/image/hotProduct1 (4).png')}}" alt="">
-      </div>
-      <div class="product-info">
-        <p class="product-name">Fresh Sujapuri Mango</p>
-        <span class="product-category">Fruits</span>
-      </div>
-      <div class="price-block">
-        <span class="price-now" style="color:var(--text-muted);">$09.00</span>
-        <div class="mt-1" style="height:18px;"></div>
-      </div>
-      <span class="stock-badge out"><i class="bi bi-x-circle-fill me-1"></i>Out of Stock</span>
+    @else
+      <span class="stock-badge out">
+        <i class="bi bi-x-circle-fill me-1"></i>Out of Stock
+      </span>
       <div class="card-actions">
-        <button class="btn-notify" onclick="showToast(`🔔 You'll be notified when it's back!`)">
+        <button class="btn-notify">
           <i class="bi bi-bell-fill"></i> Notify Me
         </button>
-        <button class="btn-remove" title="Remove" onclick="removeCard('card-3')">
-          <i class="bi bi-x-lg"></i>
-        </button>
+        <form action="{{ route('wishlist.remove', $item->id) }}"
+              method="POST" style="display:inline;">
+          @csrf @method('DELETE')
+          <button type="submit" class="btn-remove" title="Remove">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </form>
       </div>
-    </div>
+    @endif
+  </div>
+  @endif
+
+@empty
+  {{-- Wishlist খালি হলে --}}
+  <div class="text-center py-5">
+    <i class="bi bi-heart" style="font-size:4rem;color:#ccc;"></i>
+    <h4 class="mt-3 text-muted">Your wishlist is empty!</h4>
+    <p class="text-muted">Browse products and add them to your wishlist.</p>
+    <a href="{{ route('shop') }}" class="btn btn-success mt-2">
+      Browse Products →
+    </a>
+  </div>
+@endforelse
  
  
   </div>

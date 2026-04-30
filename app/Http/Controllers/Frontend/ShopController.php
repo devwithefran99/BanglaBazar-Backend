@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\HotDeal;
+use Illuminate\Support\Facades\Auth;
 
 class ShopController extends Controller
 {
@@ -32,6 +33,10 @@ class ShopController extends Controller
                            ->pluck('category');
 
         $categories = $productCats->merge($dealCats)->unique()->values();
+        
+        if (Auth::check()) {
+    Auth::user()->load('wishlists');
+}
 
         return view('frontend.shop', compact('products', 'hotDeals', 'categories'));
     }

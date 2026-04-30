@@ -97,8 +97,7 @@ document.querySelectorAll('.mobile-toggle').forEach(item => {
     setTimeout(() => card.remove(), 300);
     showToast('🗑 Item removed from wishlist');
   }
-
-// wishlist JS  
+ 
 
 // CheckOut JS starts ////
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\HotDeal;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -31,6 +32,10 @@ class HomeController extends Controller
                        ->latest()
                        ->take(10)
                        ->get();
+                       // Wishlist preload
+if (Auth::check()) {
+    Auth::user()->load('wishlists');
+}
 
     return view('frontend.index', compact('popularProducts', 'hotDeals', 'featureProducts'));
 }

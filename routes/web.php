@@ -4,6 +4,7 @@ use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\ShopController;
 use App\Http\Controllers\Frontend\AuthController;
 use App\Http\Controllers\Frontend\UserDashboardController;
+use App\Http\Controllers\Frontend\WishlistController;
 
 // ── Public Pages ──────────────────────────────
 Route::get('/',        [HomeController::class, 'index'])->name('home');
@@ -38,3 +39,9 @@ Route::get('/my-account', function () {
     // Customer → userdashboard
     return app(\App\Http\Controllers\Frontend\UserDashboardController::class)->index();
 })->name('userdashboard');
+
+
+// wishlist Route
+Route::get('/wishlist',              [WishlistController::class, 'index'])->name('wishlist');
+Route::post('/wishlist/toggle',      [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+Route::delete('/wishlist/{id}',      [WishlistController::class, 'remove'])->name('wishlist.remove');
