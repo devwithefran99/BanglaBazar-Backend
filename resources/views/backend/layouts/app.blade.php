@@ -13,6 +13,7 @@
   <title>@yield('title', 'Dashboard') | Admin Panel</title>
 
   <link rel="icon" type="image/x-icon" href="{{ asset('backend/assets/img/favicon/favicon.ico') }}" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet" />
@@ -70,7 +71,7 @@
                 </g>
               </svg>
             </span>
-            <span class="app-brand-text demo menu-text fw-bolder ms-2">Sneat</span>
+            <span class="app-brand-text demo menu-text fw-bolder ms-2">BanglaBazar</span>
           </a>
           <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
             <i class="bx bx-chevron-left bx-sm align-middle"></i>
@@ -128,7 +129,12 @@
     </li>
   </ul>
 </li>
-
+<li class="menu-item {{ request()->routeIs('backend.customers.*') ? 'active' : '' }}">
+  <a href="{{ route('backend.customers.index') }}" class="menu-link">
+    <i class="menu-icon tf-icons bx bx-group"></i>
+    <div>User Info</div>
+  </a>
+</li>
         </ul>
       </aside>
       {{-- ===== / SIDEBAR ===== --}}
@@ -175,7 +181,7 @@
                   </li>
                   <li><div class="dropdown-divider"></div></li>
                   <li>
-                    <form action="{{ route('logout') }}" method="POST">
+                   <form action="{{ route('admin.logout') }}" method="POST">
                       @csrf
                       <button type="submit" class="dropdown-item">
                         <i class="bx bx-power-off me-2"></i> Log Out

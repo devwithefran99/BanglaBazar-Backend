@@ -16,6 +16,7 @@
   border-radius:50%;
   filter:blur(80px);
   pointer-events:none;
+  
 }
 .blob-1{
   width:420px;height:420px;
@@ -28,6 +29,24 @@
   background:rgba(0,122,61,.08);
   bottom:-60px;right:-60px;
   animation:blobFloat 10s ease-in-out infinite reverse;
+}
+
+@media screen and (max-width: 480px) {
+  .blob-1 {
+    width: 250px;
+    height: 180px;
+    top: -30px;
+    left: -20px;
+    filter: blur(50px);
+  }
+
+  .blob-2 {
+    width: 250px;
+    height: 150px;
+    bottom: -20px;
+    right: -20px;
+    filter: blur(50px);
+  }
 }
  
 @keyframes dotShift{to{background-position:36px 36px}}

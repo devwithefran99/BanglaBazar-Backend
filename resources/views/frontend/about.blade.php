@@ -23,7 +23,7 @@
 
   <div id="preloader">
   <div class="loader">
-    <img src="./assets/image/Logo.png" alt="Logo">  
+    <img src="{{asset('frontend/image/Logo.png')}}" alt="Logo">  
     <p>Loading...</p>   
   </div>
 </div>
@@ -62,8 +62,8 @@
  
       <!-- Logo -->
       <a href="#" class="logo-slot">
-        <img src="./assets/image/Logo.png" height="35" alt="logo">
-        <!-- Replace above div with <img src="your-logo.png" height="42"> -->
+        <img src="{{asset('frontend/image/Logo.png')}}" height="35" alt="logo">
+        <!-- Replace above div with <img src="your-logo.png')}}" height="42"> -->
       </a>
       <div class="d-lg-none ms-auto">   <!-- এখানে ms-auto যোগ করো -->
         <button class="navbar-toggler-custom" type="button"
@@ -162,7 +162,7 @@
 ════════════════════════════════════════ -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileNav">
   <div class="offcanvas-header">
-    <img src="./assets/image/Logo.png" alt="">
+    <img src="{{asset('frontend/image/Logo.png')}}" alt="">
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
   </div>
   <div class="offcanvas-body">
@@ -266,7 +266,7 @@
  
           <!-- ✅ Replace these 3 src values with your own images -->
           <img class="slide-img active" src="https://images.unsplash.com/photo-1540420773420-3366772f4999?w=900&q=80" alt="Fresh vegetables from the farm"/>
-          <img class="slide-img"        src="./assets/image/trusted1.png" alt="Organic farmer in the field"/>
+          <img class="slide-img"        src="{{asset('frontend/image/trusted1.png')}}" alt="Organic farmer in the field"/>
           <img class="slide-img"        src="https://images.unsplash.com/photo-1506484381205-f7945653044d?w=900&q=80" alt="Healthy organic produce"/>
  
           <div class="slide-dots">
@@ -314,7 +314,7 @@
       <div class="col-lg-6">
         <div class="about-img-wrap">
           <!--  👇 Replace src with your actual image path  -->
-          <img src="./assets/image/about1.png" alt="Farmer with fresh organic vegetables" />
+          <img src="{{asset('frontend/image/about1.png')}}" alt="Farmer with fresh organic vegetables" />
           <span class="img-badge">100% Organic &amp; Natural</span>
         </div>
       </div>
@@ -341,7 +341,7 @@
             <!-- 1 -->
             <div class="feature-card">
               <div class="feature-icon">
-                <img src="./assets/gif/organic.gif" alt="">
+                <img src="{{asset('frontend/gif/organic.gif')}}" alt="">
               </div>
               <div class="feature-text">
                 <h6>100% Organic Food</h6>
@@ -352,7 +352,7 @@
             <!-- 2 -->
             <div class="feature-card">
               <div class="feature-icon">
-                <img src="./assets/gif/support.gif" alt="">
+                <img src="{{asset('frontend/gif/support.gif')}}" alt="">
               </div>
               <div class="feature-text">
                 <h6>Great Support 24/7</h6>
@@ -363,7 +363,7 @@
             <!-- 3 -->
             <div class="feature-card">
               <div class="feature-icon">
-                <img src="./assets/gif/rating.gif" alt="">
+                <img src="{{asset('frontend/gif/rating.gif')}}" alt="">
               </div>
               <div class="feature-text">
                 <h6>Customer Feedback</h6>
@@ -374,7 +374,7 @@
             <!-- 4 -->
             <div class="feature-card">
               <div class="feature-icon">
-                <img src="./assets/gif/credit-card.gif" alt="">
+                <img src="{{asset('frontend/gif/credit-card.gif')}}" alt="">
               </div>
               <div class="feature-text">
                 <h6>100% Secure Payment</h6>
@@ -385,7 +385,7 @@
             <!-- 5 -->
             <div class="feature-card">
               <div class="feature-icon">
-               <img src="./assets/gif/transport.gif" alt="">
+               <img src="{{asset('frontend/gif/transport.gif')}}" alt="">
               </div>
               <div class="feature-text">
                 <h6>Free Shipping</h6>
@@ -396,7 +396,7 @@
             <!-- 6 -->
             <div class="feature-card">
               <div class="feature-icon">
-               <img src="./assets/gif/best-price.gif" alt="">
+               <img src="{{asset('frontend/gif/best-price.gif')}}" alt="">
               </div>
               <div class="feature-text">
                 <h6>Best Deal</h6>
@@ -706,7 +706,7 @@ Phasellus imperdiet elit eu magna dictum.
 <div class="client-left">
 
 <!-- CLIENT IMAGE -->
-<img src="./assets/image/clients (1).png" class="client-img">
+<img src="{{asset('frontend/image/clients (1).png')}}" class="client-img">
 
 <div>
 <p class="client-name">Robert Fox</p>
@@ -735,7 +735,7 @@ Phasellus imperdiet elit eu magna dictum.
 
 <div class="client-left">
 
-<img src="./assets/image/clients (2).png" class="client-img">
+<img src="{{asset('frontend/image/clients (2).png')}}" class="client-img">
 
 <div>
 <p class="client-name">Dianne Russell</p>
@@ -764,7 +764,7 @@ Phasellus imperdiet elit eu magna dictum.
 
 <div class="client-left">
 
-<img src="./assets/image/clients (3).png" class="client-img">
+<img src="{{asset('frontend/image/clients (3).png')}}" class="client-img">
 
 <div>
 <p class="client-name">Eleanor Pena</p>
@@ -793,7 +793,7 @@ Phasellus imperdiet elit eu magna dictum.
 
 <div class="client-left">
 
-<img src="./assets/image/bigApple.png" class="client-img">
+<img src="{{asset('frontend/image/bigApple.png')}}" class="client-img">
 
 <div>
 <p class="client-name">Jenny Wilson</p>
@@ -828,7 +828,7 @@ Phasellus imperdiet elit eu magna dictum.
   <div class="cp-header">
     <div class="cp-title">
       
-      <img src="./assets/image/Logo.png" alt="">
+      <img src="{{asset('frontend/image/Logo.png')}}" alt="">
      
     </div>
     <button class="cp-close" id="cpClose" aria-label="Close cart">
@@ -840,7 +840,7 @@ Phasellus imperdiet elit eu magna dictum.
   <div class="cp-items" id="cpItems">
  
     <div class="cp-item" data-id="1">
-      <div class="cp-item-img"><img src="./assets/image/hotProduct1 (2).png" alt=""></div>
+      <div class="cp-item-img"><img src="{{asset('frontend/image/hotProduct1 (2).png')}}" alt=""></div>
       <div class="cp-item-info">
         <div class="cp-item-name">Fresh Indian Orange</div>
         <div class="cp-item-meta">1 kg × <strong>$12.00</strong></div>
@@ -851,7 +851,7 @@ Phasellus imperdiet elit eu magna dictum.
     </div>
  
     <div class="cp-item" data-id="2">
-      <div class="cp-item-img"><img src="./assets/image/hotProduct1 (1).png" alt=""></div>
+      <div class="cp-item-img"><img src="{{asset('frontend/image/hotProduct1 (1).png')}}" alt=""></div>
       <div class="cp-item-info">
         <div class="cp-item-name">Green Apple</div>
         <div class="cp-item-meta">1 kg × <strong>$14.00</strong></div>
@@ -894,7 +894,7 @@ Phasellus imperdiet elit eu magna dictum.
  
       <!-- Brand Column -->
       <div class="col-lg-3 col-md-6 anim-fade-up d1">
-        <img src="./assets/image/logoLight.png" alt="">
+        <img src="{{asset('frontend/image/logoLight.png')}}" alt="">
  
         <p class="footer-desc">
           Morbi cursus porttitor enim lobortis molestie. Duis gravida turpis dui, eget bibendum magna congue nec.

@@ -21,7 +21,6 @@
 <body>
 
   <!-- preloader  -->
-
   <div id="preloader">
   <div class="loader">
     <img src="{{ asset ('frontend/image/Logo.png')}}" alt="logo">  
@@ -848,289 +847,113 @@ document.querySelectorAll('.countdown[data-ends]').forEach(function(el) {
 
   <!-- feature product starts -->
 <section id="featureProduct" class="new-trends-section">
+  <div class="container">
 
-<div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+      <h2 class="section-title text-dark">
+        Feature <span style="color: #22c55e;">Product</span>
+      </h2>
+      <div class="d-flex gap-2">
+        <button class="arrow-btn prev">&#8249;</button>
+        <button class="arrow-btn next">&#8250;</button>
+      </div>
+    </div>
 
-<div class="d-flex justify-content-between align-items-center">
-<h2 class="section-title text-dark">Feature <span style="color: #22c55e;">Product</span></h2>
+    <div class="slider-wrapper">
+      <div class="slider-track">
 
-<div class="d-flex gap-2">
-<button class="arrow-btn prev">&#8249;</button>  
-<button class="arrow-btn next">&#8250;</button>
-</div>
-</div>
+        @forelse($featureProducts as $product)
+        <div class="slider-product">
 
-<div class="slider-wrapper">
+          {{-- Sale badge --}}
+          @if($product->hasSale())
+            <div class="sale-badge">
+              ৳{{ number_format($product->old_price - $product->price, 0) }} OFF
+            </div>
+          @endif
 
-<div class="slider-track">
+          <div class="product-img-wrap">
+            <div class="img-overlay">
+              <div class="overlay-icons">
+                <button><i class="bi bi-heart"></i></button>
+                <button title="Quick View"><i class="bi bi-eye"></i></button>
+              </div>
+            </div>
+            @if($product->image)
+              <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}">
+            @else
+              <img src="{{ asset('frontend/image/Product Image (1).png') }}" alt="{{ $product->name }}">
+            @endif
+          </div>
 
-<!-- product -->
-<div class="slider-product">
-<div class="sale-badge">৳40 OFF</div>
+          <div class="card-body-custom">
+            <div class="product-name">{{ $product->name }}</div>
 
-<div class="product-img-wrap">
-<div class="img-overlay">
-<div class="overlay-icons">
-<button><i class="bi bi-heart"></i></button>
-<button title="Quick View"><i class="bi bi-eye"></i></button>
-</div>
-</div>
+            <div class="stars">
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star empty"></i>
+            </div>
 
-<img src="{{ asset('frontend/image/Product Image (1).png')}}">
-</div>
+            <div class="price-row">
+              <div>
+                <span class="price-main">৳{{ number_format($product->price, 2) }}</span>
+                @if($product->hasSale())
+                  <span class="price-old">৳{{ number_format($product->old_price, 2) }}</span>
+                @endif
+              </div>
+              <a href="{{ route('product', $product->id) }}" class="cart-btn">
+                <i class="bi bi-bag"></i>
+              </a>
+            </div>
+          </div>
 
-<div class="card-body-custom">
-<div class="product-name">Product Name</div>
+        </div>
+        @empty
+        {{-- Database এ product না থাকলে static fallback --}}
+        @foreach(range(1,7) as $i)
+        <div class="slider-product">
+          <div class="sale-badge">৳40 OFF</div>
+          <div class="product-img-wrap">
+            <div class="img-overlay">
+              <div class="overlay-icons">
+                <button><i class="bi bi-heart"></i></button>
+                <button title="Quick View"><i class="bi bi-eye"></i></button>
+              </div>
+            </div>
+            <img src="{{ asset('frontend/image/Product Image (1).png') }}">
+          </div>
+          <div class="card-body-custom">
+            <div class="product-name">Product Name</div>
+            <div class="stars">
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star empty"></i>
+            </div>
+            <div class="price-row">
+              <div>
+                <span class="price-main">৳80</span>
+                <span class="price-old">৳120</span>
+              </div>
+              <button class="cart-btn"><i class="bi bi-bag"></i></button>
+            </div>
+          </div>
+        </div>
+        @endforeach
+        @endforelse
 
-<div class="stars">
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star empty"></i>
-</div>
+      </div>
+    </div>
 
-<div class="price-row">
-<div>
-<span class="price-main">৳80</span>
-<span class="price-old">৳120</span>
-</div>
+    <div class="slider-dots"></div>
 
-<button class="cart-btn">
-<i class="bi bi-bag"></i>
-</button>
-</div>
-</div>
-</div>
-
-<!-- duplicate products -->
-<div class="slider-product">
-<div class="product-img-wrap">
-<div class="img-overlay">
-<div class="overlay-icons">
-<button><i class="bi bi-heart"></i></button>
-<button title="Quick View"><i class="bi bi-eye"></i></button>
-</div>
-</div>
-
-<img src="{{ asset('frontend/image/Product Image (1).png')}}">
-</div>
-
-<div class="card-body-custom">
-<div class="product-name">Product Name</div>
-
-<div class="stars">
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star empty"></i>
-</div>
-
-<div class="price-row">
-<div>
-<span class="price-main">৳80</span>
-<span class="price-old">৳120</span>
-</div>
-
-<button class="cart-btn">
-<i class="bi bi-bag"></i>
-</button>
-</div>
-</div>
-</div>
-<div class="slider-product">
-<div class="sale-badge">৳40 OFF</div>
-
-<div class="product-img-wrap">
-<div class="img-overlay">
-<div class="overlay-icons">
-<button><i class="bi bi-heart"></i></button>
-<button title="Quick View"><i class="bi bi-eye"></i></button>
-</div>
-</div>
-
-<img src="{{ asset('frontend/image/Product Image (1).png')}}">
-</div>
-
-<div class="card-body-custom">
-<div class="product-name">Product Name</div>
-
-<div class="stars">
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star empty"></i>
-</div>
-
-<div class="price-row">
-<div>
-<span class="price-main">৳80</span>
-<span class="price-old">৳120</span>
-</div>
-
-<button class="cart-btn">
-<i class="bi bi-bag"></i>
-</button>
-</div>
-</div>
-</div>
-<div class="slider-product">
-<div class="sale-badge">৳40 OFF</div>
-
-<div class="product-img-wrap">
-<div class="img-overlay">
-<div class="overlay-icons">
-<button><i class="bi bi-heart"></i></button>
-<button title="Quick View"><i class="bi bi-eye"></i></button>
-</div>
-</div>
-
-<img src="{{ asset('frontend/image/Product Image (1).png')}}">
-</div>
-
-<div class="card-body-custom">
-<div class="product-name">Product Name</div>
-
-<div class="stars">
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star empty"></i>
-</div>
-
-<div class="price-row">
-<div>
-<span class="price-main">৳80</span>
-<span class="price-old">৳120</span>
-</div>
-
-<button class="cart-btn">
-<i class="bi bi-bag"></i>
-</button>
-</div>
-</div>
-</div>
-<div class="slider-product">
-
-
-<div class="product-img-wrap">
-<div class="img-overlay">
-<div class="overlay-icons">
-<button><i class="bi bi-heart"></i></button>
-<button title="Quick View"><i class="bi bi-eye"></i></button>
-</div>
-</div>
-
-<img src="{{ asset('frontend/image/Product Image (1).png')}}">
-</div>
-
-<div class="card-body-custom">
-<div class="product-name">Product Name</div>
-
-<div class="stars">
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star empty"></i>
-</div>
-
-<div class="price-row">
-<div>
-<span class="price-main">৳80</span>
-<span class="price-old">৳120</span>
-</div>
-
-<button class="cart-btn">
-<i class="bi bi-bag"></i>
-</button>
-</div>
-</div>
-</div><div class="slider-product">
-
-
-<div class="product-img-wrap">
-<div class="img-overlay">
-<div class="overlay-icons">
-<button><i class="bi bi-heart"></i></button>
-<button title="Quick View"><i class="bi bi-eye"></i></button>
-</div>
-</div>
-
-<img src="{{ asset('frontend/image/Product Image (1).png')}}">
-</div>
-
-<div class="card-body-custom">
-<div class="product-name">Product Name</div>
-
-<div class="stars">
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star empty"></i>
-</div>
-
-<div class="price-row">
-<div>
-<span class="price-main">৳80</span>
-<span class="price-old">৳120</span>
-</div>
-
-<button class="cart-btn">
-<i class="bi bi-bag"></i>
-</button>
-</div>
-</div>
-</div>
-<div class="slider-product">
-<div class="product-img-wrap">
-<div class="img-overlay">
-<div class="overlay-icons">
-<button><i class="bi bi-heart"></i></button>
-<button title="Quick View"><i class="bi bi-eye"></i></button>
-</div>
-</div>
-
-<img src="{{ asset('frontend/image/Product Image (1).png')}}">
-</div>
-
-<div class="card-body-custom">
-<div class="product-name">Product Name</div>
-
-<div class="stars">
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star-fill"></i>
-<i class="bi bi-star empty"></i>
-</div>
-
-<div class="price-row">
-<div>
-<span class="price-main">৳80</span>
-<span class="price-old">৳120</span>
-</div>
-
-<button class="cart-btn">
-<i class="bi bi-bag"></i>
-</button>
-</div>
-</div>
-</div>
-
-</div>
-
-</div>
-
-<div class="slider-dots"></div>
-
-</div>
+  </div>
 </section>
-  <!-- feature product ends -->
+<!-- feature product ends -->
 
   <!-- client feedback starts -->
 <section id="feedback" class="py-5">

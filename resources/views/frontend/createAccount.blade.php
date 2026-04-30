@@ -343,7 +343,7 @@
   <div class="cp-items" id="cpItems">
  
     <div class="cp-item" data-id="1">
-      <div class="cp-item-img"><img src="{{ asset('frontrnd/')}}/imhotProduct1 (2).png')}}" alt=""></div>
+      <div class="cp-item-img"><img src="{{ asset('frontend/image/hotProduct1 (2).png')}}" alt=""></div>
       <div class="cp-item-info">
         <div class="cp-item-name">Fresh Indian Orange</div>
         <div class="cp-item-meta">1 kg × <strong>$12.00</strong></div>
@@ -354,7 +354,7 @@
     </div>
  
     <div class="cp-item" data-id="2">
-      <div class="cp-item-img"><img src="{{ asset('frontrnd/')}}/imhotProduct1 (1).png')}}" alt=""></div>
+      <div class="cp-item-img"><img src="{{ asset('frontend/image/hotProduct1 (1).png')}}" alt=""></div>
       <div class="cp-item-info">
         <div class="cp-item-name">Green Apple</div>
         <div class="cp-item-meta">1 kg × <strong>$14.00</strong></div>
@@ -398,7 +398,7 @@
  
       <!-- Brand Column -->
       <div class="col-lg-3 col-md-6 anim-fade-up d1">
-        <img src="{{ asset('frontrnd/')}}/e/logoLight.png')}}" alt="">
+        <img src="{{ asset('frontend/image/logoLight.png')}}" alt="">
  
         <p class="footer-desc">
           Morbi cursus porttitor enim lobortis molestie. Duis gravida turpis dui, eget bibendum magna congue nec.
@@ -477,12 +477,16 @@
 </footer>
 
     <!-- footer part ends -->
+   
 
-  
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mixitup@3/dist/mixitup.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mixitup@3/dist/mixitup.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{{ asset ('frontend/js/common.js') }}"></script>
-<script src="{{ asset('frontrnd/')}}/reatAccount.js"></script>
+<script src="{{ asset('frontend/js/common.js') }}"></script>
+<script>
+  const REGISTER_URL = "{{ route('register.post') }}";
+  const CSRF_TOKEN   = "{{ csrf_token() }}";
+</script>
+<script src="{{ asset('frontend/js/signPages.js') }}"></script>
 </body>
 </html>

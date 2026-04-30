@@ -241,374 +241,185 @@
  <!-- Breadcrumbs part ends -->
 
  <!-- shop main part -->
-  <main>
-    <section class="content">
+ <!-- shop main part -->
+<main>
+  <section class="content">
     <div class="container p-0">
-    <div class="row g-0">
-        
+      <div class="row g-0">
+
         <!-- FILTER SIDEBAR -->
-       <!-- FILTER SIDEBAR -->
-<div class="col-lg-3 filter-sidebar" id="filter-sidebar">
-    <div class="d-flex align-items-center justify-content-between mb-4">
-        <h5 class="mb-0 fw-bold">All Categories</h5>
-        <button onclick="closeSidebar()" class="btn btn-success btn-sm d-lg-none"><i class="bi bi-x-lg"></i></button>
-    </div>
+        <div class="col-lg-3 filter-sidebar" id="filter-sidebar">
+          <div class="d-flex align-items-center justify-content-between mb-4">
+            <h5 class="mb-0 fw-bold">All Categories</h5>
+            <button onclick="closeSidebar()" class="btn btn-success btn-sm d-lg-none">
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </div>
 
-    <!-- Categories -->
-    <div id="categories-list" class="mb-4"></div>
+          {{-- Dynamic Categories from Database --}}
+          <div class="mb-4">
+            <button class="category-item active-cat" data-filter="all">
+              <span><i class="bi bi-grid me-2"></i>All Products</span>
+              <span class="cat-count">{{ $products->count() + $hotDeals->count() }}</span>
+            </button>
+            @foreach($categories as $cat)
+              <button class="category-item" data-filter="{{ $cat }}">
+                <span><i class="bi bi-tag me-2"></i>{{ ucfirst($cat) }}</span>
+                <span class="cat-count">
+                  {{ $products->where('category',$cat)->count() + $hotDeals->where('category',$cat)->count() }}
+                </span>
+              </button>
+            @endforeach
+          </div>
 
-    <!-- Popular Tag Section -->
-<div class="mb-4">
-    <h6 class="fw-bold mb-3 text-white">Popular Tag</h6>
-    <div class="d-flex flex-wrap gap-2" id="tags-container"></div>
-</div>
+          {{-- Discount Banner --}}
+          <div class="bg-white text-dark p-4 rounded-4 mb-4 text-center">
+            <h4 class="fw-bold text-success mb-1">79% Discount</h4>
+            <p class="mb-3 small">on your first order</p>
+            <a href="#" class="btn btn-success btn-sm px-4">
+              Shop Now <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
 
-    <!-- Discount Banner -->
-    <div class="bg-white text-dark p-4 rounded-4 mb-4 text-center" 
-         style="background: linear-gradient(135deg, #f8fafc, #e0f2e9);">
-        <h4 class="fw-bold text-success mb-1">79% Discount</h4>
-        <p class="mb-3 small">on your first order</p>
-        <a href="#" class="btn btn-success btn-sm px-4">Shop Now <i class="bi bi-arrow-right"></i></a>
-    </div>
-
-    <div class="text-center mt-5 text-muted small">82 Results Found</div>
-</div>
+          <div class="text-center mt-3 text-muted small" id="results-count">
+            {{ $products->count() + $hotDeals->count() }} Results Found
+          </div>
+        </div>
+        {{-- / SIDEBAR --}}
 
         <!-- MAIN CONTENT -->
         <div class="col-lg-9">
-            <div class="top-bar d-flex align-items-center justify-content-between flex-wrap gap-3">
-                <div class="d-flex align-items-center gap-3">
-                    <button onclick="toggleSidebar()" class="filter-btn btn btn-success d-lg-none">
-                        <i class="bi bi-list"></i> 
-                    </button>
-                    <h4 class="mb-0 fw-semibold text-dark">Products</h4>
-                </div>
-                
-                <div class="d-flex align-items-center gap-3">
-                    <input type="text" id="searchInput" class="form-control d-none d-lg-block" placeholder="Search products..." style="width: 240px;" onkeyup="filterProducts()">
-                    
-                    <select id="sortSelect" class="form-select" style="width: 160px;" onchange="filterProducts()">
-                        <option value="latest">Latest</option>
-                        <option value="name">Name A-Z</option>
-                    </select>
-                </div>
+          <div class="top-bar d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-3">
+              <button onclick="toggleSidebar()" class="filter-btn btn btn-success d-lg-none">
+                <i class="bi bi-list"></i>
+              </button>
+              <h4 class="mb-0 fw-semibold text-dark">Products</h4>
             </div>
-
-            <!-- Product Grid -->
-            <div class="p-4">
-                <div class="row g-4" id="product-grid">
-                    
-                    <!-- ==================== VEGETABLES CARDS ==================== -->
-                    <div class="col-6 col-lg-4 col-xl-3 product-col vegetables">
-                        <div class="hotProduct-card">
-                            <div class="product-img-wrap">
-                                <div class="img-overlay">
-                                    <div class="overlay-icons">
-                                        <button><i class="bi bi-heart"></i></button>
-                                        <button title="Quick View"><i class="bi bi-eye"></i></button>
-                                    </div>
-                                </div>
-                                <img src=" {{ asset('frontend/image/Product Image (2).png')}}" alt="Big Potatoes">
-                            </div>
-                            <div class="card-body-custom">
-                                <div class="product-name">Big Potatoes</div>
-                                <div class="stars">
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star empty"></i>
-                                </div>
-                                <div class="price-row">
-                                    <span class="price-main">$14.99</span>
-                                     <a href="#"  class="cart-btn"><i class="bi bi-bag"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- আরও Vegetables কার্ড যোগ করো এখানে (একই structure) -->
-                    <!-- উদাহরণ: Chinese Cabbage -->
-                    <div class="col-6 col-lg-4 col-xl-3 product-col vegetables">
-                        <div class="hotProduct-card">
-                            <div class="product-img-wrap">
-                                <div class="img-overlay">
-                                    <div class="overlay-icons">
-                                        <button><i class="bi bi-heart"></i></button>
-                                        <button title="Quick View"><i class="bi bi-eye"></i></button>
-                                    </div>
-                                </div>
-                                <img src=" {{ asset('frontend/image/bigApple.png')}}" alt="Chinese Cabbage">
-                            </div>
-                            <div class="card-body-custom">
-                                <div class="product-name">Chinese Cabbage</div>
-                                <div class="stars">
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                </div>
-                                <div class="price-row">
-                                    <span class="price-main">$14.99</span>
-                                     <button href="{{ route('product') }}"  class="cart-btn"><i class="bi bi-bag"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-6 col-lg-4 col-xl-3 product-col vegetables">
-                        <div class="hotProduct-card">
-                            <div class="product-img-wrap">
-                                <div class="img-overlay">
-                                    <div class="overlay-icons">
-                                        <button><i class="bi bi-heart"></i></button>
-                                        <button title="Quick View"><i class="bi bi-eye"></i></button>
-                                    </div>
-                                </div>
-                                <img src=" {{ asset('frontend/image/hotProduct1 (1).png')}}" alt="Chinese Cabbage">
-                            </div>
-                            <div class="card-body-custom">
-                                <div class="product-name">Chinese Cabbage</div>
-                                <div class="stars">
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                </div>
-                                <div class="price-row">
-                                    <span class="price-main">$14.99</span>
-                                     <button href="{{ route('product') }}"  class="cart-btn"><i class="bi bi-bag"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    
-
-                    <!-- ==================== FRESH FRUIT CARDS ==================== -->
-                    <div class="col-6 col-lg-4 col-xl-3 product-col fresh-fruit">
-                        <div class="hotProduct-card">
-                            <div class="product-img-wrap">
-                                <div class="img-overlay">
-                                    <div class="overlay-icons">
-                                        <button><i class="bi bi-heart"></i></button>
-                                        <button title="Quick View"><i class="bi bi-eye"></i></button>
-                                    </div>
-                                </div>
-                                <img src=" {{ asset('frontend/image/hotProduct1 (2).png')}}" alt="Green Apple">
-                            </div>
-                            <div class="card-body-custom">
-                                <div class="product-name">Green Apple</div>
-                                <div class="stars">
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star empty"></i>
-                                    <i class="bi bi-star empty"></i>
-                                </div>
-                                <div class="price-row">
-                                    <span class="price-main">$14.99</span>
-                                     <button href="{{ route('product') }}"  class="cart-btn"><i class="bi bi-bag"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-6 col-lg-4 col-xl-3 product-col fresh-fruit">
-                        <div class="hotProduct-card">
-                            <div class="product-img-wrap">
-                                <div class="img-overlay">
-                                    <div class="overlay-icons">
-                                        <button><i class="bi bi-heart"></i></button>
-                                        <button title="Quick View"><i class="bi bi-eye"></i></button>
-                                    </div>
-                                </div>
-                                <img src=" {{ asset('frontend/image/hotProduct1 (3).png')}}" alt="Green Apple">
-                            </div>
-                            <div class="card-body-custom">
-                                <div class="product-name">Green Apple</div>
-                                <div class="stars">
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star empty"></i>
-                                    <i class="bi bi-star empty"></i>
-                                </div>
-                                <div class="price-row">
-                                    <span class="price-main">$14.99</span>
-                                     <button href="{{ route('product') }}"  class="cart-btn"><i class="bi bi-bag"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-6 col-lg-4 col-xl-3 product-col fresh-fruit">
-                        <div class="hotProduct-card">
-                            <div class="product-img-wrap">
-                                <div class="img-overlay">
-                                    <div class="overlay-icons">
-                                        <button><i class="bi bi-heart"></i></button>
-                                        <button title="Quick View"><i class="bi bi-eye"></i></button>
-                                    </div>
-                                </div>
-                                <img src=" {{ asset('frontend/image/hotProduct1 (4).png')}}" alt="Green Apple">
-                            </div>
-                            <div class="card-body-custom">
-                                <div class="product-name">Green Apple</div>
-                                <div class="stars">
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star empty"></i>
-                                    <i class="bi bi-star empty"></i>
-                                </div>
-                                <div class="price-row">
-                                    <span class="price-main">$14.99</span>
-                                     <button href="{{ route('product') }}"  class="cart-btn"><i class="bi bi-bag"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-6 col-lg-4 col-xl-3 product-col fresh-fruit">
-                        <div class="hotProduct-card">
-                            <div class="product-img-wrap">
-                                <div class="img-overlay">
-                                    <div class="overlay-icons">
-                                        <button><i class="bi bi-heart"></i></button>
-                                        <button title="Quick View"><i class="bi bi-eye"></i></button>
-                                    </div>
-                                </div>
-                                <img src=" {{ asset('frontend/image/Product Image (1).png')}}" alt="Green Apple">
-                            </div>
-                            <div class="card-body-custom">
-                                <div class="product-name">Green Apple</div>
-                                <div class="stars">
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star empty"></i>
-                                    <i class="bi bi-star empty"></i>
-                                </div>
-                                <div class="price-row">
-                                    <span class="price-main">$14.99</span>
-                                     <button href="{{ route('product') }}"  class="cart-btn"><i class="bi bi-bag"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-6 col-lg-4 col-xl-3 product-col cooking">
-                        <div class="hotProduct-card">
-                            <div class="product-img-wrap">
-                                <div class="img-overlay">
-                                    <div class="overlay-icons">
-                                        <button><i class="bi bi-heart"></i></button>
-                                        <button title="Quick View"><i class="bi bi-eye"></i></button>
-                                    </div>
-                                </div>
-                                <img src=" {{ asset('frontend/image/Product Image (3).png')}}" alt="Green Apple">
-                            </div>
-                            <div class="card-body-custom">
-                                <div class="product-name">Green Apple</div>
-                                <div class="stars">
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star empty"></i>
-                                    <i class="bi bi-star empty"></i>
-                                </div>
-                                <div class="price-row">
-                                    <span class="price-main">$14.99</span>
-                                     <button href="{{ route('product') }}"  class="cart-btn"><i class="bi bi-bag"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-6 col-lg-4 col-xl-3 product-col cooking">
-                        <div class="hotProduct-card">
-                            <div class="product-img-wrap">
-                                <div class="img-overlay">
-                                    <div class="overlay-icons">
-                                        <button><i class="bi bi-heart"></i></button>
-                                        <button title="Quick View"><i class="bi bi-eye"></i></button>
-                                    </div>
-                                </div>
-                                <img src=" {{ asset('frontend/image/Product Image (4).png')}}" alt="Green Apple">
-                            </div>
-                            <div class="card-body-custom">
-                                <div class="product-name">Green Apple</div>
-                                <div class="stars">
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star empty"></i>
-                                    <i class="bi bi-star empty"></i>
-                                </div>
-                                <div class="price-row">
-                                    <span class="price-main">$14.99</span>
-                                     <button href="{{ route('product') }}"  class="cart-btn"><i class="bi bi-bag"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-6 col-lg-4 col-xl-3 product-col snacks">
-                        <div class="hotProduct-card">
-                            <div class="product-img-wrap">
-                                <div class="img-overlay">
-                                    <div class="overlay-icons">
-                                        <button><i class="bi bi-heart"></i></button>
-                                        <button title="Quick View"><i class="bi bi-eye"></i></button>
-                                    </div>
-                                </div>
-                                <img src=" {{ asset('frontend/image/Product Image.png')}}" alt="Green Apple">
-                            </div>
-                            <div class="card-body-custom">
-                                <div class="product-name">Green Apple</div>
-                                <div class="stars">
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star empty"></i>
-                                    <i class="bi bi-star empty"></i>
-                                </div>
-                                <div class="price-row">
-                                    <span class="price-main">$14.99</span>
-                                     <button href="{{ route('product') }}"  class="cart-btn"><i class="bi bi-bag"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class=" product-col beverages">
-                            <img src=" {{ asset('frontend/image/nodata.png')}}" alt="" class="w-100">
-                    </div>
-
-                    <div class="col-6 col-lg-4 col-xl-3 product-col beauty-health">
-                        <div class="hotProduct-card">
-                            <div class="product-img-wrap">
-                                <div class="img-overlay">
-                                    <div class="overlay-icons">
-                                        <button><i class="bi bi-heart"></i></button>
-                                        <button title="Quick View"><i class="bi bi-eye"></i></button>
-                                    </div>
-                                </div>
-                                <img src=" {{ asset('frontend/image/hotProduct1 (1).png')}}" alt="Green Apple">
-                            </div>
-                            <div class="card-body-custom">
-                                <div class="product-name">Green Apple</div>
-                                <div class="stars">
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star empty"></i>
-                                    <i class="bi bi-star empty"></i>
-                                </div>
-                                <div class="price-row">
-                                    <span class="price-main">$14.99</span>
-                                     <button href="{{ route('product') }}"  class="cart-btn"><i class="bi bi-bag"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class=" product-col bread-bakery">
-                            <img src=" {{ asset('frontend/image/nodata.png')}}" alt="" class="w-100">
-                    </div>
-
-
-                    <!-- আরও Fresh Fruit, Snacks, Beverages ইত্যাদি কার্ড এখানে যোগ করো -->
-                    <!-- প্রত্যেক কার্ডে class="product-col vegetables" বা "fresh-fruit" বা "snacks" বা "beverages" দিয়ে দিবে -->
-
-                </div>
+            <div class="d-flex align-items-center gap-3">
+              <input type="text" id="searchInput"
+                     class="form-control d-none d-lg-block"
+                     placeholder="Search products..."
+                     style="width: 240px;">
+              <select id="sortSelect" class="form-select" style="width: 160px;">
+                <option value="latest">Latest</option>
+                <option value="name">Name A-Z</option>
+              </select>
             </div>
+          </div>
+
+          <!-- Product Grid -->
+          <div class="p-4">
+            <div class="row g-4" id="product-grid">
+
+              {{-- Regular Products --}}
+              @foreach($products as $product)
+              <div class="col-6 col-lg-4 col-xl-3 product-col"
+                   data-category="{{ $product->category ?? 'other' }}">
+                <div class="hotProduct-card">
+                  @if($product->hasSale())
+                    <div class="sale-badge">-{{ $product->salePercent() }}%</div>
+                  @endif
+                  <div class="product-img-wrap">
+                    <div class="img-overlay">
+                      <div class="overlay-icons">
+                        <button><i class="bi bi-heart"></i></button>
+                        <button title="Quick View"><i class="bi bi-eye"></i></button>
+                      </div>
+                    </div>
+                    @if($product->image)
+                      <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}">
+                    @else
+                      <img src="{{ asset('frontend/image/Product Image.png') }}" alt="{{ $product->name }}">
+                    @endif
+                  </div>
+                  <div class="card-body-custom">
+                    <div class="product-name">{{ $product->name }}</div>
+                    <div class="stars">
+                      <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                      <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                      <i class="bi bi-star empty"></i>
+                    </div>
+                    <div class="price-row">
+                      <div>
+                        <span class="price-main">৳{{ number_format($product->price,2) }}</span>
+                        @if($product->hasSale())
+                          <span class="price-old">৳{{ number_format($product->old_price,2) }}</span>
+                        @endif
+                      </div>
+                      <a href="{{ route('product', $product->id) }}" class="cart-btn">
+                        <i class="bi bi-bag"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              @endforeach
+
+              {{-- Hot Deal Products --}}
+              @foreach($hotDeals as $deal)
+              <div class="col-6 col-lg-4 col-xl-3 product-col"
+                   data-category="{{ $deal->category ?? 'other' }}">
+                <div class="hotProduct-card">
+                  <div style="position:absolute;top:8px;left:8px;z-index:2;
+                              background:#ef4444;color:#fff;font-size:10px;
+                              padding:3px 8px;border-radius:20px;font-weight:600;">
+                    🔥 Hot Deal
+                  </div>
+                  @if($deal->hasSale())
+                    <div class="sale-badge">-{{ $deal->salePercent() }}%</div>
+                  @endif
+                  <div class="product-img-wrap">
+                    <div class="img-overlay">
+                      <div class="overlay-icons">
+                        <button><i class="bi bi-heart"></i></button>
+                        <button title="Quick View"><i class="bi bi-eye"></i></button>
+                      </div>
+                    </div>
+                    @if($deal->image)
+                      <img src="{{ asset('storage/'.$deal->image) }}" alt="{{ $deal->name }}">
+                    @else
+                      <img src="{{ asset('frontend/image/Product Image.png') }}" alt="{{ $deal->name }}">
+                    @endif
+                  </div>
+                  <div class="card-body-custom">
+                    <div class="product-name">{{ $deal->name }}</div>
+                    <div class="stars">
+                      <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                      <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                      <i class="bi bi-star empty"></i>
+                    </div>
+                    <div class="price-row">
+                      <div>
+                        <span class="price-main">৳{{ number_format($deal->price,2) }}</span>
+                        @if($deal->hasSale())
+                          <span class="price-old">৳{{ number_format($deal->old_price,2) }}</span>
+                        @endif
+                      </div>
+                      <button class="cart-btn"><i class="bi bi-bag"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              @endforeach
+
+              {{-- Empty state --}}
+              @if($products->isEmpty() && $hotDeals->isEmpty())
+              <div class="col-12 text-center py-5">
+                <img src="{{ asset('frontend/image/nodata.png') }}" alt=""
+                     style="max-width:200px;opacity:0.5;">
+                <p class="text-muted mt-3">কোনো product পাওয়া যায়নি।</p>
+              </div>
+              @endif
+
+            </div>
+          </div>
         </div>
-    </div>
-</div>
-    </section>
+        {{-- / MAIN CONTENT --}}
 
+      </div>
+    </div>
+  </section>
 </main>
  <!-- ends odf shop main part -->
 

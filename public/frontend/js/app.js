@@ -1,5 +1,4 @@
 
-
 // hero js down
 $(document).ready(function(){
 
@@ -41,100 +40,180 @@ $(document).ready(function(){
 
 // hot deals ends
 
-  // tranding slide js
+// trending slider js with infinite loop
 $(function(){
 
-const track = $('.slider-track')
-let card = $('.slider-product')
+  const track = $('.slider-track');
+  const card = $('.slider-product');
+  const totalCards = card.length;
+  
+  let index = 0;
+  let slideInterval;
+  let isTransitioning = false;
 
-/* clone cards for infinite */
-track.append(card.clone())
+  // Clone ALL cards for seamless infinite loop
+  for(let i = 0; i < totalCards; i++) {
+    track.append(card.eq(i).clone());
+  }
 
-card = $('.slider-product')
+  function getCardWidth() {
+    return card.outerWidth(true);
+  }
 
-let index = 0
-let slideInterval
+  function getVisibleItems() {
+    let w = $(window).width();
+    if(w < 768) return 2;
+    if(w < 1024) return 3;
+    return 5;
+  }
 
-function cardWidth(){
-return card.outerWidth(true)
-}
+  function move(animate = true) {
+    if(!animate) {
+      track.css('transition', 'none');
+    } else {
+      track.css('transition', 'transform 0.6s ease');
+    }
+    
+    track.css('transform', 'translateX(-' + (index * getCardWidth()) + 'px)');
+  }
 
-function visible(){
-let w = $(window).width()
+  function nextSlide() {
+    if(isTransitioning) return;
+    isTransitioning = true;
+    
+    index++;
+    move();
 
-if(w < 768) return 2
-if(w < 1024) return 3
-return 5
-}
+    // If we reach the cloned set, reset to original position
+    if(index >= totalCards) {
+      setTimeout(function() {
+        index = 0;
+        move(false);
+        
+        // Re-enable transition after reset
+        setTimeout(function() {
+          move(true);
+          isTransitioning = false;
+        }, 50);
+      }, 600); // Match this with CSS transition duration
+    } else {
+      setTimeout(function() {
+        isTransitioning = false;
+      }, 600);
+    }
+  }
 
-function move(){
-track.css('transform','translateX(-'+ index * cardWidth() +'px)')
-}
+  function prevSlide() {
+    if(isTransitioning) return;
+    isTransitioning = true;
+    
+    if(index <= 0) {
+      index = totalCards;
+      move(false);
+      
+      setTimeout(function() {
+        index--;
+        move();
+      }, 50);
+    } else {
+      index--;
+      move();
+    }
 
-function nextSlide(){
+    setTimeout(function() {
+      isTransitioning = false;
+    }, 600);
+  }
 
-index++
-move()
+  function goToSlide(slideIndex) {
+    if(isTransitioning) return;
+    index = slideIndex;
+    move();
+  }
 
-if(index >= card.length/2){
+  // Button controls
+  $('.next').click(function(e) {
+    e.preventDefault();
+    nextSlide();
+    resetAutoSlide();
+  });
 
-setTimeout(function(){
+  $('.prev').click(function(e) {
+    e.preventDefault();
+    prevSlide();
+    resetAutoSlide();
+  });
 
-track.css('transition','none')
-index = 0
-move()
+  // Dots navigation (optional - add if you have dots)
+  $('.slider-dot').click(function() {
+    const dotIndex = $(this).index();
+    goToSlide(dotIndex);
+    resetAutoSlide();
+  });
 
-setTimeout(function(){
-track.css('transition','transform .6s ease')
-},50)
+  // Auto slide
+  function startAutoSlide() {
+    slideInterval = setInterval(nextSlide, 2500);
+  }
 
-},600)
+  function resetAutoSlide() {
+    clearInterval(slideInterval);
+    startAutoSlide();
+  }
 
-}
+  // Start auto slide
+  startAutoSlide();
 
-}
+  // Pause on hover
+  $('.slider-parent').hover(
+    function() {
+      clearInterval(slideInterval);
+    },
+    function() {
+      startAutoSlide();
+    }
+  );
 
-function prevSlide(){
+  // Touch/Swipe support
+  let touchStartX = 0;
+  let touchEndX = 0;
 
-if(index <= 0){
-index = card.length/2
-track.css('transition','none')
-move()
+  track.on('touchstart', function(e) {
+    touchStartX = e.originalEvent.touches[0].clientX;
+  });
 
-setTimeout(function(){
-track.css('transition','transform .6s ease')
-},50)
-}
+  track.on('touchend', function(e) {
+    touchEndX = e.originalEvent.changedTouches[0].clientX;
+    handleSwipe();
+  });
 
-index--
-move()
+  function handleSwipe() {
+    const swipeThreshold = 50;
+    const diff = touchStartX - touchEndX;
+    
+    if(Math.abs(diff) > swipeThreshold) {
+      if(diff > 0) {
+        nextSlide();
+      } else {
+        prevSlide();
+      }
+      resetAutoSlide();
+    }
+  }
 
-}
+  // Resize handler
+  let resizeTimer;
+  $(window).resize(function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() {
+      move(false);
+      setTimeout(function() {
+        move(true);
+      }, 50);
+    }, 250);
+  });
 
-/* BUTTON CONTROL */
-
-$('.next').click(function(){
-nextSlide()
-})
-
-$('.prev').click(function(){
-prevSlide()
-})
-
-/* AUTO SLIDE */
-
-slideInterval = setInterval(nextSlide,2500)
-
-/* RESIZE */
-
-$(window).resize(function(){
-move()
-})
-
-})
-
-
-  // end of tranding slider js
+});
 
   // feedback starts
   $('.testimonial-slider').owlCarousel({

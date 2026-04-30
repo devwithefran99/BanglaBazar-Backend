@@ -1,3 +1,42 @@
+// Super Smooth Sexy Cursor
+const cursor = document.getElementById('customCursor');
+
+let timeout;
+
+document.addEventListener('mousemove', (e) => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  
+  // Reset timeout
+  clearTimeout(timeout);
+  cursor.classList.remove('active');
+  
+  timeout = setTimeout(() => {
+    cursor.classList.add('active');
+  }, 800);
+});
+
+// Hover effect on interactive elements
+const hoverElements = document.querySelectorAll('a, button, .btn, .card, input, textarea, [role="button"]');
+
+hoverElements.forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.classList.add('hover');
+  });
+  
+  el.addEventListener('mouseleave', () => {
+    cursor.classList.remove('hover');
+  });
+});
+
+// Click effect
+document.addEventListener('mousedown', () => {
+  cursor.classList.add('active');
+});
+
+document.addEventListener('mouseup', () => {
+  cursor.classList.remove('active');
+});
 // preloader js
 window.addEventListener('load', function() {
   const preloader = document.getElementById('preloader');

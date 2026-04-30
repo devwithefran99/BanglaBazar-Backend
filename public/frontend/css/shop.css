@@ -20,13 +20,38 @@
             border-radius: 8px;
         }
         
-        .filter-sidebar .category-item {
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin-bottom: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+       /* Category Sidebar Items */
+.category-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,0.08);
+  color: #1f1616;
+  border: none;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .2s;
+  width: 100%;
+  margin-bottom: 5px;
+  text-align: left;
+}
+
+.category-item:hover,
+.category-item.active-cat {
+  background: #22c55e;
+  color: #fff;
+}
+
+.cat-count {
+  background: rgba(255,255,255,0.2);
+  border-radius: 20px;
+  padding: 1px 8px;
+  font-size: 11px;
+  min-width: 28px;
+  text-align: center;
+}
         
         .filter-sidebar .category-item:hover,
         .filter-sidebar .category-item.active {

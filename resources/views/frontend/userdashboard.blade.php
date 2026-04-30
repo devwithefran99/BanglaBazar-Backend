@@ -238,7 +238,7 @@
  
                 <!-- Greeting -->
                 <div class="udb-greeting">
-                    <h2 id="udbGreeting">Good evening, Erfan ✦</h2>
+                    <h2 id="udbGreeting">Good evening, {{ Auth::user()->name }} ✦</h2>
                     <p>Here's a summary of your account activity</p>
                 </div>
  
@@ -246,11 +246,13 @@
                 <div class="udb-stats">
                     <div class="udb-stat">
                         <div class="udb-stat-label">Orders</div>
-                        <div class="udb-stat-val">47</div>
+                        <div class="udb-stat-val">{{ Auth::user()->orders->count() }}</div>
                     </div>
                     <div class="udb-stat">
                         <div class="udb-stat-label">Spent</div>
-                        <div class="udb-stat-val green">$635</div>
+                        <div class="udb-stat-val green">
+    ৳{{ number_format(Auth::user()->orders->sum('total_price'), 0) }}
+</div>
                     </div>
                     <div class="udb-stat">
                         <div class="udb-stat-label">Tier</div>
@@ -264,11 +266,15 @@
                     <!-- Profile -->
                     <div class="udb-card udb-profile-card">
                         <div class="udb-profile-inner">
-                            <div class="udb-avatar">
-                                <img src="https://i.pravatar.cc/300?img=68" alt="Dianne Russell">
-                            </div>
+                            {{-- Avatar --}}
+@if(Auth::user()->avatar)
+    <img src="{{ asset('storage/'.Auth::user()->avatar) }}" alt="">
+@else
+    <img src="https://i.pravatar.cc/300?img=68" alt="">
+@endif
                             <div class="udb-profile-info">
-                                <h4>Dianne Russell</h4>
+                                <h4>{{ Auth::user()->name }}</h4>
+
                                 <div>
                                     <span class="udb-vip">
                                         <i class="bi bi-star-fill"></i> VIP Member
@@ -284,7 +290,7 @@
                     <!-- Billing -->
                     <div class="udb-card">
                         <div class="udb-card-label">Billing Address</div>
-                        <div class="udb-billing-name">Dianne Russell</div>
+                        <div class="udb-billing-name">{{ Auth::user()->name }}</div>
                         <div class="udb-billing-addr">4540 Parker Rd<br>Allentown, NM 3834</div>
                         <button class="udb-btn-outline" onclick="editAddress()">
                             <i class="bi bi-pencil me-1"></i> Edit Address
@@ -311,28 +317,30 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="td-n">Ultimate Tech Bundle</td>
-                                    <td class="td-d udb-hide-mobile">8 Sep 2020</td>
-                                    <td class="td-p">$135</td>
-                                    <td><span class="udb-qty">5</span></td>
-                                    <td><span class="udb-status udb-s-proc">Processing</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="td-n">Executive Workstation</td>
-                                    <td class="td-d udb-hide-mobile">24 May 2020</td>
-                                    <td class="td-p">$250</td>
-                                    <td><span class="udb-qty">1</span></td>
-                                    <td><span class="udb-status udb-s-way">On Way</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="td-n">Audio Mastery Set</td>
-                                    <td class="td-d udb-hide-mobile">22 Oct 2020</td>
-                                    <td class="td-p">$250</td>
-                                    <td><span class="udb-qty">4</span></td>
-                                    <td><span class="udb-status udb-s-done">Done</span></td>
-                                </tr>
-                            </tbody>
+@forelse(Auth::user()->orders->take(5) as $order)
+    <tr>
+        <td class="td-n">Order #{{ $order->id }}</td>
+        <td class="td-d udb-hide-mobile">{{ $order->created_at->format('d M Y') }}</td>
+        <td class="td-p">৳{{ number_format($order->total_price, 0) }}</td>
+        <td><span class="udb-qty">{{ $order->items->count() }}</span></td>
+        <td>
+            @if($order->status == 'pending')
+                <span class="udb-status udb-s-proc">Processing</span>
+            @elseif($order->status == 'shipped')
+                <span class="udb-status udb-s-way">On Way</span>
+            @elseif($order->status == 'delivered')
+                <span class="udb-status udb-s-done">Done</span>
+            @else
+                <span class="udb-status udb-s-proc">{{ ucfirst($order->status) }}</span>
+            @endif
+        </td>
+    </tr>
+@empty
+    <tr>
+        <td colspan="5" class="text-center py-3 text-muted">No orders yet.</td>
+    </tr>
+@endforelse
+</tbody>
                         </table>
                     </div>
                 </div>

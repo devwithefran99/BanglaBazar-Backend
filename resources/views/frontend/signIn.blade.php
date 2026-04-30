@@ -319,7 +319,7 @@
   </div>
  
   <!-- Register -->
-  <p class="register-row">Don't have an account? <a href="#">Register</a></p>
+  <p class="register-row">Don't have an account? <a href="{{ route('register') }}">Register</a></p>
  
 </div>
  
@@ -497,7 +497,12 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mixitup@3/dist/mixitup.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 <script src="{{ asset ('frontend/js/common.js') }}"></script>
-<script src="{{asset('frontend/js/signPages.js"></script>
+<script>
+  const SIGNIN_URL = "{{ route('signin.post') }}";
+  const CSRF_TOKEN = "{{ csrf_token() }}";
+</script>
+<script src="{{ asset('frontend/js/signPages.js') }}"></script>
 </body>
 </html>
