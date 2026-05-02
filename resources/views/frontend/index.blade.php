@@ -8,6 +8,8 @@
 <meta name="wishlist-url" content="{{ route('wishlist.toggle') }}">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <meta name="wishlist-url" content="{{ route('wishlist.toggle') }}">
+<meta name="cart-add-url" content="{{ route('cart.add') }}">
+<meta name="cart-count-url" content="{{ route('cart.count') }}">
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
@@ -15,7 +17,6 @@
 <!-- Owl Carousel -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
-<link rel="stylesheet" href="navbar-active.css">
 <link rel="stylesheet" href="{{ asset ('frontend/css/common.css')}}">
 <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
 <link rel="stylesheet" href="{{ asset ('frontend/css/responsive.css')}}">
@@ -90,12 +91,12 @@
     {{ Auth::check() ? Auth::user()->wishlists()->count() : 0 }}
   </span>
         </a>
-        <a href="#" class="icon-btn cart-btn ">
-          <i class="bi bi-bag"></i>
-           <span class="badge-dot" id="wishlistCount">
-    {{ Auth::check() ? Auth::user()->wishlists()->count() : 0 }}
+        <a href="#" class="icon-btn cart-btn" id="navCartBtn">
+  <i class="bi bi-bag"></i>
+  <span class="badge-dot" id="cartCount">
+    {{ Auth::check() ? Auth::user()->carts()->count() : 0 }}
   </span>
-        </a>
+</a>
       </div>
     </div>
   </div>
@@ -508,16 +509,30 @@
             <i class="bi bi-star empty"></i>
           </div>
           <div class="price-row">
-            <div>
-              <span class="price-main">৳{{ number_format($product->price, 2) }}</span>
-              @if($product->hasSale())
-                <span class="price-old">৳{{ number_format($product->old_price, 2) }}</span>
-              @endif
-            </div>
-            <a href="{{ route('product', $product->id) }}" class="cart-btn">
-              <i class="bi bi-bag"></i>
-            </a>
-          </div>
+  <div>
+    <span class="price-main">৳{{ number_format($product->price, 2) }}</span>
+    @if($product->hasSale())
+      <span class="price-old">৳{{ number_format($product->old_price, 2) }}</span>
+    @endif
+  </div>
+  
+  <!-- Cart Button with Quantity Selector -->
+  <div class="cart-action-wrap">
+    <button class="cart-btn show-qty-btn" data-product-id="{{ $product->id }}">
+      <i class="bi bi-bag"></i>
+    </button>
+    
+    <!-- Quantity Selector (Hidden by default) -->
+    <div class="qty-selector" data-product-id="{{ $product->id }}" style="display: none;">
+      <button class="qty-btn minus"><i class="bi bi-dash"></i></button>
+      <input type="number" class="qty-input" value="1" min="1" max="{{ $product->stock }}">
+      <button class="qty-btn plus"><i class="bi bi-plus"></i></button>
+      <button class="add-to-cart-btn" data-product-id="{{ $product->id }}">
+        <i class="bi bi-check-lg"></i>
+      </button>
+    </div>
+  </div>
+</div>
         </div>
 
       </div>
@@ -547,7 +562,7 @@
 </section>
   <!-- discount banner ends -->
 
-  <!-- hot deals starts -->
+
 <!-- hot deals starts -->
 <section id="hotDeals">
   <div class="container" style="padding:24px 16px;">
@@ -627,14 +642,17 @@
                 <div class="product-img-wrap">
                   <div class="img-overlay">
                     <div class="overlay-icons">
-                    <button 
-  class="wishlist-btn"
-  data-product-id="{{ $product->id }}"
-  data-product-type="product"
-  title="Wishlist">
-  <i class="bi bi-heart{{ $inWishlist ? '-fill' : '' }}"
-     style="{{ $inWishlist ? 'color:#e74c3c;' : '' }}"></i>
-</button>
+                      @php
+                        $inWishlistDeal = Auth::check() ? Auth::user()->wishlists->pluck('product_id')->contains($deal->id) : false;
+                      @endphp
+                      <button 
+                        class="wishlist-btn"
+                        data-product-id="{{ $deal->id }}"
+                        data-product-type="hotdeal"
+                        title="Wishlist">
+                        <i class="bi bi-heart{{ $inWishlistDeal ? '-fill' : '' }}"
+                           style="{{ $inWishlistDeal ? 'color:#e74c3c;' : '' }}"></i>
+                      </button>
                       <button title="Quick View"><i class="bi bi-eye"></i></button>
                     </div>
                   </div>
@@ -651,6 +669,7 @@
                     <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
                     <i class="bi bi-star empty"></i>
                   </div>
+                  
                   <div class="price-row">
                     <div>
                       <span class="price-main">৳{{ number_format($deal->price, 2) }}</span>
@@ -658,8 +677,25 @@
                         <span class="price-old">৳{{ number_format($deal->old_price, 2) }}</span>
                       @endif
                     </div>
-                    <button class="cart-btn"><i class="bi bi-bag"></i></button>
+                    
+                    <!-- Cart Button with Quantity Selector -->
+                    <div class="cart-action-wrap">
+                      <button class="cart-btn show-qty-btn" data-product-id="{{ $deal->id }}">
+                        <i class="bi bi-bag"></i>
+                      </button>
+                      
+                      <!-- Quantity Selector (Hidden by default) -->
+                      <div class="qty-selector" data-product-id="{{ $deal->id }}" style="display: none;">
+                        <button class="qty-btn minus"><i class="bi bi-dash"></i></button>
+                        <input type="number" class="qty-input" value="1" min="1" max="{{ $deal->stock }}">
+                        <button class="qty-btn plus"><i class="bi bi-plus"></i></button>
+                        <button class="add-to-cart-btn" data-product-id="{{ $deal->id }}">
+                          <i class="bi bi-check-lg"></i>
+                        </button>
+                      </div>
+                    </div>
                   </div>
+                  
                   @if($deal->deal_ends_at && $deal->isLive())
                     <div class="countdown mt-1" data-ends="{{ $deal->deal_ends_at->timestamp * 1000 }}">
                       <div class="cd-box"><span class="num cd-days">00</span><span class="lbl">D</span></div>
@@ -688,14 +724,17 @@
               <div class="product-img-wrap">
                 <div class="img-overlay">
                   <div class="overlay-icons">
-                   <button 
-  class="wishlist-btn"
-  data-product-id="{{ $product->id }}"
-  data-product-type="product"
-  title="Wishlist">
-  <i class="bi bi-heart{{ $inWishlist ? '-fill' : '' }}"
-     style="{{ $inWishlist ? 'color:#e74c3c;' : '' }}"></i>
-</button>
+                    @php
+                      $inWishlistBottom = Auth::check() ? Auth::user()->wishlists->pluck('product_id')->contains($deal->id) : false;
+                    @endphp
+                    <button 
+                      class="wishlist-btn"
+                      data-product-id="{{ $deal->id }}"
+                      data-product-type="hotdeal"
+                      title="Wishlist">
+                      <i class="bi bi-heart{{ $inWishlistBottom ? '-fill' : '' }}"
+                         style="{{ $inWishlistBottom ? 'color:#e74c3c;' : '' }}"></i>
+                    </button>
                     <button title="Quick View"><i class="bi bi-eye"></i></button>
                   </div>
                 </div>
@@ -713,8 +752,24 @@
                   <i class="bi bi-star empty"></i><i class="bi bi-star empty"></i>
                 </div>
                 <div class="price-row">
-                  <span class="price-main">৳{{ number_format($deal->price, 2) }}</span>
-                  <button class="cart-btn"><i class="bi bi-bag"></i></button>
+                  <div>
+                    <span class="price-main">৳{{ number_format($deal->price, 2) }}</span>
+                  </div>
+                  
+                  <div class="cart-action-wrap">
+                    <button class="cart-btn show-qty-btn" data-product-id="{{ $deal->id }}">
+                      <i class="bi bi-bag"></i>
+                    </button>
+                    
+                    <div class="qty-selector" data-product-id="{{ $deal->id }}" style="display: none;">
+                      <button class="qty-btn minus"><i class="bi bi-dash"></i></button>
+                      <input type="number" class="qty-input" value="1" min="1" max="{{ $deal->stock }}">
+                      <button class="qty-btn plus"><i class="bi bi-plus"></i></button>
+                      <button class="add-to-cart-btn" data-product-id="{{ $deal->id }}">
+                        <i class="bi bi-check-lg"></i>
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -723,148 +778,8 @@
 
       @else
         {{-- ===== কোনো deal না থাকলে static fallback ===== --}}
-        <div class="col-12 col-md-6 col-lg-4">
-          <div class="featured-card">
-            <div class="sale-badge">Sale 50%</div>
-            <div class="best-badge">Best Sale</div>
-            <div class="featured-img-wrap">
-              <img src="{{ asset('frontend/image/bigApple.png') }}" alt="Featured Product">
-            </div>
-            <div class="featured-action-row">
-              <a href="{{ route('wishlist') }}" class="icon-btn"><i class="bi bi-heart"></i></a>
-              <button class="add-to cart-btn"><i class="bi bi-bag"></i> Add to Cart</button>
-              <button title="Quick View" class="icon-btn"><i class="bi bi-eye"></i></button>
-            </div>
-            <div class="featured-info">
-              <div class="name">Chinese cabbage</div>
-              <div class="prices">$12.00 <span class="old">$24.00</span></div>
-              <div class="feedback">
-                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                <i class="bi bi-star-half"></i>
-                <span>(524 Feedback)</span>
-              </div>
-              <div class="hurry">Hurry up! Offer ends in:</div>
-              <div class="countdown" data-ends="{{ (now()->addDays(1)->timestamp) * 1000 }}">
-                <div class="cd-box"><span class="num cd-days">01</span><span class="lbl">Days</span></div>
-                <span class="cd-sep">:</span>
-                <div class="cd-box"><span class="num cd-hours">23</span><span class="lbl">Hours</span></div>
-                <span class="cd-sep">:</span>
-                <div class="cd-box"><span class="num cd-mins">34</span><span class="lbl">Mins</span></div>
-                <span class="cd-sep">:</span>
-                <div class="cd-box"><span class="num cd-secs">57</span><span class="lbl">Secs</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-12 col-md-6 col-lg-8">
-          <div class="row g-3">
-            @foreach([
-              'Product Image (1).png','Product Image (2).png','Product Image (4).png',
-              'hotProduct1 (1).png','Product Image (3).png','hotProduct1 (3).png'
-            ] as $img)
-            <div class="col-6 col-lg-4">
-              <div class="hotProduct-card">
-                <div class="product-img-wrap">
-                  <div class="img-overlay">
-                    <div class="overlay-icons">
-                     <button 
-  class="wishlist-btn"
-  data-product-id="{{ $product->id }}"
-  data-product-type="product"
-  title="Wishlist">
-  <i class="bi bi-heart{{ $inWishlist ? '-fill' : '' }}"
-     style="{{ $inWishlist ? 'color:#e74c3c;' : '' }}"></i>
-</button>
-                      <button title="Quick View"><i class="bi bi-eye"></i></button>
-                    </div>
-                  </div>
-                  <img src="{{ asset('frontend/image/' . $img) }}" alt="Product">
-                </div>
-                <div class="card-body-custom">
-                  <div class="product-name">Product Name</div>
-                  <div class="stars">
-                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star empty"></i>
-                  </div>
-                  <div class="price-row">
-                    <span class="price-main">$12.00</span>
-                    <button class="cart-btn"><i class="bi bi-bag"></i></button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            @endforeach
-          </div>
-        </div>
-
-        @foreach(['hotProduct1 (4).png','hotProduct1 (4).png','hotProduct1 (4).png','hotProduct1 (4).png'] as $i => $img)
-        <div class="bottom-col">
-          <div class="hotProduct-card">
-            <div class="product-img-wrap">
-              <div class="img-overlay">
-                <div class="overlay-icons">
-                 <button 
-  class="wishlist-btn"
-  data-product-id="{{ $product->id }}"
-  data-product-type="product"
-  title="Wishlist">
-  <i class="bi bi-heart{{ $inWishlist ? '-fill' : '' }}"
-     style="{{ $inWishlist ? 'color:#e74c3c;' : '' }}"></i>
-</button>
-                  <button title="Quick View"><i class="bi bi-eye"></i></button>
-                </div>
-              </div>
-              <img src="{{ asset('frontend/image/' . $img) }}" alt="Product">
-            </div>
-            <div class="card-body-custom">
-              <div class="product-name">Product Name</div>
-              <div class="stars">
-                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                <i class="bi bi-star-fill"></i>
-                <i class="bi bi-star empty"></i><i class="bi bi-star empty"></i>
-              </div>
-              <div class="price-row">
-                <span class="price-main">$12.00</span>
-                <button class="cart-btn"><i class="bi bi-bag"></i></button>
-              </div>
-            </div>
-          </div>
-        </div>
-        @endforeach
-        <div class="bottom-col d-none d-lg-block">
-          <div class="hotProduct-card">
-            <div class="product-img-wrap">
-              <div class="img-overlay">
-                <div class="overlay-icons">
-                 <button 
-  class="wishlist-btn"
-  data-product-id="{{ $product->id }}"
-  data-product-type="product"
-  title="Wishlist">
-  <i class="bi bi-heart{{ $inWishlist ? '-fill' : '' }}"
-     style="{{ $inWishlist ? 'color:#e74c3c;' : '' }}"></i>
-</button>
-                  <button title="Quick View"><i class="bi bi-eye"></i></button>
-                </div>
-              </div>
-              <img src="{{ asset('frontend/image/hotProduct1 (4).png') }}" alt="Product">
-            </div>
-            <div class="card-body-custom">
-              <div class="product-name">Product Name</div>
-              <div class="stars">
-                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                <i class="bi bi-star-fill"></i>
-                <i class="bi bi-star empty"></i><i class="bi bi-star empty"></i>
-              </div>
-              <div class="price-row">
-                <span class="price-main">$12.00</span>
-                <button class="cart-btn"><i class="bi bi-bag"></i></button>
-              </div>
-            </div>
-          </div>
+        <div class="col-12 text-center py-5 text-muted">
+          No hot deals available at the moment.
         </div>
       @endif
 
@@ -960,16 +875,30 @@ document.querySelectorAll('.countdown[data-ends]').forEach(function(el) {
             </div>
 
             <div class="price-row">
-              <div>
-                <span class="price-main">৳{{ number_format($product->price, 2) }}</span>
-                @if($product->hasSale())
-                  <span class="price-old">৳{{ number_format($product->old_price, 2) }}</span>
-                @endif
-              </div>
-              <a href="{{ route('product', $product->id) }}" class="cart-btn">
-                <i class="bi bi-bag"></i>
-              </a>
-            </div>
+  <div>
+    <span class="price-main">৳{{ number_format($product->price, 2) }}</span>
+    @if($product->hasSale())
+      <span class="price-old">৳{{ number_format($product->old_price, 2) }}</span>
+    @endif
+  </div>
+  
+  <!-- Cart Button with Quantity Selector -->
+  <div class="cart-action-wrap">
+    <button class="cart-btn show-qty-btn" data-product-id="{{ $product->id }}">
+      <i class="bi bi-bag"></i>
+    </button>
+    
+    <!-- Quantity Selector (Hidden by default) -->
+    <div class="qty-selector" data-product-id="{{ $product->id }}" style="display: none;">
+      <button class="qty-btn minus"><i class="bi bi-dash"></i></button>
+      <input type="number" class="qty-input" value="1" min="1" max="{{ $product->stock }}">
+      <button class="qty-btn plus"><i class="bi bi-plus"></i></button>
+      <button class="add-to-cart-btn" data-product-id="{{ $product->id }}">
+        <i class="bi bi-check-lg"></i>
+      </button>
+    </div>
+  </div>
+</div>
           </div>
 
         </div>
@@ -1169,59 +1098,36 @@ Phasellus imperdiet elit eu magna dictum.
   <!-- Header -->
   <div class="cp-header">
     <div class="cp-title">
-      
-      <img src="{{ asset ('frontend/image/Logo.png')}}" alt="">
-     
+      <img src="{{ asset('frontend/image/Logo.png') }}" alt="Logo">
     </div>
     <button class="cp-close" id="cpClose" aria-label="Close cart">
       <i class="bi bi-x-lg"></i>
     </button>
   </div>
  
-  <!-- Items -->
-  <div class="cp-items" id="cpItems">
+  <!-- Items Container - খালি রাখো, JS দিয়ে populate হবে -->
+  <div class="cp-items" id="cpItems"></div>
  
-    <div class="cp-item" data-id="1">
-      <div class="cp-item-img"><img src="{{ asset ('frontend/image/hotProduct1 (2).png')}}" alt=""></div>
-      <div class="cp-item-info">
-        <div class="cp-item-name">Fresh Indian Orange</div>
-        <div class="cp-item-meta">1 kg × <strong>$12.00</strong></div>
-      </div>
-      <button class="cp-remove" onclick="cpRemoveItem(this)" aria-label="Remove">
-        <i class="bi bi-x"></i>
-      </button>
-    </div>
- 
-    <div class="cp-item" data-id="2">
-      <div class="cp-item-img"><img src="{{ asset ('frontend/image/hotProduct1 (1).png')}}" alt=""></div>
-      <div class="cp-item-info">
-        <div class="cp-item-name">Green Apple</div>
-        <div class="cp-item-meta">1 kg × <strong>$14.00</strong></div>
-      </div>
-      <button class="cp-remove" onclick="cpRemoveItem(this)" aria-label="Remove">
-        <i class="bi bi-x"></i>
-      </button>
-    </div>
- 
-  </div>
- 
-  <!-- Empty state (hidden by default) -->
-  <div class="cp-empty" id="cpEmpty">
+  <!-- Empty state -->
+  <div class="cp-empty" id="cpEmpty" style="display: flex;">
     <i class="bi bi-bag-x"></i>
     <p>Your cart is empty</p>
     <a href="{{ route('shop') }}" class="cp-shop-link">Browse Products →</a>
   </div>
  
   <!-- Footer -->
-  <div class="cp-footer" id="cpFooter">
+  <div class="cp-footer" id="cpFooter" style="display: none;">
     <div class="cp-subtotal">
-      <span class="cp-sub-label"><span id="cpProductCount">2</span> Product</span>
-      <span class="cp-sub-price" id="cpTotal">$26.00</span>
+      <span class="cp-sub-label"><span id="cpProductCount">0</span> Product</span>
+      <span class="cp-sub-price" id="cpTotal">৳0.00</span>
     </div>
-    <a href="checkout.html" class="cp-checkout-btn">
-      <i class="bi bi-bag-check-fill me-1"></i> Checkout
+    <a href="{{ route('shop') }}" class="cp-checkout-btn">
+      <i class="bi bi-bag-check-fill me-1"></i> Continue Shopping
     </a>
-    <a href="#" class="cp-cart-link">Go To Cart</a>
+  </div>
+ 
+</div>
+ 
   </div>
  
 </div>
@@ -1361,7 +1267,6 @@ Phasellus imperdiet elit eu magna dictum.
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="navbar-active.js"></script>
 <script src="{{ asset ('frontend/js/common.js') }}"></script>
 <script src="{{ asset ('frontend/js/wishlist.js') }}"></script>
 <script src="{{ asset ('frontend/js/app.js') }}"></script >

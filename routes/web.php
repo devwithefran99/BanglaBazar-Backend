@@ -5,6 +5,7 @@ use App\Http\Controllers\Frontend\ShopController;
 use App\Http\Controllers\Frontend\AuthController;
 use App\Http\Controllers\Frontend\UserDashboardController;
 use App\Http\Controllers\Frontend\WishlistController;
+use App\Http\Controllers\Frontend\CartController;
 
 // ── Public Pages ──────────────────────────────
 Route::get('/',        [HomeController::class, 'index'])->name('home');
@@ -45,3 +46,19 @@ Route::get('/my-account', function () {
 Route::get('/wishlist',              [WishlistController::class, 'index'])->name('wishlist');
 Route::post('/wishlist/toggle',      [WishlistController::class, 'toggle'])->name('wishlist.toggle');
 Route::delete('/wishlist/{id}',      [WishlistController::class, 'remove'])->name('wishlist.remove');
+
+// cart Route
+
+
+
+// Cart Routes (Protected by auth middleware)
+Route::middleware(['auth'])->group(function () {
+    Route::prefix('cart')->name('cart.')->group(function () {
+        Route::get('/', [CartController::class, 'index'])->name('index');
+        Route::post('/add', [CartController::class, 'add'])->name('add');
+        Route::put('/update/{id}', [CartController::class, 'updateQuantity'])->name('update');
+        Route::delete('/remove/{id}', [CartController::class, 'remove'])->name('remove');
+        Route::delete('/clear', [CartController::class, 'clear'])->name('clear');
+        Route::get('/count', [CartController::class, 'count'])->name('count');
+    });
+});

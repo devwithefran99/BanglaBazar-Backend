@@ -84,12 +84,12 @@
     {{ Auth::check() ? Auth::user()->wishlists()->count() : 0 }}
   </span>
         </a>
-        <a href="#" class="icon-btn cart-btn ">
-          <i class="bi bi-bag"></i>
-           <span class="badge-dot" id="wishlistCount">
-    {{ Auth::check() ? Auth::user()->wishlists()->count() : 0 }}
+        <a href="#" class="icon-btn cart-btn" id="navCartBtn">
+  <i class="bi bi-bag"></i>
+  <span class="badge-dot" id="cartCount">
+    {{ Auth::check() ? Auth::user()->carts()->count() : 0 }}
   </span>
-        </a>
+</a>
       </div>
  
     </div>

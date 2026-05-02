@@ -43,10 +43,10 @@ class User extends Authenticatable
         return $this->hasMany(Wishlist::class);
     }
 
-    public function carts()
-    {
-        return $this->hasMany(Cart::class);
-    }
+   public function carts()
+{
+    return $this->hasMany(Cart::class);
+}
 
     // ── Helper ─────────────────────────────
     public function isAdmin(): bool

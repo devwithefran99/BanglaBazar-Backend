@@ -10,7 +10,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="navbar-active.css">
+
   <link rel="stylesheet" href="{{ asset ('frontend/css/common.css')}}">
   <link rel="stylesheet" href="{{ asset ('frontend/css/shop.css')}}">
   <link rel="stylesheet" href="{{ asset ('frontend/css/responsive.css')}}">
@@ -85,12 +85,12 @@
     {{ Auth::check() ? Auth::user()->wishlists()->count() : 0 }}
   </span>
         </a>
-        <a href="#" class="icon-btn cart-btn ">
-          <i class="bi bi-bag"></i>
-           <span class="badge-dot" id="wishlistCount">
-    {{ Auth::check() ? Auth::user()->wishlists()->count() : 0 }}
+        <a href="#" class="icon-btn cart-btn" id="navCartBtn">
+  <i class="bi bi-bag"></i>
+  <span class="badge-dot" id="cartCount">
+    {{ Auth::check() ? Auth::user()->carts()->count() : 0 }}
   </span>
-        </a>
+</a>
       </div>
  
     </div>
@@ -448,7 +448,7 @@
 </main>
  <!-- ends odf shop main part -->
 
- <!-- footrer part starts -->
+ <!-- footer part starts -->
 
 <!-- add to cart popup -->
 <section>
@@ -462,7 +462,7 @@
   <div class="cp-header">
     <div class="cp-title">
       
-      <img src=" {{ asset('frontend/image/Logo.png')}}" alt="">
+      <img src="{{ asset ('frontend/image/Logo.png')}}" alt="">
      
     </div>
     <button class="cp-close" id="cpClose" aria-label="Close cart">
@@ -473,27 +473,26 @@
   <!-- Items -->
   <div class="cp-items" id="cpItems">
  
-    <div class="cp-item" data-id="1">
-      <div class="cp-item-img"><img src=" {{ asset('frontend/image/hotProduct1 (2).png')}}" alt=""></div>
-      <div class="cp-item-info">
-        <div class="cp-item-name">Fresh Indian Orange</div>
-        <div class="cp-item-meta">1 kg × <strong>$12.00</strong></div>
-      </div>
-      <button class="cp-remove" onclick="cpRemoveItem(this)" aria-label="Remove">
-        <i class="bi bi-x"></i>
-      </button>
-    </div>
- 
-    <div class="cp-item" data-id="2">
-      <div class="cp-item-img"><img src=" {{ asset('frontend/image/hotProduct1 (1).png')}}" alt=""></div>
-      <div class="cp-item-info">
-        <div class="cp-item-name">Green Apple</div>
-        <div class="cp-item-meta">1 kg × <strong>$14.00</strong></div>
-      </div>
-      <button class="cp-remove" onclick="cpRemoveItem(this)" aria-label="Remove">
-        <i class="bi bi-x"></i>
-      </button>
-    </div>
+    <!-- Empty state - initially visible -->
+<div class="cp-empty" id="cpEmpty" style="display: flex;">
+  <i class="bi bi-bag-x"></i>
+  <p>Your cart is empty</p>
+  <a href="{{ route('shop') }}" class="cp-shop-link">Browse Products →</a>
+</div>
+
+<!-- Footer - initially hidden -->
+<div class="cp-footer" id="cpFooter" style="display: none;">
+  <div class="cp-subtotal">
+    <span class="cp-sub-label"><span id="cpProductCount">0</span> Product</span>
+    <span class="cp-sub-price" id="cpTotal">৳0.00</span>
+  </div>
+  <a href="{{ route('shop') }}" class="cp-checkout-btn">
+  <i class="bi bi-bag-check-fill me-1"></i> Checkout
+</a>
+  <a href="{{ route('shop') }}" class="cp-checkout-btn">
+  <i class="bi bi-bag-check-fill me-1"></i> Checkout
+</a>
+</div>
  
   </div>
  
@@ -656,7 +655,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mixitup@3/dist/mixitup.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="navbar-active.js"></script>
+
 <script src="{{ asset ('frontend/js/common.js') }}"></script>
 <script src="{{ asset ('frontend/js/wishlist.js') }}"></script>
 <script src="{{ asset ('frontend/js/shop.js') }}"></script>

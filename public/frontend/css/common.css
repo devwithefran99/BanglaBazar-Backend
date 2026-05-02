@@ -152,6 +152,186 @@ body{
   opacity: 0;
   pointer-events: none;
 }
+
+/* Quantity Selector Styles */
+/* ═══════════════════════════════════════════════════════
+   QUANTITY SELECTOR - RESPONSIVE
+═══════════════════════════════════════════════════════ */
+
+.cart-action-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qty-selector {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 4px;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.qty-btn {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: #f3f4f6;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.qty-btn:hover {
+  background: #22c55e;
+  color: #fff;
+}
+
+.qty-input {
+  width: 40px;
+  height: 28px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.qty-input::-webkit-inner-spin-button,
+.qty-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.add-to-cart-btn {
+  width: 32px;
+  height: 32px;
+  background: #22c55e;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 16px;
+}
+
+.add-to-cart-btn:hover {
+  background: #16a34a;
+  transform: scale(1.05);
+}
+
+/* ─────────────────────────────────────────────────────
+   MOBILE RESPONSIVE (576px and below)
+───────────────────────────────────────────────────── */
+@media (max-width: 576px) {
+  .qty-selector {
+    gap: 2px;
+    padding: 3px;
+    border-radius: 6px;
+  }
+
+  .qty-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+    border-radius: 4px;
+  }
+
+  .qty-input {
+    width: 32px;
+    height: 24px;
+    font-size: 12px;
+    border-radius: 4px;
+  }
+
+  .add-to-cart-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+    border-radius: 4px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────
+   VERY SMALL MOBILE (400px and below)
+───────────────────────────────────────────────────── */
+@media (max-width: 400px) {
+  .qty-selector {
+    gap: 1px;
+    padding: 2px;
+  }
+
+  .qty-btn {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+  }
+
+  .qty-input {
+    width: 28px;
+    height: 20px;
+    font-size: 11px;
+  }
+
+  .add-to-cart-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+}
+
+/* Toast Animation */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.custom-toast {
+  font-family: 'Nunito', sans-serif;
+}
+/* Toast Animation */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.custom-toast {
+  font-family: 'Nunito', sans-serif;
+}
 /* common css ends */
 
 /* ── TOP BAR ─────────────────────────────────── */
