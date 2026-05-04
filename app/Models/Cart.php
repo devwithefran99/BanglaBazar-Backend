@@ -12,6 +12,7 @@ class Cart extends Model
     protected $fillable = [
         'user_id',
         'product_id',
+        'product_type',  // ✅ যোগ করা হয়েছে
         'quantity'
     ];
 
@@ -21,9 +22,13 @@ class Cart extends Model
         return $this->belongsTo(User::class);
     }
 
-    // Relationship with Product
+    // ✅ FIX: product_type দেখে সঠিক model থেকে লোড করো
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        if ($this->product_type === 'hotdeal') {
+            return $this->belongsTo(HotDeal::class, 'product_id');
+        }
+
+        return $this->belongsTo(Product::class, 'product_id');
     }
 }

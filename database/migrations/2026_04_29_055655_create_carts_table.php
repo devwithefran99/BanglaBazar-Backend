@@ -8,16 +8,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('carts', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            $table->integer('quantity')->default(1);
-            $table->timestamps();
+       Schema::create('carts', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('user_id')->constrained()->onDelete('cascade');
+    $table->foreignId('product_id')->constrained()->onDelete('cascade');
+    $table->string('product_type')->default('product'); // ✅ যোগ করো
+    $table->integer('quantity')->default(1);
+    $table->timestamps();
 
-            // Duplicate entry prevent করার জন্য unique constraint
-            $table->unique(['user_id', 'product_id']);
-        });
+    // ✅ product_type সহ unique constraint
+    $table->unique(['user_id', 'product_id', 'product_type']);
+});
     }
 
     public function down(): void

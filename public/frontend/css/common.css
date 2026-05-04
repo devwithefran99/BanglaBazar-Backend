@@ -1097,7 +1097,7 @@ body{
  
 /* Mobile */
 @media (max-width: 480px) {
-  .cp-drawer { width: 80vw; border-radius: 0; 
+  .cp-drawer { width: 90vw; border-radius: 0; 
   background-color: white;}
 }
 /* end add to cart  */

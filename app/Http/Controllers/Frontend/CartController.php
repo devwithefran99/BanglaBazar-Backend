@@ -2,46 +2,43 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Http\Controllers\Controller; // ✅ এই line add করো
+use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Product;
+use App\Models\HotDeal;  // ✅ যোগ করা হয়েছে
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
     // Get user's cart items
-    public function index()
+   public function index()
 {
     try {
         if (!Auth::check()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User not authenticated'
-            ], 401);
+            return response()->json(['success' => false, 'message' => 'User not authenticated'], 401);
         }
 
-        $cartItems = Auth::user()->carts()->with('product')->get();
+        $cartItems = Auth::user()->carts()->get();
 
-        // ✅ Debug log (development only)
-        \Log::info('Cart Items:', [
-            'user_id' => Auth::id(),
-            'count' => $cartItems->count(),
-            'items' => $cartItems->toArray()
-        ]);
+        // ✅ product_type অনুযায়ী manually product load করো
+        $cartItems->each(function ($item) {
+            if ($item->product_type === 'hotdeal') {
+                $item->setRelation('product', \App\Models\HotDeal::find($item->product_id));
+            } else {
+                $item->setRelation('product', \App\Models\Product::find($item->product_id));
+            }
+        });
 
         return response()->json([
             'success' => true,
-            'data' => $cartItems,
+            'data'    => $cartItems,
             'message' => 'Cart items retrieved successfully'
         ]);
+
     } catch (\Exception $e) {
         \Log::error('Cart fetch error: ' . $e->getMessage());
-        
-        return response()->json([
-            'success' => false,
-            'message' => 'Failed to retrieve cart items: ' . $e->getMessage()
-        ], 500);
+        return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
     }
 }
 
@@ -49,12 +46,28 @@ class CartController extends Controller
     public function add(Request $request)
     {
         try {
+            // ✅ FIX: product_type নাও, default 'product'
+            $productType = $request->input('product_type', 'product');
+
+            // ✅ FIX: product_type অনুযায়ী সঠিক model ও table validate করো
+            $tableMap = [
+                'product' => 'products',
+                'hotdeal' => 'hot_deals',
+            ];
+
+            $table = $tableMap[$productType] ?? 'products';
+
             $request->validate([
-                'product_id' => 'required|exists:products,id',
-                'quantity' => 'required|integer|min:1'
+                'product_id' => "required|exists:{$table},id",
+                'quantity'   => 'required|integer|min:1'
             ]);
 
-            $product = Product::findOrFail($request->product_id);
+            // ✅ FIX: product_type অনুযায়ী সঠিক model থেকে product আনো
+            if ($productType === 'hotdeal') {
+                $product = HotDeal::findOrFail($request->product_id);
+            } else {
+                $product = Product::findOrFail($request->product_id);
+            }
 
             // Stock check
             if ($product->stock < $request->quantity) {
@@ -64,13 +77,13 @@ class CartController extends Controller
                 ], 400);
             }
 
-            // Check if already exists
+            // ✅ FIX: product_type দিয়ে existing cart check করো
             $existingCart = Cart::where('user_id', Auth::id())
                                 ->where('product_id', $request->product_id)
+                                ->where('product_type', $productType)
                                 ->first();
 
             if ($existingCart) {
-                // Update quantity
                 $newQuantity = $existingCart->quantity + $request->quantity;
 
                 if ($product->stock < $newQuantity) {
@@ -84,28 +97,29 @@ class CartController extends Controller
 
                 return response()->json([
                     'success' => true,
-                    'data' => $existingCart,
+                    'data'    => $existingCart,
                     'message' => 'Cart updated successfully'
                 ]);
             }
 
-            // Create new cart item
+            // ✅ FIX: product_type সহ নতুন cart item তৈরি করো
             $cartItem = Cart::create([
-                'user_id' => Auth::id(),
-                'product_id' => $request->product_id,
-                'quantity' => $request->quantity
+                'user_id'      => Auth::id(),
+                'product_id'   => $request->product_id,
+                'product_type' => $productType,
+                'quantity'     => $request->quantity
             ]);
 
             return response()->json([
                 'success' => true,
-                'data' => $cartItem,
+                'data'    => $cartItem,
                 'message' => 'Product added to cart successfully'
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to add product to cart'
+                'message' => 'Failed to add product to cart: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -136,7 +150,7 @@ class CartController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => $cartItem,
+                'data'    => $cartItem,
                 'message' => 'Cart quantity updated successfully'
             ]);
 
@@ -198,7 +212,7 @@ class CartController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => $count,
+                'data'    => $count,
                 'message' => 'Cart count retrieved successfully'
             ]);
 
