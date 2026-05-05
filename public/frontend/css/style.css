@@ -339,6 +339,38 @@
     margin-top: 4px;
   }
   .stars .empty { color: #d1d5db; }
+ #hotDeals .cart-btn.hot-btn {
+  flex: 1;
+  height: 34px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #00c92f, #00a91f);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 185, 35, 0.28);
+  transition: 0.3s ease;
+}
+
+#hotDeals .cart-btn.hot-btn i {
+  font-size: 13px;
+  line-height: 1;
+}
+#hotDeals .cart-btn.hot-btn:hover {
+  background: linear-gradient(135deg, #00a91f, #008f1a);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0, 185, 35, 0.35);
+}
+
+#hotDeals .cart-btn.hot-btn:active {
+  transform: scale(0.97);
+}
+
   .cart-btn {
     width: 34px;
     height: 34px;

@@ -235,3 +235,28 @@ responsive:{
 }
 });
 // feedback ends
+
+ /* ── Countdown Timer ── */
+  document.querySelectorAll('.countdown[data-ends]').forEach(function (el) {
+    const endTime = parseInt(el.dataset.ends);
+    function tick() {
+      const diff = endTime - Date.now();
+      if (diff <= 0) {
+        el.innerHTML = '<span style="color:#ef4444;font-size:11px;">Ended</span>';
+        return;
+      }
+      const days  = Math.floor(diff / 86400000);
+      const hours = Math.floor((diff % 86400000) / 3600000);
+      const mins  = Math.floor((diff % 3600000) / 60000);
+      const secs  = Math.floor((diff % 60000) / 1000);
+      el.querySelector('.cd-days').textContent  = String(days).padStart(2,'0');
+      el.querySelector('.cd-hours').textContent = String(hours).padStart(2,'0');
+      el.querySelector('.cd-mins').textContent  = String(mins).padStart(2,'0');
+      el.querySelector('.cd-secs').textContent  = String(secs).padStart(2,'0');
+    }
+    tick();
+    setInterval(tick, 1000);
+  });
+
+
+

@@ -105,7 +105,7 @@
             <ul class="submenu">
               <li><a href="{{ route('wishlist') }}">Wishlist</a></li>
               <li><a href="{{ route('userdashboard') }}">Order History</a></li>
-              <li><a href="{{ route('product') }}">CheckOut</a></li>
+              <li><a href="{{ route('checkout.show') }}">CheckOut</a></li>
               <li><a href="{{ route('signin') }}">Sign In</a></li>
               <li><a href="{{ route('register') }}">Sign Up</a></li>
               <li><a href="{{ route('faq') }}">FAQS</a></li>
@@ -157,7 +157,7 @@
           <ul class="mobile-submenu">
             <li><a href="{{ route('wishlist') }}">Wishlist</a></li>
             <li><a href="{{ route('userdashboard') }}">Order History</a></li>
-            <li><a href="{{ route('product') }}">CheckOut</a></li>
+            <li><a href="{{ route('checkout.show') }}">CheckOut</a></li>
             <li><a href="{{ route('signin') }}">Sign In</a></li>
             <li><a href="{{ route('register') }}">Sign Up</a></li>
             <li><a href="{{ route('faq') }}">FAQS</a></li>
@@ -299,7 +299,8 @@
           $uid = 'product-' . $product->id;
         @endphp
         <div class="col">
-          <div class="product-card h-100">
+  <div class="product-card h-100" style="cursor:pointer;" 
+       onclick="window.location='{{ route('product', $product->id) }}'">
             @if($product->hasSale())
               <div class="sale-badge">Sale {{ $product->salePercent() }}%</div>
             @endif
@@ -323,7 +324,11 @@
               @endif
             </div>
             <div class="card-body-custom">
-              <div class="product-name">{{ $product->name }}</div>
+           <a href="{{ route('product', $product->id) }}" 
+   class="product-name" 
+   style="text-decoration:none;color:inherit;display:block;">
+   {{ $product->name }}
+</a>
               <div class="stars">
                 <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
                 <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
@@ -382,17 +387,17 @@
 
   {{-- ── HOT DEALS ── --}}
   <section id="hotDeals">
-    <div class="container" style="padding:24px 16px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-        <h2 style="font-size:30px;font-weight:700;margin-top:30px;">
-          Hot <span style="color:#22c55e;">Deals</span>
-        </h2>
-        <a href="{{ route('shop') }}" style="color:#22c55e;font-size:14px;font-weight:500;text-decoration:none;">
-          View All <i class="bi bi-arrow-right"></i>
-        </a>
-      </div>
+   <div class="container" style="padding:24px 16px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+    <h2 style="font-size:30px;font-weight:700;margin-top:30px;">
+      Hot <span style="color:#22c55e;">Deals</span>
+    </h2>
+    <a href="{{ route('shop') }}" style="color:#22c55e;font-size:14px;font-weight:500;text-decoration:none;">
+      View All <i class="bi bi-arrow-right"></i>
+    </a>
+  </div>
 
-      <div class="row g-3">
+  <div class="row g-3">
 
         @if($hotDeals->isNotEmpty())
           @php $featured = $hotDeals->first(); $featuredUid = 'hotdeal-' . $featured->id; @endphp
@@ -414,11 +419,11 @@
               <div class="featured-action-row">
                 <a href="{{ route('wishlist') }}" class="icon-btn"><i class="bi bi-heart"></i></a>
                 {{-- ✅ Featured card এও uid যোগ করা হয়েছে --}}
-                <button class="cart-btn show-qty-btn"
+                <button class="cart-btn show-qty-btn hot-btn"
                         data-uid="{{ $featuredUid }}"
                         data-product-id="{{ $featured->id }}"
                         data-product-type="hotdeal">
-                  <i class="bi bi-bag"></i> Add to Cart
+                  <i class="bi bi-bag">Add to Cart</i>
                 </button>
                 <button title="Quick View" class="icon-btn"><i class="bi bi-eye"></i></button>
               </div>
@@ -478,7 +483,8 @@
                 $uid = 'hotdeal-' . $deal->id;
               @endphp
               <div class="col-6 col-lg-4">
-                <div class="hotProduct-card">
+  <div class="hotProduct-card" style="cursor:pointer;"
+       onclick="window.location='{{ route('product', $deal->id) }}?type=hotdeal'">
                   @if($deal->hasSale())
                     <div class="sale-badge">Sale {{ $deal->salePercent() }}%</div>
                   @endif
@@ -502,7 +508,7 @@
                     @endif
                   </div>
                   <div class="card-body-custom">
-                    <div class="product-name">{{ $deal->name }}</div>
+                   <a href="{{ route('product', ['id' => $deal->id, 'type' => 'hotdeal']) }}" class="product-name" style="text-decoration:none;color:inherit;">{{ $deal->name }}</a>
                     <div class="stars">
                       <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
                       <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
@@ -591,7 +597,7 @@
                 @endif
               </div>
               <div class="card-body-custom">
-                <div class="product-name">{{ $deal->name }}</div>
+              <a href="{{ route('product', ['id' => $deal->id, 'type' => 'hotdeal']) }}" class="product-name" style="text-decoration:none;color:inherit;">{{ $deal->name }}</a>
                 <div class="stars">
                   <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
                   <i class="bi bi-star-fill"></i>
@@ -685,7 +691,11 @@
               @endif
             </div>
             <div class="card-body-custom">
-              <div class="product-name">{{ $product->name }}</div>
+           <a href="{{ route('product', $product->id) }}" 
+   class="product-name" 
+   style="text-decoration:none;color:inherit;display:block;">
+   {{ $product->name }}
+</a>
               <div class="stars">
                 <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
                 <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
@@ -742,7 +752,11 @@
               <img src="{{ asset('frontend/image/Product Image (1).png') }}">
             </div>
             <div class="card-body-custom">
-              <div class="product-name">Product Name</div>
+             <a href="{{ route('product', $product->id) }}" 
+   class="product-name" 
+   style="text-decoration:none;color:inherit;display:block;">
+   {{ $product->name }}
+</a>
               <div class="stars">
                 <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
                 <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>

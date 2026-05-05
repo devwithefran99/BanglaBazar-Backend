@@ -103,7 +103,7 @@
             <ul class="submenu">
               <li><a href="{{ route('wishlist') }}">Wishlist</a></li>
               <li><a href="{{ route('userdashboard') }}">Order History</a></li>
-              <li><a href="{{ route('product') }}">CheckOut</a></li>
+              <li><a href="{{ route('checkout.show') }}">CheckOut</a></li>
               <li><a href="{{ route('signin') }}">Sign In</a></li>
               <li><a href="{{ route('register') }}">Sign Up</a></li>
               <li><a href="{{ route('faq') }}">FAQS</a></li>
@@ -160,7 +160,7 @@
           <ul class="mobile-submenu">
             <li><a href="{{ route('wishlist') }}">Wishlist</a></li>
             <li><a href="{{ route('userdashboard') }}">Order History</a></li>
-            <li><a href="{{ route('product') }}">CheckOut</a></li>
+            <li><a href="{{ route('checkout.show') }}">CheckOut</a></li>
             <li><a href="{{ route('signin') }}">Sign In</a></li>
             <li><a href="{{ route('register') }}">Sign Up</a></li>
             <li><a href="{{ route('faq') }}">FAQS</a></li>
@@ -260,8 +260,9 @@
       @endphp
       <div class="col-6 col-lg-4 col-xl-3 product-col"
            data-category="{{ $product->category ?? 'other' }}">
-        <div class="hotProduct-card">
-          @if($product->hasSale())
+        <div class="hotProduct-card" style="cursor:pointer;"
+     onclick="window.location='{{ route('product', $product->id) }}'">
+  @if($product->hasSale())
             <div class="sale-badge">-{{ $product->salePercent() }}%</div>
           @endif
           <div class="product-img-wrap">
@@ -284,7 +285,12 @@
             @endif
           </div>
           <div class="card-body-custom">
-            <div class="product-name">{{ $product->name }}</div>
+          <a href="{{ route('product', ['id' => $product->id]) }}" 
+   class="product-name" 
+   style="text-decoration:none;color:inherit;display:block;"
+   onclick="event.stopPropagation();">
+   {{ $product->name }}
+</a>
             <div class="stars">
               <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
               <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
@@ -328,91 +334,127 @@
       </div>
       @endforeach
  
-      {{-- ── Hot Deal Products ── --}}
-      @foreach($hotDeals as $deal)
-      @php
-        $inWishlistDeal = Auth::check()
-          ? Auth::user()->wishlists->pluck('product_id')->contains($deal->id)
-          : false;
-        $uid = 'hotdeal-' . $deal->id; 
-      @endphp
-      <div class="col-6 col-lg-4 col-xl-3 product-col"
-           data-category="{{ $deal->category ?? 'other' }}">
-        <div class="hotProduct-card">
- 
-          {{-- 🔥 Hot Deal badge --}}
-          <div class="hot-deal-badge">🔥 Hot Deal</div>
- 
-          @if($deal->hasSale())
-            <div class="sale-badge">-{{ $deal->salePercent() }}%</div>
-          @endif
- 
-          <div class="product-img-wrap">
-            <div class="img-overlay">
-              <div class="overlay-icons">
-                <button class="wishlist-btn"
-                        data-product-id="{{ $deal->id }}"
-                        data-product-type="hotdeal"
-                        title="Wishlist">
-                  <i class="bi bi-heart{{ $inWishlistDeal ? '-fill' : '' }}"
-                     style="{{ $inWishlistDeal ? 'color:#e74c3c;' : '' }}"></i>
-                </button>
-                <button title="Quick View"><i class="bi bi-eye"></i></button>
-              </div>
-            </div>
-            @if($deal->image)
-              <img src="{{ asset('storage/'.$deal->image) }}" alt="{{ $deal->name }}">
-            @else
-              <img src="{{ asset('frontend/image/Product Image.png') }}" alt="{{ $deal->name }}">
-            @endif
-          </div>
- 
-          <div class="card-body-custom">
-            <div class="product-name">{{ $deal->name }}</div>
-            <div class="stars">
-              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-              <i class="bi bi-star empty"></i>
-            </div>
-            <div class="price-row">
-              <div class="price-block">
-                <span class="price-main">৳{{ number_format($deal->price,2) }}</span>
-                @if($deal->hasSale())
-                  <span class="price-old">৳{{ number_format($deal->old_price,2) }}</span>
-                @endif
-              </div>
-              <div class="cart-action-wrap">
-                {{-- ✅ data-uid দিয়ে unique করা হয়েছে --}}
-                <button class="cart-btn show-qty-btn"
-                        data-uid="{{ $uid }}"
-                        data-product-id="{{ $deal->id }}"
-                        data-product-type="hotdeal">
-                  <i class="bi bi-bag"></i>
-                </button>
-                <div class="qty-selector"
-                     data-uid="{{ $uid }}"
-                     data-product-id="{{ $deal->id }}"
-                     data-product-type="hotdeal"
-                     style="display:none;">
-                  <button class="qty-btn minus"><i class="bi bi-dash"></i></button>
-                  <input type="number" class="qty-input"
-                         value="1" min="1" max="{{ $deal->stock }}">
-                  <button class="qty-btn plus"><i class="bi bi-plus"></i></button>
-                  <button class="add-to-cart-btn"
-                          data-uid="{{ $uid }}"
-                          data-product-id="{{ $deal->id }}"
-                          data-product-type="hotdeal">
-                    <i class="bi bi-check-lg"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
- 
+     {{-- ── Hot Deal Products ── --}}
+@foreach($hotDeals as $deal)
+@php
+  $inWishlistDeal = Auth::check()
+    ? Auth::user()->wishlists->pluck('product_id')->contains($deal->id)
+    : false;
+
+  $uid = 'hotdeal-' . $deal->id;
+@endphp
+
+<div class="col-6 col-lg-4 col-xl-3 product-col"
+     data-category="{{ $deal->category ?? 'other' }}">
+
+  <div class="hotProduct-card"
+       style="cursor:pointer;"
+       onclick="window.location='{{ route('product', ['id' => $deal->id]) }}?type=hotdeal'">
+
+    {{-- 🔥 Hot Deal badge --}}
+    <div class="hot-deal-badge">🔥 Hot Deal</div>
+
+    @if($deal->hasSale())
+      <div class="sale-badge">-{{ $deal->salePercent() }}%</div>
+    @endif
+
+    <div class="product-img-wrap">
+      <div class="img-overlay">
+        <div class="overlay-icons">
+
+          <button class="wishlist-btn"
+                  data-product-id="{{ $deal->id }}"
+                  data-product-type="hotdeal"
+                  title="Wishlist"
+                  onclick="event.stopPropagation();">
+            <i class="bi bi-heart{{ $inWishlistDeal ? '-fill' : '' }}"
+               style="{{ $inWishlistDeal ? 'color:#e74c3c;' : '' }}"></i>
+          </button>
+
+          <button title="Quick View" onclick="event.stopPropagation();">
+            <i class="bi bi-eye"></i>
+          </button>
+
         </div>
       </div>
-      @endforeach
- 
+
+      @if($deal->image)
+        <img src="{{ asset('storage/'.$deal->image) }}" alt="{{ $deal->name }}">
+      @else
+        <img src="{{ asset('frontend/image/Product Image.png') }}" alt="{{ $deal->name }}">
+      @endif
+    </div>
+
+    <div class="card-body-custom">
+
+      <a href="{{ route('product', ['id' => $deal->id]) }}?type=hotdeal"
+         class="product-name"
+         style="text-decoration:none;color:inherit;display:block;"
+         onclick="event.stopPropagation();">
+        {{ $deal->name }}
+      </a>
+
+      <div class="stars">
+        <i class="bi bi-star-fill"></i>
+        <i class="bi bi-star-fill"></i>
+        <i class="bi bi-star-fill"></i>
+        <i class="bi bi-star-fill"></i>
+        <i class="bi bi-star empty"></i>
+      </div>
+
+      <div class="price-row">
+        <div class="price-block">
+          <span class="price-main">৳{{ number_format($deal->price, 2) }}</span>
+
+          @if($deal->hasSale())
+            <span class="price-old">৳{{ number_format($deal->old_price, 2) }}</span>
+          @endif
+        </div>
+
+        <div class="cart-action-wrap" onclick="event.stopPropagation();">
+
+          <button class="cart-btn show-qty-btn"
+                  data-uid="{{ $uid }}"
+                  data-product-id="{{ $deal->id }}"
+                  data-product-type="hotdeal">
+            <i class="bi bi-bag"></i>
+          </button>
+
+          <div class="qty-selector"
+               data-uid="{{ $uid }}"
+               data-product-id="{{ $deal->id }}"
+               data-product-type="hotdeal"
+               style="display:none;">
+
+            <button class="qty-btn minus">
+              <i class="bi bi-dash"></i>
+            </button>
+
+            <input type="number"
+                   class="qty-input"
+                   value="1"
+                   min="1"
+                   max="{{ $deal->stock }}">
+
+            <button class="qty-btn plus">
+              <i class="bi bi-plus"></i>
+            </button>
+
+            <button class="add-to-cart-btn"
+                    data-uid="{{ $uid }}"
+                    data-product-id="{{ $deal->id }}"
+                    data-product-type="hotdeal">
+              <i class="bi bi-check-lg"></i>
+            </button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+@endforeach
       {{-- Empty state --}}
       @if($products->isEmpty() && $hotDeals->isEmpty())
       <div class="col-12 text-center py-5">

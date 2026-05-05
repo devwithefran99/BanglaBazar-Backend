@@ -6,6 +6,8 @@ use App\Http\Controllers\Frontend\AuthController;
 use App\Http\Controllers\Frontend\UserDashboardController;
 use App\Http\Controllers\Frontend\WishlistController;
 use App\Http\Controllers\Frontend\CartController;
+use App\Http\Controllers\Frontend\CheckoutController;
+use App\Http\Controllers\Frontend\ProductController;
 
 // ── Public Pages ──────────────────────────────
 Route::get('/',        [HomeController::class, 'index'])->name('home');
@@ -15,9 +17,7 @@ Route::get('/contact', fn() => view('frontend.contact'))->name('contact');
 Route::get('/wishlist',fn() => view('frontend.wishlist'))->name('wishlist');
 Route::get('/faq',     fn() => view('frontend.faq'))->name('faq');
 
-Route::get('/product/{id?}', function ($id = null) {
-    return view('frontend.singleProduct');
-})->name('product');
+Route::get('/product/{id}', [ProductController::class, 'show'])->name('product');
 
 // ── Auth (Guest only) ─────────────────────────
 Route::get('/signin',    [AuthController::class, 'showSignIn'])->name('signin');
@@ -62,3 +62,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/count', [CartController::class, 'count'])->name('count');
     });
 });
+
+// checkout 
+Route::get('/checkout',        [CheckoutController::class, 'index'])->name('checkout.show');
+Route::post('/checkout/place', [CheckoutController::class, 'place'])->name('checkout.place');

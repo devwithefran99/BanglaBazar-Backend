@@ -382,3 +382,42 @@ $(document).ready(function () {
   if (isAuthenticated) updateCartCount();
 
 });
+
+ 
+
+ 
+document.addEventListener('click', function (e) {
+ 
+    // এগুলোতে click করলে redirect হবে না
+    const skip = [
+        '.cart-btn', '.show-qty-btn', '.add-to-cart-btn',
+        '.wishlist-btn', '.qty-btn', '.qty-input',
+        '.qty-selector', 'a', 'button'
+    ];
+    for (const sel of skip) {
+        if (e.target.closest(sel)) return;
+    }
+ 
+    // Clickable card areas
+    const clickable = e.target.closest(
+        '.product-img-wrap, .card-body-custom, .product-name, ' +
+        '.price-main, .stars, .featured-img-wrap, .featured-info'
+    );
+    if (!clickable) return;
+ 
+    const card = clickable.closest(
+        '.product-card, .hotProduct-card, .featured-card, .slider-product'
+    );
+    if (!card) return;
+ 
+    const btn = card.querySelector('[data-product-id]');
+    if (!btn) return;
+ 
+    const productId   = btn.dataset.productId;
+    const productType = btn.dataset.productType || 'product';
+    if (!productId) return;
+ 
+    // ✅ Single Product Page এ যাবে
+  window.location.href = `/product/${productId}?type=${productType}`;
+});
+ 

@@ -126,7 +126,7 @@
   <ul class="submenu">
     <li><a href="{{ route('wishlist') }}">Wishlist</a></li>
     <li><a href="{{ route('userdashboard') }}">Order History</a></li>
-    <li><a href="{{ route('product') }}">CheckOut</a></li>
+    <li><a href="{{ route('checkout.show') }}">CheckOut</a></li>
      <li><a href="{{ route('signin') }}">Sign In</a></li>
    <li><a href="{{ route('register') }}">Sign Up</a></li>
     <li><a href="{{ route('faq') }}">FAQS</a></li>
@@ -208,7 +208,7 @@
   <ul class="mobile-submenu">
      <li><a href="{{ route('wishlist') }}">Wishlist</a></li>
      <li><a href="{{ route('userdashboard') }}">Order History</a></li>
-    <li><a href="{{ route('product') }}">CheckOut</a></li>
+    <li><a href="{{ route('checkout.show') }}">CheckOut</a></li>
      <li><a href="{{ route('signin') }}">Sign In</a></li>
    <li><a href="{{ route('register') }}">Sign Up</a></li>
      <li><a href="{{ route('faq') }}">FAQS</a></li>
