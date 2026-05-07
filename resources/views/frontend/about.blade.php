@@ -882,7 +882,7 @@ Phasellus imperdiet elit eu magna dictum.
       <span class="cp-sub-label"><span id="cpProductCount">2</span> Product</span>
       <span class="cp-sub-price" id="cpTotal">$26.00</span>
     </div>
-    <a href="checkout.html" class="cp-checkout-btn">
+    <a href="{{ route('checkout.show') }}?source=cart" class="cp-checkout-btn">
       <i class="bi bi-bag-check-fill me-1"></i> Checkout
     </a>
     <a href="#" class="cp-cart-link">Go To Cart</a>

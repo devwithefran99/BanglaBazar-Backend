@@ -1420,6 +1420,7 @@
 .bl-section {
   padding: 2.5rem 0 4rem;
   font-family: 'Nunito', sans-serif;
+  z-index: -999;
 }
  
 .bl-page-title {
@@ -1443,6 +1444,7 @@
   padding: 2rem;
   margin-bottom: 1rem;
   transition: box-shadow .2s;
+  z-index: -999;
  
 }
 .bl-card:hover { box-shadow: 0 4px 22px rgba(0,166,81,.07); }

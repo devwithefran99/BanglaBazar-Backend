@@ -103,7 +103,8 @@ document.querySelectorAll('.main-navbar .nav-item').forEach((el, i) => {
   document.addEventListener('click', function (e) {
     const eyeBtn = e.target.closest('button[title="Quick View"]');
     if (!eyeBtn) return;
-    e.stopPropagation();
+    e.preventDefault();
+    e.stopPropagation();  // ✅ card-click redirect আটকাও
 
     const card = eyeBtn.closest('.product-card, .hotProduct-card, .slider-product, .featured-card');
     if (!card) return;
@@ -177,10 +178,6 @@ $(document).ready(function () {
     if (e.key === 'Escape') closeDrawer();
   });
 
-  /* ─────────────────────────────────────────────────
-     ✅ FIX: data-uid দিয়ে exact card target করো
-     product-1, hotdeal-1 — আলাদা uid তাই clash নেই
-  ───────────────────────────────────────────────── */
   $(document).on('click', '.show-qty-btn', function (e) {
     e.preventDefault();
     e.stopPropagation();
@@ -193,52 +190,47 @@ $(document).ready(function () {
 
     const uid = $(this).data('uid');
 
-    // সব বন্ধ করো
     $('.qty-selector').slideUp(200);
     $('.show-qty-btn').show();
 
-    // শুধু এই uid এর কার্ডটা open করো
     $(this).hide();
     $(`.qty-selector[data-uid="${uid}"]`).slideDown(200);
   });
 
   /* ── Qty + / - ── */
-  $(document).on('click', '.qty-btn.plus', function () {
+  $(document).on('click', '.qty-btn.plus', function (e) {
+    e.stopPropagation();
     const input = $(this).siblings('.qty-input');
     const max   = parseInt(input.attr('max')) || 99;
     const val   = parseInt(input.val());
     if (val < max) input.val(val + 1);
   });
 
-  $(document).on('click', '.qty-btn.minus', function () {
+  $(document).on('click', '.qty-btn.minus', function (e) {
+    e.stopPropagation();
     const input = $(this).siblings('.qty-input');
     const val   = parseInt(input.val());
     if (val > 1) input.val(val - 1);
   });
 
   /* ── Add to cart (✓ button) ── */
-  $(document).on('click', '.add-to-cart-btn', function () {
+  $(document).on('click', '.add-to-cart-btn', function (e) {
+    e.stopPropagation();
     const uid         = $(this).data('uid');
     const productId   = $(this).data('product-id');
     const productType = $(this).data('product-type') || 'product';
-    const quantity    = $(`.qty-selector[data-uid="${uid}"] .qty-input`).val(); // ✅ uid দিয়ে qty
+    const quantity    = $(`.qty-selector[data-uid="${uid}"] .qty-input`).val();
 
     $.ajax({
       url: '/cart/add',
       method: 'POST',
       headers: { 'X-CSRF-TOKEN': csrfToken },
-      data: {
-        product_id:   productId,
-        quantity:     quantity,
-        product_type: productType
-      },
+      data: { product_id: productId, quantity: quantity, product_type: productType },
       success: function (response) {
         if (response.success) {
-          // ✅ uid দিয়ে exact কার্ড বন্ধ করো
           $(`.qty-selector[data-uid="${uid}"]`).slideUp(200);
           $(`.show-qty-btn[data-uid="${uid}"]`).show();
           $(`.qty-selector[data-uid="${uid}"] .qty-input`).val(1);
-
           updateCartCount();
           showToast('success', response.message);
           openDrawer();
@@ -383,41 +375,37 @@ $(document).ready(function () {
 
 });
 
- 
-
- 
+/* ─────────────────────────────────────────────────────
+   8. CARD CLICK → Single Product Page
+   ✅ FIX: button বা তার ভেতরের <i> তে click করলে
+   redirect হবে না — শুধু card body তে হবে
+───────────────────────────────────────────────────── */
 document.addEventListener('click', function (e) {
- 
-    // এগুলোতে click করলে redirect হবে না
-    const skip = [
-        '.cart-btn', '.show-qty-btn', '.add-to-cart-btn',
-        '.wishlist-btn', '.qty-btn', '.qty-input',
-        '.qty-selector', 'a', 'button'
-    ];
-    for (const sel of skip) {
-        if (e.target.closest(sel)) return;
-    }
- 
-    // Clickable card areas
-    const clickable = e.target.closest(
-        '.product-img-wrap, .card-body-custom, .product-name, ' +
-        '.price-main, .stars, .featured-img-wrap, .featured-info'
-    );
-    if (!clickable) return;
- 
-    const card = clickable.closest(
-        '.product-card, .hotProduct-card, .featured-card, .slider-product'
-    );
-    if (!card) return;
- 
-    const btn = card.querySelector('[data-product-id]');
-    if (!btn) return;
- 
-    const productId   = btn.dataset.productId;
-    const productType = btn.dataset.productType || 'product';
-    if (!productId) return;
- 
-    // ✅ Single Product Page এ যাবে
+
+  // ✅ KEY FIX: click যদি যেকোনো button বা <a> বা
+  // তার child (<i>, <span>) এর মধ্যে হয় — skip করো
+  if (e.target.closest('button') || e.target.closest('a') || e.target.closest('.qty-selector') || e.target.closest('.qty-input')) {
+    return;
+  }
+
+  // Card এর clickable area চেক করো
+  const clickable = e.target.closest(
+    '.product-img-wrap, .card-body-custom, .product-name, ' +
+    '.price-main, .stars, .featured-img-wrap, .featured-info'
+  );
+  if (!clickable) return;
+
+  const card = clickable.closest(
+    '.product-card, .hotProduct-card, .featured-card, .slider-product'
+  );
+  if (!card) return;
+
+  const btn = card.querySelector('[data-product-id]');
+  if (!btn) return;
+
+  const productId   = btn.dataset.productId;
+  const productType = btn.dataset.productType || 'product';
+  if (!productId) return;
+
   window.location.href = `/product/${productId}?type=${productType}`;
 });
- 

@@ -189,7 +189,7 @@
     $inWishlist = Auth::check()
                     ? Auth::user()->wishlists->pluck('product_id')->contains($item->id)
                     : false;
-  $checkoutUrl = url('/checkout') . '?type=' . $type . '&id=' . $item->id . '&qty=1';
+  $checkoutUrl = url('/checkout') . '?source=buynow&type=' . $type . '&id=' . $item->id . '&qty=1';
 @endphp
 
 <!-- product detail section -->
@@ -253,10 +253,10 @@
                 <div class="pd-price-row">
                     @if($hasSale)
                         <span class="pd-price-old">৳{{ number_format($item->old_price, 2) }}</span>
-                        <span class="pd-price-now">৳{{ number_format($item->price, 2) }}</span>
+                       <span class="pd-price-now" id="pdPriceNow">৳{{ number_format($item->price, 2) }}</span>
                         <span class="pd-discount">{{ $salePct }}% Off</span>
                     @else
-                        <span class="pd-price-now">৳{{ number_format($item->price, 2) }}</span>
+                        <span class="pd-price-now" id="pdPriceNow">৳{{ number_format($item->price, 2) }}</span>
                     @endif
                 </div>
 
@@ -734,29 +734,84 @@
 <script src="{{ asset('frontend/js/pages.js') }}"></script>
 
 <script>
-/* ═══════════════════════════════════════
-   SINGLE PRODUCT PAGE JS
-═══════════════════════════════════════ */
+
 const PD_MAX_STOCK  = {{ $item->stock ?? 1 }};
 const PD_PRODUCT_ID = {{ $item->id ?? 0 }};
 const PD_TYPE       = '{{ $type }}';
-
+const PD_BASE_PRICE = {{ $item->price ?? 0 }}; // ✅ base price
+ 
+/* ── Toast helper ── */
+function showPdToast(msg, type = 'success') {
+    const toast = document.getElementById('toast');
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.style.background = type === 'error' ? '#ef4444' : '#22c55e';
+    toast.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => toast.classList.remove('show'), 2800);
+}
+ 
+/* ── Qty change ── */
 function changeQty(delta) {
     const el  = document.getElementById('qtyNum');
+    const inp = document.getElementById('qtyInput'); // manual input field (optional)
     let qty   = parseInt(el.textContent) + delta;
-    qty       = Math.max(1, Math.min(PD_MAX_STOCK, qty));
+ 
+    // ✅ out of stock check
+    if (qty > PD_MAX_STOCK) {
+        showPdToast('⚠️ স্টকে মাত্র ' + PD_MAX_STOCK + 'টি পণ্য আছে!', 'error');
+        qty = PD_MAX_STOCK;
+    }
+ 
+    qty = Math.max(1, qty);
     el.textContent = qty;
-
+ 
+    updatePrice(qty);
+    updateBuyNow(qty);
+}
+ 
+/* ── Manual input change ── */
+function onQtyInput(input) {
+    let qty = parseInt(input.value);
+    if (isNaN(qty) || qty < 1) qty = 1;
+ 
+    if (qty > PD_MAX_STOCK) {
+        showPdToast('⚠️ স্টকে মাত্র ' + PD_MAX_STOCK + 'টি পণ্য আছে!', 'error');
+        qty = PD_MAX_STOCK;
+        input.value = qty;
+    }
+ 
+    document.getElementById('qtyNum').textContent = qty;
+    updatePrice(qty);
+    updateBuyNow(qty);
+}
+ 
+/* ── Price update ── */
+function updatePrice(qty) {
+    const priceEl = document.getElementById('pdPriceNow');
+    if (priceEl) {
+        const total = (PD_BASE_PRICE * qty).toFixed(2);
+        priceEl.textContent = '৳' + parseFloat(total).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+    }
+}
+ 
+/* ── Buy Now URL update ── */
+function updateBuyNow(qty) {
     const buyBtn = document.getElementById('pdBuyNowBtn');
     if (buyBtn) {
         buyBtn.href = '/checkout?type=' + PD_TYPE + '&id=' + PD_PRODUCT_ID + '&qty=' + qty;
     }
 }
-
-// ── Add to Cart (uses existing common.js cart logic via AJAX) ──
+ 
+/* ── Add to Cart ── */
 function pdAddToCart() {
     const qty = parseInt(document.getElementById('qtyNum').textContent) || 1;
-
+ 
+    if (PD_MAX_STOCK <= 0) {
+        showPdToast('❌ পণ্যটি স্টকে নেই!', 'error');
+        return;
+    }
+ 
     fetch('{{ route("cart.add") }}', {
         method: 'POST',
         headers: {
@@ -766,44 +821,32 @@ function pdAddToCart() {
         body: JSON.stringify({
             product_id:   PD_PRODUCT_ID,
             product_type: PD_TYPE,
-            qty:          qty,
+            quantity:     qty,
         }),
     })
     .then(r => r.json())
     .then(data => {
         if (data.success) {
-            // Update cart badge
             const badge = document.getElementById('cartCount');
-            if (badge && data.cart_count !== undefined) {
-                badge.textContent = data.cart_count;
-            }
-            // Show toast
-            const toast = document.getElementById('toast');
-            if (toast) {
-                toast.textContent = '✅ Added to cart!';
-                toast.classList.add('show');
-                setTimeout(() => toast.classList.remove('show'), 2500);
-            }
+            if (badge) badge.textContent = data.cart_count ?? (parseInt(badge.textContent) + 1);
+            showPdToast('✅ Cart এ যোগ হয়েছে!');
+        } else {
+            showPdToast('❌ ' + (data.message || 'Failed to add'), 'error');
         }
     })
     .catch(() => {
-        const toast = document.getElementById('toast');
-        if (toast) {
-            toast.textContent = '⚠️ Please login first.';
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2500);
-        }
+        showPdToast('⚠️ Please login first.', 'error');
     });
 }
-
-// ── Thumbnail switcher ──
+ 
+/* ── Thumbnail switcher ── */
 function switchMain(thumb, src) {
     document.getElementById('mainImg').src = src;
     document.querySelectorAll('.pd-thumb').forEach(t => t.classList.remove('active'));
     thumb.classList.add('active');
 }
-
-// ── Tab switcher ──
+ 
+/* ── Tab switcher ── */
 function switchTab(id, btn) {
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));

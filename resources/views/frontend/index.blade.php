@@ -54,7 +54,7 @@
     <div class="container">
       <div class="d-flex align-items-center justify-content-between gap-3">
         <a href="#" class="logo-slot">
-          <img src="{{ asset('frontend/image/Logo.png') }}" height="35" alt="logo">
+          <img src="{{ asset('frontend/image/Logo.png') }}" height="40" alt="logo">
         </a>
         <div class="d-lg-none ms-auto">
           <button class="navbar-toggler-custom" type="button"
@@ -299,8 +299,7 @@
           $uid = 'product-' . $product->id;
         @endphp
         <div class="col">
-  <div class="product-card h-100" style="cursor:pointer;" 
-       onclick="window.location='{{ route('product', $product->id) }}'">
+  <div class="product-card h-100" style="cursor:pointer;">
             @if($product->hasSale())
               <div class="sale-badge">Sale {{ $product->salePercent() }}%</div>
             @endif
@@ -483,8 +482,7 @@
                 $uid = 'hotdeal-' . $deal->id;
               @endphp
               <div class="col-6 col-lg-4">
-  <div class="hotProduct-card" style="cursor:pointer;"
-       onclick="window.location='{{ route('product', $deal->id) }}?type=hotdeal'">
+  <div class="hotProduct-card" style="cursor:pointer;">
                   @if($deal->hasSale())
                     <div class="sale-badge">Sale {{ $deal->salePercent() }}%</div>
                   @endif
@@ -815,34 +813,70 @@
 
 </main>
 
-{{-- ── CART DRAWER ── --}}
-<div class="cp-overlay" id="cpOverlay"></div>
+<!-- Cart Drawer -->
 <div class="cp-drawer" id="cpDrawer">
+ 
+  <!-- Header -->
   <div class="cp-header">
     <div class="cp-title">
-      <img src="{{ asset('frontend/image/Logo.png') }}" alt="Logo">
+      
+      <img src="{{asset('frontend/image/Logo.png')}}" alt="">
+     
     </div>
     <button class="cp-close" id="cpClose" aria-label="Close cart">
       <i class="bi bi-x-lg"></i>
     </button>
   </div>
-  <div class="cp-items" id="cpItems"></div>
-  <div class="cp-empty" id="cpEmpty" style="display:flex;">
+ 
+  <!-- Items -->
+  <div class="cp-items" id="cpItems">
+ 
+    <div class="cp-item" data-id="1">
+      <div class="cp-item-img"><img src="{{asset('frontend/image/hotProduct1 (2).png')}}" alt=""></div>
+      <div class="cp-item-info">
+        <div class="cp-item-name">Fresh Indian Orange</div>
+        <div class="cp-item-meta">1 kg × <strong>$12.00</strong></div>
+      </div>
+      <button class="cp-remove" onclick="cpRemoveItem(this)" aria-label="Remove">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+ 
+    <div class="cp-item" data-id="2">
+      <div class="cp-item-img"><img src="{{asset('frontend/image/hotProduct1 (1).png')}}" alt=""></div>
+      <div class="cp-item-info">
+        <div class="cp-item-name">Green Apple</div>
+        <div class="cp-item-meta">1 kg × <strong>$14.00</strong></div>
+      </div>
+      <button class="cp-remove" onclick="cpRemoveItem(this)" aria-label="Remove">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+ 
+  </div>
+ 
+  <!-- Empty state (hidden by default) -->
+  <div class="cp-empty" id="cpEmpty">
     <i class="bi bi-bag-x"></i>
     <p>Your cart is empty</p>
     <a href="{{ route('shop') }}" class="cp-shop-link">Browse Products →</a>
   </div>
-  <div class="cp-footer" id="cpFooter" style="display:none;">
+ 
+  <!-- Footer -->
+  <div class="cp-footer" id="cpFooter">
     <div class="cp-subtotal">
-      <span class="cp-sub-label"><span id="cpProductCount">0</span> Product</span>
-      <span class="cp-sub-price" id="cpTotal">৳0.00</span>
+      <span class="cp-sub-label"><span id="cpProductCount">2</span> Product</span>
+      <span class="cp-sub-price" id="cpTotal">$26.00</span>
     </div>
-    <a href="{{ route('shop') }}" class="cp-checkout-btn">
-      <i class="bi bi-bag-check-fill me-1"></i> Continue Shopping
+    <a href="{{ route('checkout.show') }}?source=cart" class="cp-checkout-btn">
+      <i class="bi bi-bag-check-fill me-1"></i> Checkout
     </a>
+    <a href="#" class="cp-cart-link">Go To Cart</a>
   </div>
+ 
 </div>
-
+ 
+</section>
 {{-- ── FOOTER ── --}}
 <footer class="main-footer">
   <div class="container">

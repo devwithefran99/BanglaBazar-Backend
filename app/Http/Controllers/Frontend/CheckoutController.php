@@ -6,74 +6,175 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\HotDeal;
+use App\Models\Order;
+use App\Models\OrderItem;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CheckoutController extends Controller
 {
     /**
-     * Show checkout page with the selected product/hotdeal details.
+     * Show checkout page
      *
-     * URL: /checkout?type=product&id=5&qty=2
-     *      /checkout?type=hotdeal&id=3&qty=1
+     * 3 scenarios:
+     * 1. Cart checkout   → /checkout?source=cart
+     * 2. Buy Now         → /checkout?source=buynow&type=product&id=5&qty=2
+     * 3. Wishlist Buy All→ /checkout?source=wishlist
      */
     public function index(Request $request)
     {
-        $type = $request->query('type', 'product'); // 'product' or 'hotdeal'
-        $id   = $request->query('id');
-        $qty  = max(1, (int) $request->query('qty', 1));
+        $source = $request->query('source', 'cart');
+        $items  = collect(); // order summary items
+        $total  = 0;
 
-        $item = null;
+        if ($source === 'buynow') {
+            // ── Single product Buy Now ──
+            $type = $request->query('type', 'product');
+            $id   = $request->query('id');
+            $qty  = max(1, (int) $request->query('qty', 1));
 
-        if ($id) {
-            if ($type === 'hotdeal') {
-                $item = HotDeal::find($id);
-            } else {
-                $item = Product::find($id);
+            $product = $type === 'hotdeal'
+                ? HotDeal::find($id)
+                : Product::find($id);
+
+            if ($product) {
+                $qty = min($qty, $product->stock);
+                $items->push([
+                    'product'      => $product,
+                    'product_type' => $type,
+                    'quantity'     => $qty,
+                    'price'        => $product->price,
+                    'subtotal'     => $product->price * $qty,
+                ]);
+                $total = $product->price * $qty;
+            }
+
+        } elseif ($source === 'wishlist') {
+            // ── Wishlist Buy All ──
+            if (Auth::check()) {
+                $wishlists = Auth::user()->wishlists()->with('product')->get();
+                foreach ($wishlists as $wish) {
+                    $product = $wish->product;
+                    if (!$product || $product->stock <= 0) continue;
+                    $items->push([
+                        'product'      => $product,
+                        'product_type' => $wish->product_type ?? 'product',
+                        'quantity'     => 1,
+                        'price'        => $product->price,
+                        'subtotal'     => $product->price,
+                    ]);
+                    $total += $product->price;
+                }
+            }
+
+        } else {
+            // ── Cart checkout (default) ──
+            if (Auth::check()) {
+                $cartItems = Auth::user()->carts()->get();
+                foreach ($cartItems as $cartItem) {
+                    // product_type অনুযায়ী সঠিক model
+                    if ($cartItem->product_type === 'hotdeal') {
+                        $product = HotDeal::find($cartItem->product_id);
+                    } else {
+                        $product = Product::find($cartItem->product_id);
+                    }
+                    if (!$product) continue;
+                    $qty = $cartItem->quantity;
+                    $items->push([
+                        'product'      => $product,
+                        'product_type' => $cartItem->product_type,
+                        'quantity'     => $qty,
+                        'price'        => $product->price,
+                        'subtotal'     => $product->price * $qty,
+                    ]);
+                    $total += $product->price * $qty;
+                }
             }
         }
 
-        // Clamp qty to available stock
-        if ($item && $qty > $item->stock) {
-            $qty = $item->stock;
-        }
+        // User info prefill
+        $user = Auth::user();
 
-      return view('frontend.checkout', compact('item', 'type', 'qty'));
+        return view('frontend.checkout', compact('items', 'total', 'source', 'user'));
     }
 
     /**
-     * Handle Place Order form submission.
+     * Place Order
      */
     public function place(Request $request)
     {
         $request->validate([
             'first_name'   => 'required|string|max:100',
+            'last_name'    => 'required|string|max:100',
             'address'      => 'required|string|max:255',
             'country'      => 'required|string',
             'state'        => 'required|string',
             'zip'          => 'required|string|max:20',
             'email'        => 'required|email',
             'phone'        => 'required|string|max:20',
-            'product_id'   => 'required|integer',
-            'product_type' => 'required|in:product,hotdeal',
-            'qty'          => 'required|integer|min:1',
+            'payment'      => 'required|string',
+            'source'       => 'required|string',
+            'items'        => 'required|string', // JSON encoded items
         ]);
 
-        // ── Fetch the ordered item ──
-        $type = $request->product_type;
-        $item = $type === 'hotdeal'
-            ? HotDeal::findOrFail($request->product_id)
-            : Product::findOrFail($request->product_id);
+        $source    = $request->source;
+        $orderData = json_decode($request->items, true);
 
-        $qty   = (int) $request->qty;
-        $total = $item->price * $qty;
+        if (!$orderData || count($orderData) === 0) {
+            return back()->with('error', 'No items to order!');
+        }
 
-        // ── (Optional) Create an Order record here ──
-        // Order::create([...]);
+        DB::beginTransaction();
+        try {
+            // ── Create Order ──
+            $total = collect($orderData)->sum(fn($i) => $i['price'] * $i['quantity']);
 
-        // ── Reduce stock ──
-        // $item->decrement('stock', $qty);
+            $order = Order::create([
+                'user_id'        => Auth::id(),
+                'total_price'    => $total,
+                'status'         => 'pending',
+                'address'        => $request->first_name . ' ' . $request->last_name
+                                    . ', ' . $request->address
+                                    . ', ' . $request->state
+                                    . ', ' . $request->country
+                                    . ' - ' . $request->zip,
+                'phone'          => $request->phone,
+            ]);
 
-        // ── Redirect to success / thank-you page ──
-        return redirect()->route('home')
-            ->with('success', "✅ Order placed successfully! Total: ৳" . number_format($total, 2));
+            // ── Create Order Items ──
+            foreach ($orderData as $item) {
+                OrderItem::create([
+                    'order_id'     => $order->id,
+                    'product_id'   => $item['product_id'],
+                    'product_type' => $item['product_type'],
+                    'product_name' => $item['product_name'],
+                    'quantity'     => $item['quantity'],
+                    'price'        => $item['price'],
+                ]);
+
+                // ── Stock কমাও ──
+                if ($item['product_type'] === 'hotdeal') {
+                    HotDeal::where('id', $item['product_id'])
+                           ->decrement('stock', $item['quantity']);
+                } else {
+                    Product::where('id', $item['product_id'])
+                           ->decrement('stock', $item['quantity']);
+                }
+            }
+
+            // ── Cart clear করো (cart checkout হলে) ──
+            if ($source === 'cart' && Auth::check()) {
+                Auth::user()->carts()->delete();
+            }
+
+            DB::commit();
+
+            return redirect()->route('order.success', $order->id)
+                ->with('success', '✅ Order placed successfully!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Order failed: ' . $e->getMessage());
+        }
     }
 }

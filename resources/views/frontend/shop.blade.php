@@ -260,8 +260,7 @@
       @endphp
       <div class="col-6 col-lg-4 col-xl-3 product-col"
            data-category="{{ $product->category ?? 'other' }}">
-        <div class="hotProduct-card" style="cursor:pointer;"
-     onclick="window.location='{{ route('product', $product->id) }}'">
+        <div class="hotProduct-card" style="cursor:pointer;">
   @if($product->hasSale())
             <div class="sale-badge">-{{ $product->salePercent() }}%</div>
           @endif
@@ -348,8 +347,7 @@
      data-category="{{ $deal->category ?? 'other' }}">
 
   <div class="hotProduct-card"
-       style="cursor:pointer;"
-       onclick="window.location='{{ route('product', ['id' => $deal->id]) }}?type=hotdeal'">
+       style="cursor:pointer;">
 
     {{-- 🔥 Hot Deal badge --}}
     <div class="hot-deal-badge">🔥 Hot Deal</div>

@@ -299,9 +299,9 @@
   </div>
   <div class="ms-auto">
     <button class="btn-buy" style="font-size:0.8rem; padding:9px 18px;">
-      <a style="text-decoration:none; color:#fff;" href="{{ route('shop') }}">
-        <i class="bi bi-bag-check-fill"></i> Buy All Available
-      </a>
+      <a href="{{ route('checkout.show') }}?source=wishlist" style="text-decoration:none;color:#fff;">
+    <i class="bi bi-bag-check-fill"></i> Buy All Available
+</a>
     </button>
   </div>
 </div>
@@ -454,7 +454,7 @@
       <span class="cp-sub-label"><span id="cpProductCount">2</span> Product</span>
       <span class="cp-sub-price" id="cpTotal">$26.00</span>
     </div>
-    <a href="checkout.html" class="cp-checkout-btn">
+    <a href="{{ route('checkout.show') }}?source=cart" class="cp-checkout-btn">
       <i class="bi bi-bag-check-fill me-1"></i> Checkout
     </a>
     <a href="#" class="cp-cart-link">Go To Cart</a>
