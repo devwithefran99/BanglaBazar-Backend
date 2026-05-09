@@ -286,8 +286,7 @@
           <div class="card-body-custom">
           <a href="{{ route('product', ['id' => $product->id]) }}" 
    class="product-name" 
-   style="text-decoration:none;color:inherit;display:block;"
-   onclick="event.stopPropagation();">
+   style="text-decoration:none;color:inherit;display:block;">
    {{ $product->name }}
 </a>
             <div class="stars">
@@ -363,13 +362,12 @@
           <button class="wishlist-btn"
                   data-product-id="{{ $deal->id }}"
                   data-product-type="hotdeal"
-                  title="Wishlist"
-                  onclick="event.stopPropagation();">
+                  title="Wishlist">
             <i class="bi bi-heart{{ $inWishlistDeal ? '-fill' : '' }}"
                style="{{ $inWishlistDeal ? 'color:#e74c3c;' : '' }}"></i>
           </button>
 
-          <button title="Quick View" onclick="event.stopPropagation();">
+          <button title="Quick View">
             <i class="bi bi-eye"></i>
           </button>
 
@@ -387,8 +385,7 @@
 
       <a href="{{ route('product', ['id' => $deal->id]) }}?type=hotdeal"
          class="product-name"
-         style="text-decoration:none;color:inherit;display:block;"
-         onclick="event.stopPropagation();">
+         style="text-decoration:none;color:inherit;display:block;">
         {{ $deal->name }}
       </a>
 
@@ -409,7 +406,7 @@
           @endif
         </div>
 
-        <div class="cart-action-wrap" onclick="event.stopPropagation();">
+        <div class="cart-action-wrap">
 
           <button class="cart-btn show-qty-btn"
                   data-uid="{{ $uid }}"

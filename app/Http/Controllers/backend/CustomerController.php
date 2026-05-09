@@ -25,11 +25,11 @@ class CustomerController extends Controller
                 ->with('error', 'Admin users cannot be viewed here.');
         }
 
-        $user->load([
-            'orders.items',
-            'wishlists',
-            'carts',
-        ]);
+$user->load([
+    'orders.items.product',  // ✅ product পর্যন্ত load
+    'wishlists.product',     // ✅ wishlist এর product
+    'carts.product',         // ✅ cart এর product
+]);
 
         return view('backend.customers.show', compact('user'));
     }

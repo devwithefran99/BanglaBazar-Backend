@@ -1422,7 +1422,9 @@
   font-family: 'Nunito', sans-serif;
   z-index: -999;
 }
- 
+ .bill{
+  z-index: -999px;
+ }
 .bl-page-title {
   font-size: clamp(20px, 4vw, 26px);
   font-weight: 800;

@@ -5,6 +5,7 @@ use App\Http\Controllers\Backend\ProductController;
 use App\Http\Controllers\Backend\HotDealController;
 use App\Http\Controllers\Backend\CustomerController;
 use App\Http\Controllers\Backend\AdminAuthController;
+use App\Http\Controllers\Backend\OrderController;
 
 // ── Admin Login (guest only) ─────────────────
 Route::middleware('guest')->group(function () {
@@ -29,3 +30,8 @@ Route::middleware('auth')->group(function () {
     });
 
 });
+
+// Orders
+Route::get('/orders', [OrderController::class, 'index'])->name('backend.orders.index');
+Route::get('/orders/{id}', [OrderController::class, 'show'])->name('backend.orders.show');
+Route::patch('/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('backend.orders.updateStatus');

@@ -9,7 +9,17 @@ class UserDashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $user->load(['orders.items', 'wishlists', 'carts']);
+
+        // ✅ orders এর সাথে items ও load করো
+        $user->load([
+            'orders' => function($q) {
+                $q->latest()->take(10);
+            },
+            'orders.items',
+            'wishlists',
+            'carts',
+        ]);
+
         return view('frontend.userdashboard', compact('user'));
     }
 }

@@ -66,3 +66,8 @@ Route::middleware(['auth'])->group(function () {
 // checkout 
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.show');
 Route::post('/checkout/place', [CheckoutController::class, 'place'])->name('checkout.place')->middleware('auth');
+
+// Order Success
+Route::get('/order/success/{id}', [CheckoutController::class, 'success'])
+    ->name('order.success')
+    ->middleware('auth');

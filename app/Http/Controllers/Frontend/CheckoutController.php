@@ -13,29 +13,17 @@ use Illuminate\Support\Facades\DB;
 
 class CheckoutController extends Controller
 {
-    /**
-     * Show checkout page
-     *
-     * 3 scenarios:
-     * 1. Cart checkout   → /checkout?source=cart
-     * 2. Buy Now         → /checkout?source=buynow&type=product&id=5&qty=2
-     * 3. Wishlist Buy All→ /checkout?source=wishlist
-     */
     public function index(Request $request)
     {
         $source = $request->query('source', 'cart');
-        $items  = collect(); // order summary items
+        $items  = collect();
         $total  = 0;
 
         if ($source === 'buynow') {
-            // ── Single product Buy Now ──
-            $type = $request->query('type', 'product');
-            $id   = $request->query('id');
-            $qty  = max(1, (int) $request->query('qty', 1));
-
-            $product = $type === 'hotdeal'
-                ? HotDeal::find($id)
-                : Product::find($id);
+            $type    = $request->query('type', 'product');
+            $id      = $request->query('id');
+            $qty     = max(1, (int) $request->query('qty', 1));
+            $product = $type === 'hotdeal' ? HotDeal::find($id) : Product::find($id);
 
             if ($product) {
                 $qty = min($qty, $product->stock);
@@ -50,7 +38,6 @@ class CheckoutController extends Controller
             }
 
         } elseif ($source === 'wishlist') {
-            // ── Wishlist Buy All ──
             if (Auth::check()) {
                 $wishlists = Auth::user()->wishlists()->with('product')->get();
                 foreach ($wishlists as $wish) {
@@ -68,16 +55,12 @@ class CheckoutController extends Controller
             }
 
         } else {
-            // ── Cart checkout (default) ──
             if (Auth::check()) {
                 $cartItems = Auth::user()->carts()->get();
                 foreach ($cartItems as $cartItem) {
-                    // product_type অনুযায়ী সঠিক model
-                    if ($cartItem->product_type === 'hotdeal') {
-                        $product = HotDeal::find($cartItem->product_id);
-                    } else {
-                        $product = Product::find($cartItem->product_id);
-                    }
+                    $product = $cartItem->product_type === 'hotdeal'
+                        ? HotDeal::find($cartItem->product_id)
+                        : Product::find($cartItem->product_id);
                     if (!$product) continue;
                     $qty = $cartItem->quantity;
                     $items->push([
@@ -92,29 +75,24 @@ class CheckoutController extends Controller
             }
         }
 
-        // User info prefill
         $user = Auth::user();
-
         return view('frontend.checkout', compact('items', 'total', 'source', 'user'));
     }
 
-    /**
-     * Place Order
-     */
     public function place(Request $request)
     {
         $request->validate([
-            'first_name'   => 'required|string|max:100',
-            'last_name'    => 'required|string|max:100',
-            'address'      => 'required|string|max:255',
-            'country'      => 'required|string',
-            'state'        => 'required|string',
-            'zip'          => 'required|string|max:20',
-            'email'        => 'required|email',
-            'phone'        => 'required|string|max:20',
-            'payment'      => 'required|string',
-            'source'       => 'required|string',
-            'items'        => 'required|string', // JSON encoded items
+            'first_name' => 'required|string|max:100',
+            'last_name'  => 'required|string|max:100',
+            'address'    => 'required|string|max:255',
+            'country'    => 'required|string',
+            'state'      => 'required|string',
+            'zip'        => 'required|string|max:20',
+            'email'      => 'required|email',
+            'phone'      => 'required|string|max:20',
+            'payment'    => 'required|string',
+            'source'     => 'required|string',
+            'items'      => 'required|string',
         ]);
 
         $source    = $request->source;
@@ -126,22 +104,20 @@ class CheckoutController extends Controller
 
         DB::beginTransaction();
         try {
-            // ── Create Order ──
             $total = collect($orderData)->sum(fn($i) => $i['price'] * $i['quantity']);
 
             $order = Order::create([
-                'user_id'        => Auth::id(),
-                'total_price'    => $total,
-                'status'         => 'pending',
-                'address'        => $request->first_name . ' ' . $request->last_name
-                                    . ', ' . $request->address
-                                    . ', ' . $request->state
-                                    . ', ' . $request->country
-                                    . ' - ' . $request->zip,
-                'phone'          => $request->phone,
+                'user_id'     => Auth::id(),
+                'total_price' => $total,
+                'status'      => 'pending',
+                'address'     => $request->first_name . ' ' . $request->last_name
+                                 . ', ' . $request->address
+                                 . ', ' . $request->state
+                                 . ', ' . $request->country
+                                 . ' - ' . $request->zip,
+                'phone'       => $request->phone,
             ]);
 
-            // ── Create Order Items ──
             foreach ($orderData as $item) {
                 OrderItem::create([
                     'order_id'     => $order->id,
@@ -152,29 +128,36 @@ class CheckoutController extends Controller
                     'price'        => $item['price'],
                 ]);
 
-                // ── Stock কমাও ──
                 if ($item['product_type'] === 'hotdeal') {
-                    HotDeal::where('id', $item['product_id'])
-                           ->decrement('stock', $item['quantity']);
+                    HotDeal::where('id', $item['product_id'])->decrement('stock', $item['quantity']);
                 } else {
-                    Product::where('id', $item['product_id'])
-                           ->decrement('stock', $item['quantity']);
+                    Product::where('id', $item['product_id'])->decrement('stock', $item['quantity']);
                 }
             }
 
-            // ── Cart clear করো (cart checkout হলে) ──
             if ($source === 'cart' && Auth::check()) {
                 Auth::user()->carts()->delete();
             }
 
             DB::commit();
 
-            return redirect()->route('order.success', $order->id)
-                ->with('success', '✅ Order placed successfully!');
+            return redirect()->route('order.success', ['id' => $order->id]);
 
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Order failed: ' . $e->getMessage());
         }
+    }
+
+    // ✅ Order Success Page
+    public function success($id)
+    {
+        $order = Order::with('items')->findOrFail($id);
+
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        return view('frontend.order-success', compact('order'));
     }
 }

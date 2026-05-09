@@ -89,6 +89,17 @@
               <div>Dashboard</div>
             </a>
           </li>
+{{-- orders --}}
+          <li class="menu-item {{ request()->routeIs('backend.orders.*') ? 'active' : '' }}">
+                <a href="{{ route('backend.orders.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-receipt"></i>
+                    <div>Orders</div>
+                    @php $pending = \App\Models\Order::where('status','pending')->count(); @endphp
+                    @if($pending > 0)
+                        <div class="badge bg-danger rounded-pill ms-auto">{{ $pending }}</div>
+                    @endif
+                </a>
+          </li>
 
           {{-- Products --}}
           <li class="menu-item {{ request()->routeIs('backend.products.*') ? 'active open' : '' }}">

@@ -409,3 +409,5 @@ document.addEventListener('click', function (e) {
 
   window.location.href = `/product/${productId}?type=${productType}`;
 });
+
+

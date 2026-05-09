@@ -1,4 +1,3 @@
-
 @extends('backend.layouts.app')
 @section('title', 'Customer — ' . ($user->name ?? $user->email))
 
@@ -11,7 +10,7 @@
   </a>
   <div>
     <h4 class="fw-bold mb-0">Customer Detail</h4>
-    <small class="text-muted">{{ $user->email }}</small>s
+    <small class="text-muted">{{ $user->email }}</small>
   </div>
 </div>
 
@@ -47,15 +46,15 @@
       <div class="card-footer">
         <div class="row text-center g-0">
           <div class="col border-end">
-            <h6 class="mb-0 fw-bold">{{ $user->orders ? $user->orders->count() : 0 }}</h6>
+            <h6 class="mb-0 fw-bold">{{ $user->orders->count() }}</h6>
             <small class="text-muted">Orders</small>
           </div>
           <div class="col border-end">
-            <h6 class="mb-0 fw-bold">{{ $user->wishlists ? $user->wishlists->count() : 0 }}</h6>
+            <h6 class="mb-0 fw-bold">{{ $user->wishlists->count() }}</h6>
             <small class="text-muted">Wishlist</small>
           </div>
           <div class="col">
-            <h6 class="mb-0 fw-bold">{{ $user->carts ? $user->carts->count() : 0 }}</h6>
+            <h6 class="mb-0 fw-bold">{{ $user->carts->count() }}</h6>
             <small class="text-muted">In Cart</small>
           </div>
         </div>
@@ -74,6 +73,10 @@
           <span class="text-muted">Last Update</span>
           <span class="fw-semibold">{{ $user->updated_at->diffForHumans() }}</span>
         </div>
+        <div class="d-flex justify-content-between py-2 border-bottom">
+          <span class="text-muted">Phone</span>
+          <span class="fw-semibold">{{ $user->phone ?? '—' }}</span>
+        </div>
         <div class="d-flex justify-content-between py-2">
           <span class="text-muted">Role</span>
           <span class="badge bg-label-primary">{{ ucfirst($user->role ?? 'customer') }}</span>
@@ -91,28 +94,28 @@
           <li class="nav-item">
             <a class="nav-link active" data-bs-toggle="tab" href="#orders-tab">
               <i class="bx bx-receipt me-1"></i> Orders
-              <span class="badge bg-primary ms-1">{{ $user->orders ? $user->orders->count() : 0 }}</span>
+              <span class="badge bg-primary ms-1">{{ $user->orders->count() }}</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" data-bs-toggle="tab" href="#wishlist-tab">
               <i class="bx bx-heart me-1"></i> Wishlist
-              <span class="badge bg-danger ms-1">{{ $user->wishlists ? $user->wishlists->count() : 0 }}</span>
+              <span class="badge bg-danger ms-1">{{ $user->wishlists->count() }}</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" data-bs-toggle="tab" href="#cart-tab">
               <i class="bx bx-cart me-1"></i> Cart
-              <span class="badge bg-warning ms-1">{{ $user->carts ? $user->carts->count() : 0 }}</span>
+              <span class="badge bg-warning ms-1">{{ $user->carts->count() }}</span>
             </a>
           </li>
         </ul>
       </div>
 
-      <div class="card-body tab-content p-0">
+      <div class="tab-content">
 
         {{-- ── Orders Tab ── --}}
-        <div class="tab-pane fade show active" id="orders-tab">
+        <div class="tab-pane fade show active p-0" id="orders-tab">
           @if($user->orders->count())
             <div class="table-responsive">
               <table class="table table-hover mb-0">
@@ -178,8 +181,8 @@
         </div>
 
         {{-- ── Wishlist Tab ── --}}
-        <div class="tab-pane fade" id="wishlist-tab">
-          @if{{ $user->wishlists ? $user->wishlists->count() : 0 }}
+        <div class="tab-pane fade p-0" id="wishlist-tab">
+          @if($user->wishlists->count())
             <div class="table-responsive">
               <table class="table table-hover mb-0">
                 <thead class="table-light">
@@ -190,7 +193,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  @foreach($user->wishlistItems as $item)
+                  @foreach($user->wishlists as $item)
                     <tr>
                       <td>
                         <div class="d-flex align-items-center gap-2">
@@ -228,8 +231,8 @@
         </div>
 
         {{-- ── Cart Tab ── --}}
-        <div class="tab-pane fade" id="cart-tab">
-          @if($user->cartItems->count())
+        <div class="tab-pane fade p-0" id="cart-tab">
+          @if($user->carts->count())
             <div class="table-responsive">
               <table class="table table-hover mb-0">
                 <thead class="table-light">
@@ -242,7 +245,7 @@
                 </thead>
                 <tbody>
                   @php $cartTotal = 0; @endphp
-                  @foreach($user->cartItems as $item)
+                  @foreach($user->carts as $item)
                     @php
                       $price = $item->product->price ?? 0;
                       $sub   = $price * ($item->quantity ?? 1);
