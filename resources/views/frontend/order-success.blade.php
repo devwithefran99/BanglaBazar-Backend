@@ -17,6 +17,7 @@
 <link rel="stylesheet" href="{{ asset('frontend/css/common.css') }}">
 <link rel="stylesheet" href="{{ asset('frontend/css/responsive.css') }}">
 <title>BanglaBazar 24/7</title>
+ <link rel="icon" type="image/png" href="{{ asset('frontend/image/favIcon.png') }}">
 
 </head>
 <body>
