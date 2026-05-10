@@ -8,6 +8,8 @@ use App\Http\Controllers\Frontend\WishlistController;
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\CheckoutController;
 use App\Http\Controllers\Frontend\ProductController;
+use App\Http\Controllers\Frontend\CouponController;
+
 
 // ── Public Pages ──────────────────────────────
 Route::get('/',        [HomeController::class, 'index'])->name('home');
@@ -71,3 +73,8 @@ Route::post('/checkout/place', [CheckoutController::class, 'place'])->name('chec
 Route::get('/order/success/{id}', [CheckoutController::class, 'success'])
     ->name('order.success')
     ->middleware('auth');
+
+
+Route::post('/coupon/apply', [CouponController::class, 'apply'])
+     ->name('coupon.apply')
+     ->middleware('auth');

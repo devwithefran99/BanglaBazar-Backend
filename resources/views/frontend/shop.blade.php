@@ -194,38 +194,51 @@
     <div class="container p-0">
       <div class="row g-0">
 
-        {{-- FILTER SIDEBAR --}}
-        <div class="col-lg-3 filter-sidebar" id="filter-sidebar">
-          <div class="d-flex align-items-center justify-content-between mb-4">
-            <h5 class="mb-0 fw-bold">All Categories</h5>
-            <button onclick="closeSidebar()" class="btn btn-success btn-sm d-lg-none">
-              <i class="bi bi-x-lg"></i>
-            </button>
-          </div>
-          <div class="mb-4">
-            <button class="category-item active-cat" data-filter="all">
-              <span><i class="bi bi-grid me-2"></i>All Products</span>
-              <span class="cat-count">{{ $products->count() + $hotDeals->count() }}</span>
-            </button>
-            @foreach($categories as $cat)
-              <button class="category-item" data-filter="{{ $cat }}">
-                <span><i class="bi bi-tag me-2"></i>{{ ucfirst($cat) }}</span>
-                <span class="cat-count">
-                  {{ $products->where('category',$cat)->count() + $hotDeals->where('category',$cat)->count() }}
-                </span>
-              </button>
-            @endforeach
-          </div>
-          <div class="bg-white text-dark p-4 rounded-4 mb-4 text-center">
-            <h4 class="fw-bold text-success mb-1">79% Discount</h4>
-            <p class="mb-3 small">on your first order</p>
-            <a href="#" class="btn btn-success btn-sm px-4">Shop Now <i class="bi bi-arrow-right"></i></a>
-          </div>
-          <div class="text-center mt-3 text-muted small" id="results-count">
-            {{ $products->count() + $hotDeals->count() }} Results Found
-          </div>
-        </div>
+{{-- FILTER SIDEBAR --}}
+<div class="col-lg-3 filter-sidebar" id="filter-sidebar">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h5 class="mb-0 fw-bold">All Categories</h5>
+    <button onclick="closeSidebar()" class="btn btn-success btn-sm d-lg-none">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
 
+  <div class="mb-4">
+
+    {{-- All Products --}}
+    <a href="{{ route('shop') }}"
+       class="category-item {{ $selectedCategory === 'all' ? 'active-cat' : '' }}"
+       style="text-decoration:none;">
+      <span><i class="bi bi-grid me-2"></i>All Products</span>
+      <span class="cat-count">{{ $allProducts->count() + $allHotDeals->count() }}</span>
+    </a>
+
+    {{-- DB থেকে Categories --}}
+    @foreach($dbCategories as $cat)
+    @php
+      $count = $allProducts->where('category', $cat->slug)->count()
+             + $allHotDeals->where('category', $cat->slug)->count();
+    @endphp
+    <a href="{{ route('shop') }}?category={{ $cat->slug }}"
+       class="category-item {{ $selectedCategory === $cat->slug ? 'active-cat' : '' }}"
+       style="text-decoration:none;">
+      <span><i class="bi bi-tag me-2"></i>{{ $cat->name }}</span>
+      <span class="cat-count">{{ $count }}</span>
+    </a>
+    @endforeach
+
+  </div>
+
+  <div class="bg-white text-dark p-4 rounded-4 mb-4 text-center">
+    <h4 class="fw-bold text-success mb-1">79% Discount</h4>
+    <p class="mb-3 small">on your first order</p>
+    <a href="#" class="btn btn-success btn-sm px-4">Shop Now <i class="bi bi-arrow-right"></i></a>
+  </div>
+
+  <div class="text-center mt-3 text-muted small" id="results-count">
+    {{ $products->count() + $hotDeals->count() }} Results Found
+  </div>
+</div>
         {{-- PRODUCT GRID --}}
 <div class="col-lg-9">
   <div class="top-bar d-flex align-items-center justify-content-between flex-wrap gap-3">
@@ -452,12 +465,32 @@
 @endforeach
       {{-- Empty state --}}
       @if($products->isEmpty() && $hotDeals->isEmpty())
-      <div class="col-12 text-center py-5">
-        <img src="{{ asset('frontend/image/nodata.png') }}" alt=""
-             style="max-width:200px;opacity:0.5;">
-        <p class="text-muted mt-3">কোনো product পাওয়া যায়নি।</p>
-      </div>
-      @endif
+<div class="col-12 text-center py-5">
+  @if($selectedCategory !== 'all')
+    <div style="padding: 60px 20px;">
+      <i class="bi bi-hourglass-split text-success" style="font-size:3.5rem;"></i>
+      <h4 class="mt-3 fw-bold">Coming Soon!</h4>
+      <p class="text-muted mt-2">
+        <strong>
+          @php
+          $labels = ['sutki'=>'Sutki','meat'=>'Meat','fish'=>'Fish',
+                     'oil_ghee'=>'Oil & Ghee','spices'=>'Spices',
+                     'rice'=>'Rice','beverage'=>'Beverage'];
+          echo $labels[$selectedCategory] ?? ucfirst($selectedCategory);
+          @endphp
+        </strong> category-তে শীঘ্রই products আসছে 🚀
+      </p>
+      <a href="{{ route('shop') }}" class="btn btn-success mt-2 px-4">
+        <i class="bi bi-arrow-left me-1"></i> সব Products দেখুন
+      </a>
+    </div>
+  @else
+    <img src="{{ asset('frontend/image/nodata.png') }}" alt=""
+         style="max-width:200px;opacity:0.5;">
+    <p class="text-muted mt-3">কোনো product পাওয়া যায়নি।</p>
+  @endif
+</div>
+@endif
  
     </div>
   </div>

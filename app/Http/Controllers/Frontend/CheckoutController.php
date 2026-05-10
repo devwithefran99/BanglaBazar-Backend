@@ -76,78 +76,89 @@ class CheckoutController extends Controller
         }
 
         $user = Auth::user();
-        return view('frontend.checkout', compact('items', 'total', 'source', 'user'));
+        return view('frontend.checkOut', compact('items', 'total', 'source', 'user'));
     }
 
     public function place(Request $request)
-    {
-        $request->validate([
-            'first_name' => 'required|string|max:100',
-            'last_name'  => 'required|string|max:100',
-            'address'    => 'required|string|max:255',
-            'country'    => 'required|string',
-            'state'      => 'required|string',
-            'zip'        => 'required|string|max:20',
-            'email'      => 'required|email',
-            'phone'      => 'required|string|max:20',
-            'payment'    => 'required|string',
-            'source'     => 'required|string',
-            'items'      => 'required|string',
+{
+    $request->validate([
+        'first_name' => 'required|string|max:100',
+        'last_name'  => 'required|string|max:100',
+        'address'    => 'required|string|max:255',
+        'country'    => 'required|string',
+        'state'      => 'required|string',
+        'zip'        => 'required|string|max:20',
+        'email'      => 'required|email',
+        'phone'      => 'required|string|max:20',
+        'payment'    => 'required|string',
+        'source'     => 'required|string',
+        'items'      => 'required|string',
+    ]);
+
+    $source    = $request->source;
+    $orderData = json_decode($request->items, true);
+
+    if (!$orderData || count($orderData) === 0) {
+        return back()->with('error', 'No items to order!');
+    }
+
+    DB::beginTransaction();
+    try {
+        // ── Subtotal calculate ──
+        $total = collect($orderData)->sum(fn($i) => $i['price'] * $i['quantity']);
+
+        // ── Coupon discount apply ── 👈 নতুন
+        $discount = (float) $request->input('coupon_discount', 0);
+        $total    = max(0, $total - $discount);
+
+        $order = Order::create([
+            'user_id'     => Auth::id(),
+            'total_price' => $total, // 👈 discount বাদে total
+            'status'      => 'pending',
+            'address'     => $request->first_name . ' ' . $request->last_name
+                             . ', ' . $request->address
+                             . ', ' . $request->state
+                             . ', ' . $request->country
+                             . ' - ' . $request->zip,
+            'phone'       => $request->phone,
         ]);
 
-        $source    = $request->source;
-        $orderData = json_decode($request->items, true);
-
-        if (!$orderData || count($orderData) === 0) {
-            return back()->with('error', 'No items to order!');
-        }
-
-        DB::beginTransaction();
-        try {
-            $total = collect($orderData)->sum(fn($i) => $i['price'] * $i['quantity']);
-
-            $order = Order::create([
-                'user_id'     => Auth::id(),
-                'total_price' => $total,
-                'status'      => 'pending',
-                'address'     => $request->first_name . ' ' . $request->last_name
-                                 . ', ' . $request->address
-                                 . ', ' . $request->state
-                                 . ', ' . $request->country
-                                 . ' - ' . $request->zip,
-                'phone'       => $request->phone,
+        foreach ($orderData as $item) {
+            OrderItem::create([
+                'order_id'     => $order->id,
+                'product_id'   => $item['product_id'],
+                'product_type' => $item['product_type'],
+                'product_name' => $item['product_name'],
+                'quantity'     => $item['quantity'],
+                'price'        => $item['price'],
             ]);
 
-            foreach ($orderData as $item) {
-                OrderItem::create([
-                    'order_id'     => $order->id,
-                    'product_id'   => $item['product_id'],
-                    'product_type' => $item['product_type'],
-                    'product_name' => $item['product_name'],
-                    'quantity'     => $item['quantity'],
-                    'price'        => $item['price'],
-                ]);
-
-                if ($item['product_type'] === 'hotdeal') {
-                    HotDeal::where('id', $item['product_id'])->decrement('stock', $item['quantity']);
-                } else {
-                    Product::where('id', $item['product_id'])->decrement('stock', $item['quantity']);
-                }
+            if ($item['product_type'] === 'hotdeal') {
+                HotDeal::where('id', $item['product_id'])->decrement('stock', $item['quantity']);
+            } else {
+                Product::where('id', $item['product_id'])->decrement('stock', $item['quantity']);
             }
-
-            if ($source === 'cart' && Auth::check()) {
-                Auth::user()->carts()->delete();
-            }
-
-            DB::commit();
-
-            return redirect()->route('order.success', ['id' => $order->id]);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', 'Order failed: ' . $e->getMessage());
         }
+
+        // ── Coupon use count বাড়াও ── 👈 নতুন
+        if ($request->filled('coupon_code')) {
+            \App\Models\Coupon::where('code', strtoupper($request->coupon_code))
+                              ->increment('used_count');
+        }
+
+        if ($source === 'cart' && Auth::check()) {
+            Auth::user()->carts()->delete();
+        }
+
+        DB::commit();
+
+        return redirect()->route('order.success', ['id' => $order->id]);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return back()->with('error', 'Order failed: ' . $e->getMessage());
     }
+}
 
     // ✅ Order Success Page
     public function success($id)

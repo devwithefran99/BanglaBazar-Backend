@@ -38,17 +38,16 @@
             </div>
 
             <!-- Category -->
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Category</label>
-              <select name="category" class="form-select">
-                <option value="">— Category Select করুন —</option>
-                <option value="clothing" {{ old('category') == 'clothing' ? 'selected' : '' }}>Clothing</option>
-                <option value="electronics" {{ old('category') == 'electronics' ? 'selected' : '' }}>Electronics</option>
-                <option value="food" {{ old('category') == 'food' ? 'selected' : '' }}>Food</option>
-                <option value="accessories" {{ old('category') == 'accessories' ? 'selected' : '' }}>Accessories</option>
-                <option value="other" {{ old('category') == 'other' ? 'selected' : '' }}>Other</option>
-              </select>
-            </div>
+           <select name="category" class="form-select">
+    <option value="">— Category Select করুন —</option>
+    <option value="sutki"    {{ old('category') == 'sutki'    ? 'selected' : '' }}>Sutki</option>
+    <option value="meat"     {{ old('category') == 'meat'     ? 'selected' : '' }}>Meat</option>
+    <option value="fish"     {{ old('category') == 'fish'     ? 'selected' : '' }}>Fish</option>
+    <option value="oil_ghee" {{ old('category') == 'oil_ghee' ? 'selected' : '' }}>Oil & Ghee</option>
+    <option value="spices"   {{ old('category') == 'spices'   ? 'selected' : '' }}>Spices</option>
+    <option value="rice"     {{ old('category') == 'rice'     ? 'selected' : '' }}>Rice</option>
+    <option value="beverage" {{ old('category') == 'beverage' ? 'selected' : '' }}>Beverage</option>
+</select>
 
             <!-- Price & Discount Price -->
             <div class="row">

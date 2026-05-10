@@ -238,47 +238,50 @@
     </div>
   </section>
 
-  {{-- ── CATEGORIES ── --}}
-  <section>
-    <div class="container">
-      <div class="section-wrapper">
-        <div class="section-header">
-          <h2 class="section-title">Popular <span>Categories</span></h2>
-          <a href="{{ route('shop') }}" class="view-all">
-            View All
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </a>
-        </div>
-        <div class="row g-2">
-          @foreach([
-            ['frontend/image/image 1 (1).png','Fresh Fruit'],
-            ['frontend/image/image 1 (2).png','Fresh Vegetables'],
-            ['frontend/image/image 1 (3).png','Fresh Vegetables'],
-            ['frontend/image/image 1 (4).png','Fresh Vegetables'],
-            ['frontend/image/image 1 (5).png','Fresh Vegetables'],
-            ['frontend/image/image 1 (1).png','Fresh Vegetables'],
-            ['frontend/image/image 1 (2).png','Fresh Vegetables'],
-            ['frontend/image/image 1 (3).png','Fresh Vegetables'],
-            ['frontend/image/image 1 (4).png','Fresh Vegetables'],
-            ['frontend/image/image 1 (4).png','Fresh Vegetables'],
-            ['frontend/image/image 1 (4).png','Fresh Vegetables'],
-            ['frontend/image/image 1 (2).png','Fresh Vegetables'],
-          ] as [$img, $name])
-          <div class="col-6 col-md-3 col-lg-2 cat-col">
-            <div class="cat-card">
-              <div class="img-box">
-                <a href="{{ route('shop') }}"><img src="{{ asset($img) }}" alt="{{ $name }}"></a>
-              </div>
-              <span class="cat-name">{{ $name }}</span>
+ {{-- ── CATEGORIES ── --}}
+@php
+$categoryList = [
+    ['slug' => 'sutki',    'name' => 'Sutki',      'img' => 'frontend/image/image 1 (1).png'],
+    ['slug' => 'meat',     'name' => 'Meat',        'img' => 'frontend/image/image 1 (2).png'],
+    ['slug' => 'fish',     'name' => 'Fish',        'img' => 'frontend/image/image 1 (3).png'],
+    ['slug' => 'oil_ghee', 'name' => 'Oil & Ghee',  'img' => 'frontend/image/image 1 (4).png'],
+    ['slug' => 'spices',   'name' => 'Spices',      'img' => 'frontend/image/image 1 (5).png'],
+    ['slug' => 'rice',     'name' => 'Rice',        'img' => 'frontend/image/image 1 (1).png'],
+    ['slug' => 'beverage', 'name' => 'Beverage',    'img' => 'frontend/image/image 1 (2).png'],
+];
+@endphp
+
+<section>
+  <div class="container">
+    <div class="section-wrapper">
+      <div class="section-header">
+        <h2 class="section-title">Popular <span>Categories</span></h2>
+      </div>
+
+      {{-- ✅ এখানে cat-slider-outer wrapper যোগ হলো --}}
+      <div class="cat-slider-outer">
+        <div class="row g-2 cat-track">
+          @foreach($categories as $cat)
+          <div class="col-6 col-md-3 col-lg-2 cat-col cat-card">
+            <div class="img-box">
+              <a href="{{ route('shop') }}?category={{ $cat->slug }}">
+                @if($cat->image)
+                  <img src="{{ asset('storage/'.$cat->image) }}" alt="{{ $cat->name }}">
+                @else
+                  <img src="{{ asset('frontend/image/image 1 (1).png') }}" alt="{{ $cat->name }}">
+                @endif
+              </a>
             </div>
+            <span class="cat-name">{{ $cat->name }}</span>
           </div>
           @endforeach
         </div>
       </div>
+      {{-- ✅ wrapper শেষ --}}
+
     </div>
-  </section>
+  </div>
+</section>
 
   {{-- ── POPULAR PRODUCTS ── --}}
   <section id="populer">

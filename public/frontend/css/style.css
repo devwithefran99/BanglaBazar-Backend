@@ -208,6 +208,7 @@
     .cat-col:nth-child(1)  { animation-delay: 0.04s; }
     .cat-col:nth-child(2)  { animation-delay: 0.08s; }
     /* ... up to 12 */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
     /* categories css ends */
     
     /* populer part starts */
@@ -406,18 +407,26 @@
   .view-all:hover { color: #16a34a; }
     /* populer parts ends */
 
-    /* discount banner starts */
-   #discountBanner .discountBnr{
-    background-image: url(../image/Discount\ Bannar.png);
+/* discount banner starts */
+#discountBanner .discountBnr{
+    background-image: url(../image/discountBanner.png);
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    height: 300px;
-    border-radius: 6px ;
-    margin-bottom: 20px;
-    margin-top: 50px;
-   }
-    /* discount banner ends */
+    width: 100%;
+    height: 500px;
+    aspect-ratio: 16 / 5;
+    border-radius: 10px;
+    margin: 50px 0 20px;
+}
+/* discount banner ends */
+@media (max-width: 768px){
+    #discountBanner .discountBnr{
+        height: 160px;
+        background-size: contain;
+    }
+}
+/* discount banner ends */
 
     /* hotDeals starts */
  /* ---- shared card ---- */

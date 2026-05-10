@@ -100,6 +100,13 @@
                     @endif
                 </a>
           </li>
+          {{-- Categories --}}
+              <li class="menu-item {{ request()->routeIs('backend.categories.*') ? 'active' : '' }}">
+                <a href="{{ route('backend.categories.index') }}" class="menu-link">
+                  <i class="menu-icon tf-icons bx bx-category"></i>
+                  <div>Categories</div>
+                </a>
+              </li>
 
           {{-- Products --}}
           <li class="menu-item {{ request()->routeIs('backend.products.*') ? 'active open' : '' }}">
@@ -140,10 +147,18 @@
     </li>
   </ul>
 </li>
+{{-- cusmoter managment --}}
 <li class="menu-item {{ request()->routeIs('backend.customers.*') ? 'active' : '' }}">
   <a href="{{ route('backend.customers.index') }}" class="menu-link">
     <i class="menu-icon tf-icons bx bx-group"></i>
     <div>User Info</div>
+  </a>
+</li>
+{{-- Coupons --}}
+<li class="menu-item {{ request()->routeIs('backend.coupons.*') ? 'active' : '' }}">
+  <a href="{{ route('backend.coupons.index') }}" class="menu-link">
+    <i class="menu-icon tf-icons bx bx-purchase-tag"></i>
+    <div>Coupons</div>
   </a>
 </li>
         </ul>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\HotDeal;
+use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
@@ -33,10 +34,14 @@ class HomeController extends Controller
                        ->take(10)
                        ->get();
                        // Wishlist preload
+
+    $categories = Category::where('is_active', true)
+                          ->orderBy('sort_order')
+                          ->get();
 if (Auth::check()) {
     Auth::user()->load('wishlists');
 }
 
-    return view('frontend.index', compact('popularProducts', 'hotDeals', 'featureProducts'));
+    return view('frontend.index', compact('popularProducts', 'hotDeals', 'featureProducts', 'categories'));
 }
 }

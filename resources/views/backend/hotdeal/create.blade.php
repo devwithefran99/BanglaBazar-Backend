@@ -30,17 +30,19 @@
             @error('name')<div class="invalid-feedback">{{ $message }}</div>@enderror
           </div>
 
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Category</label>
-            <select name="category" class="form-select">
-              <option value="">— Category Select করুন —</option>
-              @foreach(['clothing','electronics','food','accessories','other'] as $cat)
-                <option value="{{ $cat }}" {{ old('category') == $cat ? 'selected' : '' }}>
-                  {{ ucfirst($cat) }}
-                </option>
-              @endforeach
-            </select>
-          </div>
+         <div class="mb-3">
+  <label class="form-label fw-semibold">Category</label>
+  <select name="category" class="form-select">
+    <option value="">— Category Select করুন —</option>
+    <option value="sutki"    {{ old('category') == 'sutki'    ? 'selected' : '' }}>Sutki</option>
+    <option value="meat"     {{ old('category') == 'meat'     ? 'selected' : '' }}>Meat</option>
+    <option value="fish"     {{ old('category') == 'fish'     ? 'selected' : '' }}>Fish</option>
+    <option value="oil_ghee" {{ old('category') == 'oil_ghee' ? 'selected' : '' }}>Oil & Ghee</option>
+    <option value="spices"   {{ old('category') == 'spices'   ? 'selected' : '' }}>Spices</option>
+    <option value="rice"     {{ old('category') == 'rice'     ? 'selected' : '' }}>Rice</option>
+    <option value="beverage" {{ old('category') == 'beverage' ? 'selected' : '' }}>Beverage</option>
+  </select>
+</div>
 
           <div class="row">
             <div class="col-md-6 mb-3">

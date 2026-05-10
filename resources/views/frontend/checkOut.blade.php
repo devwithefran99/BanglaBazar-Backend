@@ -387,6 +387,47 @@
                     </div>
                     @endforeach
 
+                    {{-- COUPON BOX --}}
+<div class="mb-3">
+  <div class="d-flex gap-2">
+    <input type="text" id="couponInput"
+           class="form-control"
+           placeholder="Coupon code লিখুন..."
+           style="text-transform:uppercase;">
+    <button type="button" onclick="applyCoupon()"
+            class="btn btn-outline-success"
+            style="white-space:nowrap;">
+      Apply
+    </button>
+  </div>
+  <div id="couponMsg" class="mt-2 small"></div>
+</div>
+
+{{-- Hidden inputs --}}
+<input type="hidden" name="coupon_code"     id="couponCode" value="">
+<input type="hidden" name="coupon_discount" id="couponDiscount" value="0">
+
+{{-- Totals --}}
+<div class="bl-totals">
+  <div class="bl-total-row">
+    <span class="label">Subtotal</span>
+    <span class="val">৳{{ number_format($total, 2) }}</span>
+  </div>
+  {{-- Discount row (hidden by default) --}}
+  <div class="bl-total-row" id="discountRow" style="display:none;">
+    <span class="label text-success">Discount</span>
+    <span class="val text-success" id="discountVal">-৳0.00</span>
+  </div>
+  <div class="bl-total-row">
+    <span class="label">Shipping</span>
+    <span class="val bl-free">Free</span>
+  </div>
+  <div class="bl-total-row grand">
+    <span class="label">Total</span>
+    <span class="val" id="grandTotal">৳{{ number_format($total, 2) }}</span>
+  </div>
+</div>
+
                     {{-- Totals --}}
                     <div class="bl-totals">
                         <div class="bl-total-row">
@@ -551,6 +592,57 @@ function selectPayment(label, value) {
     document.querySelectorAll('.bl-radio-option').forEach(l => l.classList.remove('selected'));
     label.classList.add('selected');
     document.getElementById('paymentInput').value = value;
+}
+
+// Coupon Apply
+const originalTotal = {{ $total }};
+
+function applyCoupon() {
+  const code = document.getElementById('couponInput').value.trim();
+  const msgEl = document.getElementById('couponMsg');
+
+  if (!code) {
+    msgEl.innerHTML = '<span class="text-danger">Coupon code দিন।</span>';
+    return;
+  }
+
+  fetch('{{ route('coupon.apply') }}', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+    },
+    body: JSON.stringify({ code: code, total: originalTotal }),
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.valid) {
+      msgEl.innerHTML = '<span class="text-success">' + data.message + '</span>';
+
+      // Discount row দেখাও
+      document.getElementById('discountRow').style.display = 'flex';
+      document.getElementById('discountVal').textContent = '-৳' + data.discount.toFixed(2);
+      document.getElementById('grandTotal').textContent  = '৳' + data.newTotal.toFixed(2);
+
+      // Hidden inputs set করো
+      document.getElementById('couponCode').value     = code;
+      document.getElementById('couponDiscount').value = data.discount;
+
+    } else {
+      msgEl.innerHTML = '<span class="text-danger">' + data.message + '</span>';
+      resetCoupon();
+    }
+  })
+  .catch(() => {
+    msgEl.innerHTML = '<span class="text-danger">Something went wrong!</span>';
+  });
+}
+
+function resetCoupon() {
+  document.getElementById('discountRow').style.display = 'none';
+  document.getElementById('grandTotal').textContent = '৳' + originalTotal.toFixed(2);
+  document.getElementById('couponCode').value     = '';
+  document.getElementById('couponDiscount').value = '0';
 }
 </script>
 

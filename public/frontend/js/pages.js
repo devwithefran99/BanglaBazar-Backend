@@ -266,6 +266,8 @@ if (orderList) {
   window.closeSidebar = closeSidebar;
 }
 
+
+
 /* ─────────────────────────────────────────────────────
    8. BILLING PAGE
 ───────────────────────────────────────────────────── */
@@ -289,3 +291,4 @@ if (blShipDiff) {
 function placeOrder() {
   alert('Order Placed! 🎉');
 }
+
