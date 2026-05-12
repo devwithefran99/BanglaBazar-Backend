@@ -68,6 +68,17 @@
                     @endif
                 </a>
           </li>
+          {{-- Inventory --}}
+            <li class="menu-item {{ request()->routeIs('backend.inventory.*') ? 'active' : '' }}">
+              <a href="{{ route('backend.inventory.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-store-alt"></i>
+                <div>Inventory</div>
+                @php $alertCount = \App\Models\Inventory::lowStock()->count() + \App\Models\Inventory::outOfStock()->count(); @endphp
+                @if($alertCount > 0)
+                  <div class="badge bg-danger rounded-pill ms-auto">{{ $alertCount }}</div>
+                @endif
+              </a>
+            </li>
           {{-- Categories --}}
               <li class="menu-item {{ request()->routeIs('backend.categories.*') ? 'active' : '' }}">
                 <a href="{{ route('backend.categories.index') }}" class="menu-link">

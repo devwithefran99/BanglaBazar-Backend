@@ -59,12 +59,10 @@ body{
 
 /* Logo with premium glow */
 #preloader .loader img {
-  width: 120px;
- 
-  
   filter: drop-shadow(0 0 35px rgba(0, 166, 81, 0.7));
   animation: logoPulse 2.8s ease-in-out infinite;
   transition: all 0.4s ease;
+  margin: -40px;
 }
 
 #preloader .loader img:hover {
@@ -80,8 +78,9 @@ body{
   letter-spacing: 5px;
   text-transform: uppercase;
   color: var(--green);
-  margin: 0;
   position: relative;
+  margin-top: 20px ;
+  margin-left: 10px;
 }
 
 #preloader .loader p::after {
@@ -154,9 +153,7 @@ body{
 }
 
 /* Quantity Selector Styles */
-/* ═══════════════════════════════════════════════════════
-   QUANTITY SELECTOR - RESPONSIVE
-═══════════════════════════════════════════════════════ */
+/*  QUANTITY SELECTOR - RESPONSIVE */
 
 .cart-action-wrap {
   position: relative;
@@ -435,7 +432,11 @@ body{
     .cart-label { font-size: 12px; color: var(--text-light); line-height: 1; }
     .cart-price { font-size: 14px; font-weight: 800; color: var(--text-dark); }
  
-    /* ── NAVBAR ───────────────────────────────────── */
+    /* NAVBAR  */
+    #navigation {
+  position: relative;
+  z-index: 1000;
+}
      .main-navbar {
       background: var(--green);
       padding: 0;
@@ -541,7 +542,7 @@ body{
   transform: translateY(10px);
   transition: .25s ease;
 
-  z-index: 9999; /* 🔥 important */
+  z-index: 9999 !important; 
 }
 
 /* submenu items */

@@ -10,6 +10,8 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Inventory;
+use App\Models\InventoryMovement;
 
 class CheckoutController extends Controller
 {
@@ -123,7 +125,7 @@ class CheckoutController extends Controller
             'phone'       => $request->phone,
         ]);
 
-        foreach ($orderData as $item) {
+      foreach ($orderData as $item) {
             OrderItem::create([
                 'order_id'     => $order->id,
                 'product_id'   => $item['product_id'],
@@ -133,10 +135,31 @@ class CheckoutController extends Controller
                 'price'        => $item['price'],
             ]);
 
+            // Product / HotDeal stock কমাও
             if ($item['product_type'] === 'hotdeal') {
                 HotDeal::where('id', $item['product_id'])->decrement('stock', $item['quantity']);
             } else {
                 Product::where('id', $item['product_id'])->decrement('stock', $item['quantity']);
+            }
+
+            // Inventory stock কমাও (product_id + product_type দিয়ে exact match)
+            $inventory = \App\Models\Inventory::where('product_id', $item['product_id'])
+                ->where('product_type', $item['product_type'])
+                ->first();
+
+            if ($inventory && $inventory->stock >= $item['quantity']) {
+                $stockBefore = $inventory->stock;
+                $inventory->decrement('stock', $item['quantity']);
+
+                \App\Models\InventoryMovement::create([
+                    'inventory_id' => $inventory->id,
+                    'type'         => 'out',
+                    'quantity'     => $item['quantity'],
+                    'stock_before' => $stockBefore,
+                    'stock_after'  => $stockBefore - $item['quantity'],
+                    'note'         => 'Order #' . str_pad($order->id, 6, '0', STR_PAD_LEFT),
+                    'created_by'   => null,
+                ]);
             }
         }
 

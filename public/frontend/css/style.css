@@ -2,6 +2,7 @@
 
     /* heropart css */
 
+
 #heroBanner .row{
   align-items: stretch;
 }
@@ -11,9 +12,12 @@
   
 }
 
-   .main-slider{
-  height:100%;
-   z-index: -999;
+.main-slider {
+  position: relative;
+  height: 100%;
+  min-height: 280px;           
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .main-slider img{
@@ -27,16 +31,19 @@
 .slide {
   position: absolute;
   width: 100%;
+  height: 100%;
   top: 0;
   left: 0;
-
   opacity: 0;
-  transition: opacity 0.8s ease-in-out;
+  transition: opacity 0.8s ease-in-out; /* ✅ একবার define */
+  pointer-events: none;
 }
 
 .slide.active {
   opacity: 1;
+  pointer-events: auto;
 }
+
 
 /* important */
 .main-slider {
@@ -52,6 +59,7 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
+  z-index: 10;          /* ✅ image এর উপরে থাকবে */
   background: #fff;
   border: none;
   padding: 8px 12px;
@@ -76,7 +84,7 @@
 
 /* features */
 .features-bar .row{
-  flex-wrap: nowrap; /* এক লাইনে রাখবে */
+  flex-wrap: nowrap; 
 }
 
 .features-bar .col-3{
@@ -100,7 +108,6 @@
   border-right:none;
 }
 /* mobile fix */
-
     /* hero css ends */
 
     /* categories css starts */
@@ -419,6 +426,7 @@
     border-radius: 10px;
     margin: 50px 0 20px;
 }
+
 /* discount banner ends */
 @media (max-width: 768px){
     #discountBanner .discountBnr{

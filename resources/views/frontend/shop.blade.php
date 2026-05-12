@@ -36,7 +36,7 @@
       <div class="d-flex justify-content-between align-items-center">
         <div>
           <i class="bi bi-geo-alt-fill text-success me-1"></i>
-          Store Location: 5th Floor,Kazi Complex,Beparipara,Agrabad Access Road,Chattogram
+          Store Location: 4th Floor,Kazi Complex,Beparipara,Agrabad Access Road,Chattogram
         </div>
         <div class="d-flex align-items-center gap-2">
           <span class="sep">|</span>

@@ -31,17 +31,18 @@
             @error('name')<div class="invalid-feedback">{{ $message }}</div>@enderror
           </div>
 
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Category</label>
-            <select name="category" class="form-select">
-              <option value="">— Category Select করুন —</option>
-              @foreach(['clothing','electronics','food','accessories','other'] as $cat)
-                <option value="{{ $cat }}" {{ old('category', $hotdeal->category) == $cat ? 'selected' : '' }}>
-                  {{ ucfirst($cat) }}
-                </option>
-              @endforeach
-            </select>
-          </div>
+         <div class="mb-3">
+  <label class="form-label fw-semibold">Category</label>
+  <select name="category" class="form-select">
+    <option value="">— Category Select করুন —</option>
+    @foreach($categories as $cat)
+      <option value="{{ $cat->slug }}"
+        {{ old('category', $hotdeal->category) == $cat->slug ? 'selected' : '' }}>
+        {{ $cat->name }}
+      </option>
+    @endforeach
+  </select>
+</div>
 
           <div class="row">
             <div class="col-md-6 mb-3">

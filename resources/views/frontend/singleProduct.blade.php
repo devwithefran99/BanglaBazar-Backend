@@ -35,7 +35,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <i class="bi bi-geo-alt-fill text-success me-1"></i>
-                        Store Location: 5th Floor,Kazi Complex,Beparipara,Agrabad Access Road,Chattogram
+                        Store Location: 4th Floor,Kazi Complex,Beparipara,Agrabad Access Road,Chattogram
                     </div>
                     <div class="d-flex align-items-center gap-2">
                         <span class="sep">|</span>
@@ -800,7 +800,7 @@ function updatePrice(qty) {
 function updateBuyNow(qty) {
     const buyBtn = document.getElementById('pdBuyNowBtn');
     if (buyBtn) {
-        buyBtn.href = '/checkout?type=' + PD_TYPE + '&id=' + PD_PRODUCT_ID + '&qty=' + qty;
+       buyBtn.href = '/checkout?source=buynow&type=' + PD_TYPE + '&id=' + PD_PRODUCT_ID + '&qty=' + qty;
     }
 }
  

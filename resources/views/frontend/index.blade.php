@@ -11,6 +11,7 @@
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
@@ -25,7 +26,7 @@
 <!-- preloader -->
 <div id="preloader">
   <div class="loader">
-    <img src="{{ asset('frontend/image/Logo.png') }}" alt="logo">
+    <img src="{{ asset('frontend/image/ourlogo.png') }}"  width="130px" alt="logo">
     <p>Loading...</p>
   </div>
 </div>
@@ -39,7 +40,7 @@
       <div class="d-flex justify-content-between align-items-center">
         <div>
           <i class="bi bi-geo-alt-fill text-success me-1"></i>
-          Store Location: 5th Floor,Kazi Complex,Beparipara,Agrabad Access Road,Chattogram
+          Store Location: 4th Floor,Kazi Complex,Beparipara,Agrabad Access Road,Chattogram
         </div>
         <div class="d-flex align-items-center gap-2">
           <span class="sep">|</span>
@@ -54,7 +55,7 @@
     <div class="container">
       <div class="d-flex align-items-center justify-content-between gap-3">
         <a href="#" class="logo-slot">
-          <img src="{{ asset('frontend/image/Logo.png') }}" height="40" alt="logo">
+          <img src="{{ asset('frontend/image/ourlogo.png') }}"  width="120px" alt="logo">
         </a>
         <div class="d-lg-none ms-auto">
           <button class="navbar-toggler-custom" type="button"
@@ -181,63 +182,87 @@
 </header>
 
 <main>
+  {{-- hero section --}}
+ <section id="heroBanner" class="py-2 mt-3">
+  <div class="container-fluid container-md px-2 px-md-3">
+    <div class="row g-2">
 
-  {{-- ── HERO BANNER ── --}}
-  <section id="heroBanner" class="py-2 mt-3">
-    <div class="container-fluid container-md px-2 px-md-3">
-      <div class="row g-2">
-        <div class="col-12 col-md-8">
-          <div class="main-slider position-relative overflow-hidden rounded">
-            <div class="slides position-relative w-100 h-100">
-              <div class="slide active">
-                <a href="{{ route('shop') }}"><img src="{{ asset('frontend/image/Bannar Big.png') }}" class="w-100" alt=""></a>
-              </div>
-              <div class="slide">
-                <a href="{{ route('shop') }}"><img src="{{ asset('frontend/image/Bannar.png') }}" class="w-100" alt=""></a>
-              </div>
-              <div class="slide">
-                <a href="{{ route('shop') }}"><img src="{{ asset('frontend/image/Bannar (1).png') }}" class="w-100" alt=""></a>
-              </div>
+      <!-- MAIN SLIDER -->
+      <div class="col-12 col-md-8">
+        <div class="main-slider position-relative overflow-hidden rounded">
+          <div class="slides position-relative w-100 h-100">
+
+            <!-- Slide 1 -->
+            <div class="slide active">
+              <a href="{{ route('shop') }}"><img src="{{ asset('frontend/image/sorishaBnr.png') }}" class="w-100 " alt=""></a>
             </div>
-            <button class="slider-prev">&#10094;</button>
-            <button class="slider-next">&#10095;</button>
+
+            <!-- Slide 2 -->
+            <div class="slide">
+               <a href="{{ route('shop') }}"><img src="{{ asset('frontend/image/hilshaBnr.png') }}" class="w-100 " alt=""></a>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="slide">
+              <a href="{{ route('shop') }}"><img src="{{ asset('frontend/image/bannerOffer.png') }}" class="w-100 " alt=""></a>
+            </div>
+
           </div>
-        </div>
-        <div class="col-12 col-md-4">
-          <div class="row g-2 h-100">
-            <div class="col-6 col-md-12">
-              <a href="{{ route('shop') }}"><img src="{{ asset('frontend/image/Bannar.png') }}" class="w-100 h-100 rounded object-fit-cover" alt=""></a>
-            </div>
-            <div class="col-6 col-md-12">
-              <a href="{{ route('shop') }}"><img src="{{ asset('frontend/image/Bannar (1).png') }}" class="w-100 h-100 rounded object-fit-cover" alt=""></a>
-            </div>
-          </div>
+
+          <!-- Arrows -->
+          <button class="slider-prev">&#10094;</button>
+          <button class="slider-next">&#10095;</button>
+
         </div>
       </div>
 
-      <div class="bg-light border border-secondary-subtle rounded-3 mt-3 p-2">
-        <div class="row text-center g-0">
-          <div class="col-3 border-end border-secondary-subtle d-flex flex-column align-items-center justify-content-center py-2 px-1">
-            <img src="{{ asset('frontend/gif/wallet-security.gif') }}" alt="" class="mb-1" style="width:36px;height:36px;object-fit:contain;">
-            <p class="mb-0 text-dark" style="font-size:10px;line-height:1.3;">Cash On<br>Delivery</p>
+      <!-- SIDE BANNERS -->
+      <div class="col-12 col-md-4">
+        <div class="row g-2 h-100">
+
+          <div class="col-6 col-md-12">
+            <a href="{{ route('shop') }}"><img src="{{ asset('frontend/image/khasiBnr.png') }}" class="w-100 " alt=""></a>
           </div>
-          <div class="col-3 border-end border-secondary-subtle d-flex flex-column align-items-center justify-content-center py-2 px-1">
-            <img src="{{ asset('frontend/gif/truck.gif') }}" alt="" class="mb-1" style="width:36px;height:36px;object-fit:contain;">
-            <p class="mb-0 text-dark" style="font-size:10px;line-height:1.3;">Fast<br>Delivery</p>
+
+          <div class="col-6 col-md-12">
+             <a href="{{ route('shop') }}"><img src="{{ asset('frontend/image/bannerSm2.png') }}" class="w-100 h-100 rounded object-fit-cover " alt=""></a>
           </div>
-          <div class="col-3 border-end border-secondary-subtle d-flex flex-column align-items-center justify-content-center py-2 px-1">
-            <img src="{{ asset('frontend/gif/helpdesk.gif') }}" alt="" class="mb-1" style="width:36px;height:36px;object-fit:contain;">
-            <p class="mb-0 text-dark" style="font-size:10px;line-height:1.3;">Customer<br>Support</p>
-          </div>
-          <div class="col-3 d-flex flex-column align-items-center justify-content-center py-2 px-1">
-            <img src="{{ asset('frontend/gif/deal.gif') }}" alt="" class="mb-1" style="width:36px;height:36px;object-fit:contain;">
-            <p class="mb-0 text-dark" style="font-size:10px;line-height:1.3;">Best<br>Deals</p>
-          </div>
+
         </div>
+      </div>
+
+    </div>
+
+    <!-- FEATURES BAR -->
+    <div class="bg-light border border-secondary-subtle rounded-3 mt-3 p-2">
+      <div class="row text-center g-0">
+
+        <div class="col-3 border-end border-secondary-subtle d-flex flex-column align-items-center justify-content-center py-2 px-1">
+          <img src="{{asset('frontend/gif/wallet-security.gif')}}" alt="" class="mb-1" style="width: 36px; height: 36px; object-fit: contain;">
+          <p class="mb-0 text-dark" style="font-size: 10px; line-height: 1.3;">Cash On<br>Delivery</p>
+        </div>
+
+        <div class="col-3 border-end border-secondary-subtle d-flex flex-column align-items-center justify-content-center py-2 px-1">
+          <img src="{{asset('frontend/gif/truck.gif')}}" alt="" class="mb-1" style="width: 36px; height: 36px; object-fit: contain;">
+          <p class="mb-0 text-dark" style="font-size: 10px; line-height: 1.3;">Fast<br>Delivery</p>
+        </div>
+
+        <div class="col-3 border-end border-secondary-subtle d-flex flex-column align-items-center justify-content-center py-2 px-1">
+          <img src="{{asset('frontend/gif/helpdesk.gif')}}" alt="" class="mb-1" style="width: 36px; height: 36px; object-fit: contain;">
+          <p class="mb-0 text-dark" style="font-size: 10px; line-height: 1.3;">Customer<br>Support</p>
+        </div>
+
+        <div class="col-3 d-flex flex-column align-items-center justify-content-center py-2 px-1">
+          <img src="{{asset('frontend/gif/deal.gif')}}" alt="" class="mb-1" style="width: 36px; height: 36px; object-fit: contain;">
+          <p class="mb-0 text-dark" style="font-size: 10px; line-height: 1.3;">Best<br>Deals</p>
+        </div>
+
       </div>
     </div>
-  </section>
 
+  </div>
+</section>
+{{-- hero banner ends --}}
  {{-- ── CATEGORIES ── --}}
 @php
 $categoryList = [
@@ -885,7 +910,7 @@ $categoryList = [
   <div class="container">
     <div class="row g-4">
       <div class="col-lg-3 col-md-6 anim-fade-up d1">
-        <img src="{{ asset('frontend/image/logoLight.png') }}" alt="">
+        <img src="{{ asset('frontend/image/ourlogo.png') }}"  width="140px" alt="logo">
         <p class="footer-desc">
           Morbi cursus porttitor enim lobortis molestie. Duis gravida turpis dui, eget bibendum magna congue nec.
         </p>
@@ -934,12 +959,13 @@ $categoryList = [
   </div>
   <div class="footer-bottom mt-4">
     <div class="container">
-      <div class="row align-items-center anim-fade-in d6">
-        <div class="col-12 mySign">
-          <p>BanglaBazar24/7 eCommerce © 2026. All Rights Reserved
-            <span>Powered By <a href="https://github.com/devwithefran99">devwithErfan</a></span>
-          </p>
-        </div>
+      <div class="row anim-fade-in">
+        <div class="col-12 mySign d-flex justify-content-center">
+    <p class="text-center mb-0">
+        BanglaBazar24/7 eCommerce © 2026. All Rights Reserved |
+        <span>Powered By <a href="https://github.com/devwithefran99">devwithErfan</a></span>
+    </p>
+</div>
       </div>
     </div>
   </div>

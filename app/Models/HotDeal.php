@@ -39,4 +39,9 @@ class HotDeal extends Model
         if (is_null($this->deal_ends_at)) return 0;
         return max(0, (int) Carbon::now()->diffInSeconds($this->deal_ends_at, false));
     }
+    public function isExpired(): bool
+{
+    if (!$this->deal_ends_at) return false;
+    return $this->deal_ends_at->isPast();
+}
 }
