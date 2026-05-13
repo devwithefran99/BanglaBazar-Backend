@@ -8,13 +8,20 @@ use Carbon\Carbon;
 class HotDeal extends Model
 {
     protected $fillable = [
-        'name', 'slug', 'description', 'price', 'old_price',
-        'image', 'category', 'stock', 'deal_ends_at', 'is_active'
+        'name', 'slug', 'description',
+        'price', 'old_price',
+        'image', 'category',
+        'stock', 'low_stock_threshold',   // ✅ added
+        'is_best_sale',                   // ✅ added
+        'deal_ends_at', 'is_active',
     ];
 
     protected $casts = [
-        'deal_ends_at' => 'datetime',
-        'is_active'    => 'boolean',
+        'deal_ends_at'  => 'datetime',
+        'is_active'     => 'boolean',
+        'is_best_sale'  => 'boolean',     // ✅ added
+        'price'         => 'decimal:2',
+        'old_price'     => 'decimal:2',
     ];
 
     public function hasSale(): bool
@@ -39,9 +46,10 @@ class HotDeal extends Model
         if (is_null($this->deal_ends_at)) return 0;
         return max(0, (int) Carbon::now()->diffInSeconds($this->deal_ends_at, false));
     }
+
     public function isExpired(): bool
-{
-    if (!$this->deal_ends_at) return false;
-    return $this->deal_ends_at->isPast();
-}
+    {
+        if (!$this->deal_ends_at) return false;
+        return $this->deal_ends_at->isPast();
+    }
 }

@@ -155,12 +155,14 @@
                     <div class="d-flex align-items-center gap-2">
                         <div class="avatar avatar-sm flex-shrink-0">
                             <span class="avatar-initial rounded-circle bg-label-primary" style="font-size:11px;">
-                                {{ strtoupper(substr($order->user->name ?? 'U', 0, 2)) }}
+                               {{ strtoupper(substr($order->billing_first_name ?? $order->user->name ?? 'U', 0, 2)) }}
                             </span>
                         </div>
                         <div>
-                            <div class="fw-semibold" style="font-size:13px;">{{ $order->user->name ?? 'Unknown' }}</div>
-                            <small class="text-muted">{{ $order->user->email ?? '' }}</small>
+                          <div class="fw-semibold" style="font-size:13px;">
+    {{ trim(($order->billing_first_name ?? '') . ' ' . ($order->billing_last_name ?? '')) ?: ($order->user->name ?? 'Unknown') }}
+</div>
+<small class="text-muted">{{ $order->billing_email ?? $order->user->email ?? '' }}</small>
                         </div>
                     </div>
                 </td>

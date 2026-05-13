@@ -18,6 +18,7 @@ class Inventory extends Model
     protected $casts = [
         'is_active' => 'boolean',
         'price'     => 'decimal:2',
+        'buy_price' => 'decimal:2',  // ✅ added
     ];
 
     // ── Relationships ──────────────────────────────────────
@@ -61,6 +62,12 @@ class Inventory extends Model
         if ($this->stock <= 0)                return 'out_of_stock';
         if ($this->stock <= $this->min_stock) return 'low_stock';
         return 'in_stock';
+    }
+
+    // ✅ মোট stock value = stock × sell price  (added)
+    public function getStockValueAttribute(): float
+    {
+        return (float) $this->stock * (float) $this->price;
     }
 
    // প্রতি unit এ profit

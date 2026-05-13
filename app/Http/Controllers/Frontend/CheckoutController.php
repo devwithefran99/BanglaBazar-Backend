@@ -10,8 +10,6 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Models\Inventory;
-use App\Models\InventoryMovement;
 
 class CheckoutController extends Controller
 {
@@ -82,106 +80,106 @@ class CheckoutController extends Controller
     }
 
     public function place(Request $request)
-{
-    $request->validate([
-        'first_name' => 'required|string|max:100',
-        'last_name'  => 'required|string|max:100',
-        'address'    => 'required|string|max:255',
-        'country'    => 'required|string',
-        'state'      => 'required|string',
-        'zip'        => 'required|string|max:20',
-        'email'      => 'required|email',
-        'phone'      => 'required|string|max:20',
-        'payment'    => 'required|string',
-        'source'     => 'required|string',
-        'items'      => 'required|string',
-    ]);
+    {
+        $request->validate([
+            'first_name' => 'required|string|max:100',
+            'last_name'  => 'required|string|max:100',
+            'address'    => 'required|string|max:255',
+            'country'    => 'required|string',
+            'state'      => 'required|string',
+            'zip'        => 'required|string|max:20',
+            'email'      => 'required|email',
+            'phone'      => 'required|string|max:20',
+            'payment'    => 'required|string',
+            'source'     => 'required|string',
+            'items'      => 'required|string',
+        ]);
 
-    $source    = $request->source;
-    $orderData = json_decode($request->items, true);
+        $source    = $request->source;
+        $orderData = json_decode($request->items, true);
 
-    if (!$orderData || count($orderData) === 0) {
-        return back()->with('error', 'No items to order!');
-    }
+        if (!$orderData || count($orderData) === 0) {
+            return back()->with('error', 'No items to order!');
+        }
 
-    DB::beginTransaction();
-    try {
-        // ── Subtotal calculate ──
-        $total = collect($orderData)->sum(fn($i) => $i['price'] * $i['quantity']);
+        DB::beginTransaction();
+        try {
+            // ── Subtotal calculate ──
+            $subtotal = collect($orderData)->sum(fn($i) => $i['price'] * $i['quantity']);
 
-        // ── Coupon discount apply ── 👈 নতুন
-        $discount = (float) $request->input('coupon_discount', 0);
-        $total    = max(0, $total - $discount);
+            // ── Coupon discount apply ──
+            $discount = (float) $request->input('coupon_discount', 0);
+            $total    = max(0, $subtotal - $discount);
 
-        $order = Order::create([
-            'user_id'     => Auth::id(),
-            'total_price' => $total, // 👈 discount বাদে total
-            'status'      => 'pending',
-            'address'     => $request->first_name . ' ' . $request->last_name
+            $order = Order::create([
+                'user_id'         => Auth::id(),
+                'total_price'     => $total,
+                'discount_amount' => $discount,
+                'coupon_code'     => $request->input('coupon_code'),
+                'status'          => 'pending',
+                'payment_method'  => $request->payment,
+
+                // ✅ Billing info from form (NOT from logged-in user)
+                'billing_first_name' => $request->first_name,
+                'billing_last_name'  => $request->last_name,
+                'billing_email'      => $request->email,
+                'billing_phone'      => $request->phone,
+                'billing_country'    => $request->country,
+                'billing_state'      => $request->state,
+                'billing_zip'        => $request->zip,
+                'billing_address'    => $request->address,
+
+                // legacy columns — same data, for backward compatibility
+                'address' => $request->first_name . ' ' . $request->last_name
                              . ', ' . $request->address
                              . ', ' . $request->state
                              . ', ' . $request->country
                              . ' - ' . $request->zip,
-            'phone'       => $request->phone,
-        ]);
-
-      foreach ($orderData as $item) {
-            OrderItem::create([
-                'order_id'     => $order->id,
-                'product_id'   => $item['product_id'],
-                'product_type' => $item['product_type'],
-                'product_name' => $item['product_name'],
-                'quantity'     => $item['quantity'],
-                'price'        => $item['price'],
+                'phone'   => $request->phone,
             ]);
 
-            // Product / HotDeal stock কমাও
-            if ($item['product_type'] === 'hotdeal') {
-                HotDeal::where('id', $item['product_id'])->decrement('stock', $item['quantity']);
-            } else {
-                Product::where('id', $item['product_id'])->decrement('stock', $item['quantity']);
-            }
-
-            // Inventory stock কমাও (product_id + product_type দিয়ে exact match)
-            $inventory = \App\Models\Inventory::where('product_id', $item['product_id'])
-                ->where('product_type', $item['product_type'])
-                ->first();
-
-            if ($inventory && $inventory->stock >= $item['quantity']) {
-                $stockBefore = $inventory->stock;
-                $inventory->decrement('stock', $item['quantity']);
-
-                \App\Models\InventoryMovement::create([
-                    'inventory_id' => $inventory->id,
-                    'type'         => 'out',
+            foreach ($orderData as $item) {
+                OrderItem::create([
+                    'order_id'     => $order->id,
+                    'product_id'   => $item['product_id'],
+                    'product_type' => $item['product_type'],
+                    'product_name' => $item['product_name'],
                     'quantity'     => $item['quantity'],
-                    'stock_before' => $stockBefore,
-                    'stock_after'  => $stockBefore - $item['quantity'],
-                    'note'         => 'Order #' . str_pad($order->id, 6, '0', STR_PAD_LEFT),
-                    'created_by'   => null,
+                    'price'        => $item['price'],
                 ]);
-            }
-        }
 
-        // ── Coupon use count বাড়াও ── 👈 নতুন
-        if ($request->filled('coupon_code')) {
-            \App\Models\Coupon::where('code', strtoupper($request->coupon_code))
-                              ->increment('used_count');
-        }
-
-        if ($source === 'cart' && Auth::check()) {
-            Auth::user()->carts()->delete();
-        }
-
-        DB::commit();
-
-        return redirect()->route('order.success', ['id' => $order->id]);
-
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return back()->with('error', 'Order failed: ' . $e->getMessage());
-    }
+              // ✅ Main product/hotdeal table stock decrement
+if ($item['product_type'] === 'hotdeal') {
+    HotDeal::where('id', $item['product_id'])->decrement('stock', $item['quantity']);
+} else {
+    Product::where('id', $item['product_id'])->decrement('stock', $item['quantity']);
 }
+
+// ✅ Linked Inventory table stock o decrement korun
+\App\Models\Inventory::where('product_id', $item['product_id'])
+                     ->where('product_type', $item['product_type'])
+                     ->decrement('stock', $item['quantity']);
+            }
+
+            // ── Coupon use count বাড়াও ──
+            if ($request->filled('coupon_code')) {
+                \App\Models\Coupon::where('code', strtoupper($request->coupon_code))
+                                  ->increment('used_count');
+            }
+
+            if ($source === 'cart' && Auth::check()) {
+                Auth::user()->carts()->delete();
+            }
+
+            DB::commit();
+
+            return redirect()->route('order.success', ['id' => $order->id]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Order failed: ' . $e->getMessage());
+        }
+    }
 
     // ✅ Order Success Page
     public function success($id)

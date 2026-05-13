@@ -38,45 +38,94 @@
             </div>
 
             <!-- Category -->
-         <div class="mb-3">
-  <label class="form-label fw-semibold">Category</label>
-  <select name="category" class="form-select">
-    <option value="">— Category Select করুন —</option>
-    @foreach($categories as $cat)
-      <option value="{{ $cat->slug }}"
-        {{ old('category') == $cat->slug ? 'selected' : '' }}>
-        {{ $cat->name }}
-      </option>
-    @endforeach
-  </select>
-</div>
-            <!-- Price & Discount Price -->
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label class="form-label fw-semibold">Price (৳) <span class="text-danger">*</span></label>
-                <div class="input-group">
-                  <span class="input-group-text">৳</span>
-                  <input type="number" name="price" step="0.01" min="0"
-                         class="form-control @error('price') is-invalid @enderror"
-                         value="{{ old('price') }}"
-                         placeholder="0.00">
-                  @error('price')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                  @enderror
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Category</label>
+              <select name="category" class="form-select">
+                <option value="">— Category Select করুন —</option>
+                <option value="sutki"    {{ old('category') == 'sutki'    ? 'selected' : '' }}>Sutki</option>
+                <option value="meat"     {{ old('category') == 'meat'     ? 'selected' : '' }}>Meat</option>
+                <option value="fish"     {{ old('category') == 'fish'     ? 'selected' : '' }}>Fish</option>
+                <option value="oil_ghee" {{ old('category') == 'oil_ghee' ? 'selected' : '' }}>Oil & Ghee</option>
+                <option value="spices"   {{ old('category') == 'spices'   ? 'selected' : '' }}>Spices</option>
+                <option value="rice"     {{ old('category') == 'rice'     ? 'selected' : '' }}>Rice</option>
+                <option value="beverage" {{ old('category') == 'beverage' ? 'selected' : '' }}>Beverage</option>
+              </select>
+            </div>
+
+            {{-- ────────── PRICING SECTION ────────── --}}
+            <div class="card bg-light border-0 mb-3">
+              <div class="card-body p-3">
+                <h6 class="fw-bold mb-3 text-primary">
+                  <i class="bx bx-money me-1"></i> Pricing Details
+                </h6>
+
+                <div class="row">
+                  <!-- 1. Regular Price (old_price) -->
+                  <div class="col-md-4 mb-3">
+                    <label class="form-label fw-semibold">
+                      Regular Price (৳)
+                      <small class="text-muted d-block fw-normal">আসল দাম (কেটে দেখাবে)</small>
+                    </label>
+                    <div class="input-group">
+                      <span class="input-group-text">৳</span>
+                      <input type="number" name="old_price" step="0.01" min="0"
+                             id="old_price"
+                             class="form-control @error('old_price') is-invalid @enderror"
+                             value="{{ old('old_price') }}"
+                             placeholder="1000.00">
+                      @error('old_price')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                      @enderror
+                    </div>
+                  </div>
+
+                  <!-- 2. Sell / Offer Price (price) -->
+                  <div class="col-md-4 mb-3">
+                    <label class="form-label fw-semibold">
+                      Sell / Offer Price (৳) <span class="text-danger">*</span>
+                      <small class="text-muted d-block fw-normal">customer যে দামে কিনবে</small>
+                    </label>
+                    <div class="input-group">
+                      <span class="input-group-text">৳</span>
+                      <input type="number" name="price" step="0.01" min="0"
+                             id="price"
+                             class="form-control @error('price') is-invalid @enderror"
+                             value="{{ old('price') }}"
+                             placeholder="800.00">
+                      @error('price')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                      @enderror
+                    </div>
+                  </div>
+
+                  <!-- 3. Buy Price (inventory.buy_price) -->
+                  <div class="col-md-4 mb-3">
+                    <label class="form-label fw-semibold">
+                      Buy Price (৳)
+                      <small class="text-muted d-block fw-normal">supplier থেকে কত টাকায় কেনা</small>
+                    </label>
+                    <div class="input-group">
+                      <span class="input-group-text">৳</span>
+                      <input type="number" name="buy_price" step="0.01" min="0"
+                             id="buy_price"
+                             class="form-control @error('buy_price') is-invalid @enderror"
+                             value="{{ old('buy_price', 0) }}"
+                             placeholder="600.00">
+                      @error('buy_price')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                      @enderror
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label fw-semibold">Discount Price (৳)
-                  <small class="text-muted">(optional)</small>
-                </label>
-                <div class="input-group">
-                  <span class="input-group-text">৳</span>
-                  <input type="number" name="old_price" step="0.01" min="0"
-                         class="form-control"
-                         value="{{ old('old_price') }}"
-                         placeholder="0.00">
+
+                {{-- Live Profit Preview --}}
+                <div id="profitPreview" class="alert alert-success py-2 small mb-0 d-none">
+                  <i class="bx bx-trending-up me-1"></i>
+                  Profit per unit: <strong>৳<span id="profitVal">0.00</span></strong>
+                  (<span id="profitMargin">0</span>% margin)
+                  &nbsp;|&nbsp;
+                  Customer Discount: <strong><span id="discPct">0</span>%</strong>
                 </div>
-                <small class="text-muted">এখানে আসল দাম দিন, price-এ sale দাম</small>
               </div>
             </div>
 
@@ -165,13 +214,13 @@
     <div class="col-md-4">
       <div class="card border-0 bg-label-info">
         <div class="card-body">
-          <h6 class="fw-bold mb-3"><i class="bx bx-bulb me-1"></i> Tips</h6>
+          <h6 class="fw-bold mb-3"><i class="bx bx-bulb me-1"></i> Pricing Guide</h6>
           <ul class="mb-0 ps-3 small">
-            <li class="mb-2">Product name স্পষ্ট ও সংক্ষিপ্ত রাখুন।</li>
-            <li class="mb-2">Discount দিতে চাইলে <strong>Discount Price</strong>-এ আসল দাম, <strong>Price</strong>-এ sale দাম দিন।</li>
-            <li class="mb-2">Image সর্বোচ্চ <strong>2MB</strong>, JPG/PNG/WEBP format।</li>
-            <li class="mb-2">Featured করলে homepage-এ highlight হবে।</li>
-            <li>Active না করলে website-এ দেখাবে না।</li>
+            <li class="mb-2"><strong>Regular Price</strong> = আসল MRP, কেটে দেখাবে।</li>
+            <li class="mb-2"><strong>Sell Price</strong> = এই দামেই বিক্রি হবে।</li>
+            <li class="mb-2"><strong>Buy Price</strong> = supplier price (private, customer দেখবে না)।</li>
+            <li class="mb-2">Buy Price দিলে inventory-তে profit/margin auto calculate হবে।</li>
+            <li>Image সর্বোচ্চ <strong>2MB</strong>, JPG/PNG/WEBP।</li>
           </ul>
         </div>
       </div>
@@ -195,5 +244,32 @@
       reader.readAsDataURL(input.files[0]);
     }
   }
+
+  // ✅ Live profit & discount calculator
+  function calcPricing() {
+    const old   = parseFloat(document.getElementById('old_price').value) || 0;
+    const sell  = parseFloat(document.getElementById('price').value)     || 0;
+    const buy   = parseFloat(document.getElementById('buy_price').value) || 0;
+    const box   = document.getElementById('profitPreview');
+
+    if (sell <= 0 && buy <= 0 && old <= 0) {
+      box.classList.add('d-none');
+      return;
+    }
+
+    const profit  = sell - buy;
+    const margin  = sell > 0 ? ((profit / sell) * 100).toFixed(1) : 0;
+    const discPct = old > sell && old > 0 ? Math.round(((old - sell) / old) * 100) : 0;
+
+    document.getElementById('profitVal').textContent    = profit.toFixed(2);
+    document.getElementById('profitMargin').textContent = margin;
+    document.getElementById('discPct').textContent      = discPct;
+    box.classList.remove('d-none');
+  }
+
+  ['old_price', 'price', 'buy_price'].forEach(id => {
+    document.getElementById(id).addEventListener('input', calcPricing);
+  });
+  calcPricing();
 </script>
 @endpush

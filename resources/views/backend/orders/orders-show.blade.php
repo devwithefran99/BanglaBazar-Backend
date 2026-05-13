@@ -84,38 +84,57 @@
         </div>
 
         {{-- Billing / Delivery Info --}}
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="bx bx-map me-2"></i>Billing & Delivery Info</h5>
-            </div>
-            <div class="card-body">
-                <div class="row g-3">
-                    <div class="col-sm-6">
-                        <label class="form-label text-muted small">Customer Name</label>
-                        <div class="fw-semibold">{{ $order->user->name ?? 'N/A' }}</div>
-                    </div>
-                    <div class="col-sm-6">
-                        <label class="form-label text-muted small">Email</label>
-                        <div class="fw-semibold">{{ $order->user->email ?? 'N/A' }}</div>
-                    </div>
-                    <div class="col-sm-6">
-                        <label class="form-label text-muted small">Phone</label>
-                        <div class="fw-semibold">{{ $order->phone }}</div>
-                    </div>
-                    <div class="col-sm-6">
-                        <label class="form-label text-muted small">Order Date</label>
-                        <div class="fw-semibold">{{ $order->created_at->format('d M Y, h:i A') }}</div>
-                    </div>
-                    <div class="col-12">
-                        <label class="form-label text-muted small">Delivery Address</label>
-                        <div class="fw-semibold">
-                            <i class="bx bx-map-pin text-danger me-1"></i>
-                            {{ $order->address }}
-                        </div>
-                    </div>
+      
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="bx bx-map me-2"></i>Billing & Delivery Info</h5>
+        <small class="text-muted">checkout form থেকে</small>
+    </div>
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-sm-6">
+                <label class="form-label text-muted small">Billing Name</label>
+                <div class="fw-semibold">
+                    {{ trim(($order->billing_first_name ?? '') . ' ' . ($order->billing_last_name ?? '')) ?: 'N/A' }}
                 </div>
             </div>
+            <div class="col-sm-6">
+                <label class="form-label text-muted small">Billing Email</label>
+                <div class="fw-semibold">{{ $order->billing_email ?? 'N/A' }}</div>
+            </div>
+            <div class="col-sm-6">
+                <label class="form-label text-muted small">Billing Phone</label>
+                <div class="fw-semibold">{{ $order->billing_phone ?? $order->phone ?? 'N/A' }}</div>
+            </div>
+            <div class="col-sm-6">
+                <label class="form-label text-muted small">Order Date</label>
+                <div class="fw-semibold">{{ $order->created_at->format('d M Y, h:i A') }}</div>
+            </div>
+            <div class="col-12">
+                <label class="form-label text-muted small">Delivery Address</label>
+                <div class="fw-semibold">
+                    <i class="bx bx-map-pin text-danger me-1"></i>
+                    @if($order->billing_address)
+                        {{ $order->billing_address }},
+                        {{ $order->billing_state }},
+                        {{ $order->billing_country }}
+                        @if($order->billing_zip) - {{ $order->billing_zip }} @endif
+                    @else
+                        {{ $order->address ?? 'N/A' }}
+                    @endif
+                </div>
+            </div>
+            @if($order->payment_method)
+            <div class="col-sm-6">
+                <label class="form-label text-muted small">Payment Method</label>
+                <div class="fw-semibold">
+                    <span class="badge bg-label-info">{{ strtoupper($order->payment_method) }}</span>
+                </div>
+            </div>
+            @endif
         </div>
+    </div>
+</div>
 
     </div>
 
