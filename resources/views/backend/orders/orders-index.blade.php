@@ -235,12 +235,16 @@
         </table>
     </div>
 
-    {{-- Pagination --}}
-    @if($orders->hasPages())
-    <div class="card-footer d-flex justify-content-center">
-        {{ $orders->withQueryString()->links() }}
-    </div>
-    @endif
+   {{-- Pagination --}}
+@if($orders->hasPages())
+<div class="card-footer d-flex justify-content-between align-items-center">
+    <small class="text-muted">
+        Showing {{ $orders->firstItem() }}–{{ $orders->lastItem() }}
+        of {{ $orders->total() }} orders
+    </small>
+    {{ $orders->withQueryString()->links() }}
+</div>
+@endif
 </div>
 
 @endsection
