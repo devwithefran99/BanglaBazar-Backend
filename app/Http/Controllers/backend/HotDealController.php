@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Models\HotDeal;
 use App\Models\Inventory;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -17,10 +18,11 @@ class HotDealController extends Controller
         return view('backend.hotdeal.index', compact('hotDeals'));
     }
 
-    public function create()
-    {
-        return view('backend.hotdeal.create');
-    }
+  public function create()
+{
+    $suppliers = Supplier::active()->orderBy('name')->get();
+    return view('backend.hotdeal.create', compact('suppliers'));
+}
 
     public function store(Request $request)
     {
@@ -32,6 +34,7 @@ class HotDealController extends Controller
             'stock'        => 'required|integer|min:0',
             'image'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'deal_ends_at' => 'nullable|date|after:now',
+             'supplier_id'  => 'nullable|exists:suppliers,id',
         ]);
 
         $imagePath = null;
@@ -52,6 +55,7 @@ class HotDealController extends Controller
             'is_best_sale'        => $request->has('is_best_sale'),
             'is_active'           => $request->has('is_active'),
             'deal_ends_at'        => $request->deal_ends_at ?: null,
+              'supplier_id'         => $request->supplier_id ?: null,
         ]);
 
         // ✅ Inventory auto-create with buy_price
@@ -74,11 +78,12 @@ class HotDealController extends Controller
                          ->with('success', 'Hot Deal & Inventory added successfully!');
     }
 
-    public function edit(HotDeal $hotdeal)
-    {
-        return view('backend.hotdeal.edit', compact('hotdeal'));
-    }
-
+  public function edit(HotDeal $hotdeal)
+{
+    $suppliers = Supplier::active()->orderBy('name')->get();
+    $categories = ['sutki', 'meat', 'fish', 'oil_ghee', 'spices', 'rice', 'beverage'];
+    return view('backend.hotdeal.edit', compact('hotdeal', 'suppliers', 'categories'));
+}
     public function update(Request $request, HotDeal $hotdeal)
     {
         $request->validate([
@@ -89,6 +94,7 @@ class HotDealController extends Controller
             'stock'        => 'required|integer|min:0',
             'image'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'deal_ends_at' => 'nullable|date',
+            'supplier_id'  => 'nullable|exists:suppliers,id',
         ]);
 
         $imagePath = $hotdeal->image;
@@ -110,6 +116,7 @@ class HotDealController extends Controller
             'is_best_sale'        => $request->has('is_best_sale'),
             'is_active'           => $request->has('is_active'),
             'deal_ends_at'        => $request->deal_ends_at ?: null,
+             'supplier_id'         => $request->supplier_id ?: null,
         ]);
 
         // ✅ Linked inventory sync + buy_price update

@@ -48,6 +48,30 @@
                 <option value="beverage" {{ old('category') == 'beverage' ? 'selected' : '' }}>Beverage</option>
               </select>
             </div>
+            {{-- Supplier --}}
+<div class="mb-3 mt-3">
+    <label class="form-label fw-semibold">
+        Supplier
+        <small class="text-muted">(কোন supplier থেকে কিনেছেন?)</small>
+    </label>
+    <select name="supplier_id" class="form-select">
+        <option value="">— Supplier Select করুন —</option>
+        @foreach($suppliers as $sup)
+            <option value="{{ $sup->id }}"
+                {{ old('supplier_id') == $sup->id ? 'selected' : '' }}>
+                {{ $sup->name }}
+                @if($sup->company) — {{ $sup->company }} @endif
+            </option>
+        @endforeach
+    </select>
+    @if($suppliers->isEmpty())
+        <div class="form-text text-warning">
+            <i class="bx bx-info-circle"></i>
+            কোনো active supplier নেই।
+            <a href="{{ route('backend.suppliers.create') }}" target="_blank">এখানে add করুন</a>
+        </div>
+    @endif
+</div>
 
             {{-- ────────── PRICING SECTION ────────── --}}
             <div class="card bg-label-danger border-0 mb-3">

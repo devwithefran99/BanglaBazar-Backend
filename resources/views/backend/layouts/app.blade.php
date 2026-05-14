@@ -140,6 +140,28 @@
     <div>Coupons</div>
   </a>
 </li>
+
+{{-- Suppliers --}}
+<li class="menu-item {{ request()->routeIs('backend.suppliers.*') || request()->routeIs('backend.purchases.*') || request()->routeIs('backend.supplier-payments.*') ? 'active open' : '' }}">
+    <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class="menu-icon tf-icons bx bx-buildings"></i>
+        <div>Suppliers</div>
+    </a>
+    <ul class="menu-sub">
+        <li class="menu-item {{ request()->routeIs('backend.suppliers.index') ? 'active' : '' }}">
+            <a href="{{ route('backend.suppliers.index') }}" class="menu-link"><div>All Suppliers</div></a>
+        </li>
+        <li class="menu-item {{ request()->routeIs('backend.suppliers.create') ? 'active' : '' }}">
+            <a href="{{ route('backend.suppliers.create') }}" class="menu-link"><div>Add Supplier</div></a>
+        </li>
+        <li class="menu-item {{ request()->routeIs('backend.purchases.*') ? 'active' : '' }}">
+            <a href="{{ route('backend.purchases.index') }}" class="menu-link"><div>Purchases</div></a>
+        </li>
+        <li class="menu-item {{ request()->routeIs('backend.supplier-payments.*') ? 'active' : '' }}">
+            <a href="{{ route('backend.supplier-payments.index') }}" class="menu-link"><div>Payments</div></a>
+        </li>
+    </ul>
+</li>
         </ul>
       </aside>
       {{-- ===== / SIDEBAR ===== --}}

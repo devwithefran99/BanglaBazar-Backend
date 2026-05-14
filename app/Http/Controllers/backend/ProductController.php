@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Inventory;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -17,10 +18,11 @@ class ProductController extends Controller
         return view('backend.products.index', compact('products'));
     }
 
-    public function create()
-    {
-        return view('backend.products.create');
-    }
+  public function create()
+{
+    $suppliers = Supplier::active()->orderBy('name')->get();
+    return view('backend.products.create', compact('suppliers'));
+}
 
     public function store(Request $request)
     {
@@ -31,6 +33,7 @@ class ProductController extends Controller
             'buy_price' => 'nullable|numeric|min:0',        // ✅ new
             'stock'     => 'required|integer|min:0',
             'image'     => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'supplier_id' => 'nullable|exists:suppliers,id',
         ]);
 
         $imagePath = null;
@@ -50,6 +53,7 @@ class ProductController extends Controller
             'category'    => $request->category,
             'is_featured' => $request->has('is_featured'),
             'is_active'   => $request->has('is_active'),
+               'supplier_id' => $request->supplier_id ?: null, 
         ]);
 
         // ✅ Inventory auto-create with buy_price
@@ -72,10 +76,11 @@ class ProductController extends Controller
                          ->with('success', 'Product & Inventory added successfully!');
     }
 
-    public function edit(Product $product)
-    {
-        return view('backend.products.edit', compact('product'));
-    }
+   public function edit(Product $product)
+{
+    $suppliers = Supplier::active()->orderBy('name')->get();
+    return view('backend.products.edit', compact('product', 'suppliers'));
+}
 
     public function update(Request $request, Product $product)
     {
@@ -86,6 +91,7 @@ class ProductController extends Controller
             'buy_price' => 'nullable|numeric|min:0',
             'stock'     => 'required|integer|min:0',
             'image'     => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+             'supplier_id' => 'nullable|exists:suppliers,id', 
         ]);
 
         $imagePath = $product->image;
@@ -106,6 +112,7 @@ class ProductController extends Controller
             'category'    => $request->category,
             'is_featured' => $request->has('is_featured'),
             'is_active'   => $request->has('is_active'),
+             'supplier_id' => $request->supplier_id ?: null,
         ]);
 
         // ✅ Linked inventory sync + buy_price update

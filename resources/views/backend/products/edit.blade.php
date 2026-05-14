@@ -53,6 +53,23 @@
                 @endforeach
               </select>
             </div>
+            {{-- Supplier --}}
+<div class="mb-3">
+    <label class="form-label fw-semibold">
+        Supplier
+        <small class="text-muted">(কোন supplier থেকে কিনেছেন?)</small>
+    </label>
+    <select name="supplier_id" class="form-select">
+        <option value="">— Supplier Select করুন —</option>
+        @foreach($suppliers as $sup)
+            <option value="{{ $sup->id }}"
+                {{ old('supplier_id', $product->supplier_id) == $sup->id ? 'selected' : '' }}>
+                {{ $sup->name }}
+                @if($sup->company) — {{ $sup->company }} @endif
+            </option>
+        @endforeach
+    </select>
+</div>
 
             {{-- ────────── PRICING SECTION ────────── --}}
             <div class="card bg-label-danger border-0 mb-3">

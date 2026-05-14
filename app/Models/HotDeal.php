@@ -14,7 +14,9 @@ class HotDeal extends Model
         'stock', 'low_stock_threshold',   // ✅ added
         'is_best_sale',                   // ✅ added
         'deal_ends_at', 'is_active',
+        'supplier_id',
     ];
+    
 
     protected $casts = [
         'deal_ends_at'  => 'datetime',
@@ -51,5 +53,9 @@ class HotDeal extends Model
     {
         if (!$this->deal_ends_at) return false;
         return $this->deal_ends_at->isPast();
+    }
+    public function supplier()
+    {
+        return $this->belongsTo(\App\Models\Supplier::class);
     }
 }

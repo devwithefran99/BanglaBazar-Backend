@@ -30,18 +30,35 @@
                    value="{{ old('name', $hotdeal->name) }}">
             @error('name')<div class="invalid-feedback">{{ $message }}</div>@enderror
           </div>
-
+{{-- category section --}}
          <div class="mb-3">
   <label class="form-label fw-semibold">Category</label>
   <select name="category" class="form-select">
-    <option value="">— Category Select করুন —</option>
-    @foreach($categories as $cat)
-      <option value="{{ $cat->slug }}"
-        {{ old('category', $hotdeal->category) == $cat->slug ? 'selected' : '' }}>
-        {{ $cat->name }}
-      </option>
-    @endforeach
-  </select>
+  <option value="">— Category Select করুন —</option>
+  @foreach($categories as $cat)
+    <option value="{{ $cat }}"
+      {{ old('category', $hotdeal->category) == $cat ? 'selected' : '' }}>
+      {{ ucfirst(str_replace('_', ' ', $cat)) }}
+    </option>
+  @endforeach
+</select>
+</div>
+{{-- Supplier --}}
+<div class="mb-3">
+    <label class="form-label fw-semibold">
+        Supplier
+        <small class="text-muted">(কোন supplier থেকে কিনেছেন?)</small>
+    </label>
+    <select name="supplier_id" class="form-select">
+        <option value="">— Supplier Select করুন —</option>
+        @foreach($suppliers as $sup)
+            <option value="{{ $sup->id }}"
+                {{ old('supplier_id', $hotdeal->supplier_id) == $sup->id ? 'selected' : '' }}>
+                {{ $sup->name }}
+                @if($sup->company) — {{ $sup->company }} @endif
+            </option>
+        @endforeach
+    </select>
 </div>
 
           <div class="row">

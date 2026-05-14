@@ -8,7 +8,7 @@ class Product extends Model
     protected $fillable = [
         'name', 'slug', 'description', 'price', 'old_price',
         'stock', 'low_stock_threshold', 'image',
-        'category', 'is_featured', 'is_active'
+        'category', 'is_featured', 'is_active','supplier_id'
     ];
 
     public function hasSale(): bool
@@ -25,5 +25,9 @@ class Product extends Model
     public function isLowStock(): bool
     {
         return $this->stock <= $this->low_stock_threshold;
+    }
+    public function supplier()
+    {
+        return $this->belongsTo(\App\Models\Supplier::class);
     }
 }

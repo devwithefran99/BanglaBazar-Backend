@@ -9,6 +9,9 @@ use App\Http\Controllers\Backend\OrderController;
 use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\CouponController;
 use App\Http\Controllers\Backend\InventoryController;
+use App\Http\Controllers\Backend\SupplierController;
+use App\Http\Controllers\Backend\PurchaseController;
+use App\Http\Controllers\Backend\SupplierPaymentController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login',  [AdminAuthController::class, 'showLogin'])->name('login');
@@ -44,7 +47,18 @@ Route::middleware('auth')->group(function () {
         Route::post('inventory/{inventory}/adjust-stock',
             [InventoryController::class, 'adjustStock']
         )->name('inventory.adjust-stock');
-        // ───────────────────────────────────────────────────────────
+       
+        // suppliers
+        Route::resource('suppliers', SupplierController::class);
+        Route::patch('suppliers/{supplier}/toggle-status', [SupplierController::class, 'toggleStatus'])
+     ->name('suppliers.toggleStatus');
+     // Suppliers
+        Route::resource('suppliers', SupplierController::class)->except(['show']);
+        Route::resource('purchases', PurchaseController::class)
+     ->only(['index', 'create', 'store', 'destroy']);
+        Route::resource('supplier-payments', SupplierPaymentController::class)
+     ->only(['index', 'store', 'destroy']);
+
     });
 
 });
