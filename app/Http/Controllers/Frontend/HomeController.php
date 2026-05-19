@@ -6,42 +6,54 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\HotDeal;
 use App\Models\Category;
+use App\Models\Review;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
-   public function index()
-{
-    // Popular = সব active product (featured ছাড়াও)
-    $popularProducts = Product::where('is_active', true)
-                              ->latest()
-                              ->take(10)
+    public function index()
+    {
+        $popularProducts = Product::where('is_active', true)
+                                  ->latest()
+                                  ->take(10)
+                                  ->get();
+
+        $featureProducts = Product::where('is_featured', true)
+                                  ->where('is_active', true)
+                                  ->latest()
+                                  ->take(12)
+                                  ->get();
+
+        $hotDeals = HotDeal::where('is_active', true)
+                           ->where(function($q) {
+                               $q->whereNull('deal_ends_at')
+                                 ->orWhere('deal_ends_at', '>', now());
+                           })
+                           ->latest()
+                           ->take(10)
+                           ->get();
+
+        $categories = Category::where('is_active', true)
+                              ->orderBy('sort_order')
                               ->get();
 
-    // Feature = শুধু featured + active product (slider এ দেখাবে)
-    $featureProducts = Product::where('is_featured', true)
-                              ->where('is_active', true)
+        $testimonials = Review::where('status', 'approved')
+                              ->where('featured', true)
+                              ->with('user')
                               ->latest()
-                              ->take(12)
+                              ->take(8)
                               ->get();
 
-    $hotDeals = HotDeal::where('is_active', true)
-                       ->where(function($q) {
-                           $q->whereNull('deal_ends_at')
-                             ->orWhere('deal_ends_at', '>', now());
-                       })
-                       ->latest()
-                       ->take(10)
-                       ->get();
-                       // Wishlist preload
+        if (Auth::check()) {
+            Auth::user()->load('wishlists');
+        }
 
-    $categories = Category::where('is_active', true)
-                          ->orderBy('sort_order')
-                          ->get();
-if (Auth::check()) {
-    Auth::user()->load('wishlists');
-}
-
-    return view('frontend.index', compact('popularProducts', 'hotDeals', 'featureProducts', 'categories'));
-}
+        return view('frontend.index', compact(
+            'popularProducts',
+            'hotDeals',
+            'featureProducts',
+            'categories',
+            'testimonials'
+        ));
+    }
 }

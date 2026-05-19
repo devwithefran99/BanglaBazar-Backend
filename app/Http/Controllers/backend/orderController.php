@@ -7,6 +7,8 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\HotDeal;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderMail;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -70,7 +72,21 @@ class OrderController extends Controller
         ]);
 
         $order = Order::findOrFail($id);
-        $order->update(['status' => $request->status]);
+      $oldStatus = $order->status;
+$newStatus = $request->status;
+$order->update(['status' => $newStatus]);
+
+$mailableStatuses = ['confirmed', 'shipped', 'delivered', 'cancelled'];
+if ($oldStatus !== $newStatus && in_array($newStatus, $mailableStatuses)) {
+    $order->load(['user', 'items']);
+    if ($order->user && $order->user->email) {
+        try {
+            Mail::to($order->user->email)->send(new OrderMail($order, $newStatus));
+        } catch (\Exception $mailEx) {
+            \Log::error('Order status mail failed: ' . $mailEx->getMessage());
+        }
+    }
+}
 
         return back()->with('success', 'Order #' . str_pad($id, 4, '0', STR_PAD_LEFT) . ' status updated to ' . ucfirst($request->status));
     }

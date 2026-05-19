@@ -58,4 +58,29 @@ class HotDeal extends Model
     {
         return $this->belongsTo(\App\Models\Supplier::class);
     }
+    // ── Reviews ──────────────────────────────────────────
+
+public function reviews()
+{
+    return $this->hasMany(Review::class, 'product_id')
+                ->where('product_type', 'hotdeal');
+}
+
+public function approvedReviews()
+{
+    return $this->hasMany(Review::class, 'product_id')
+                ->where('product_type', 'hotdeal')
+                ->where('status', 'approved');
+}
+
+public function getAvgRatingAttribute(): ?float
+{
+    $avg = $this->approvedReviews()->avg('rating');
+    return $avg ? round($avg, 1) : null;
+}
+
+public function getReviewCountAttribute(): int
+{
+    return $this->approvedReviews()->count();
+}
 }

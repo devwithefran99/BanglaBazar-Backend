@@ -21,10 +21,11 @@
 {{-- ── PRELOADER ── --}}
 <div id="preloader">
   <div class="loader">
-    <img src="{{ asset('frontend/image/Logo.png') }}" alt="Logo">
-    <p>Loading...</p>
+    <img src="{{ asset('frontend/image/favIcon.png') }}"  width="80px" alt="logo">
+    <p class="mt-5">Loading...</p>
   </div>
 </div>
+
 
 {{-- ── HEADER ── --}}
 <header>
@@ -52,7 +53,7 @@
     <div class="container">
       <div class="d-flex align-items-center justify-content-between gap-3">
         <a href="#" class="logo-slot">
-          <img src="{{ asset('frontend/image/Logo.png') }}" height="35" alt="logo">
+          <img src="{{ asset('frontend/image/ourlogo.png') }}"  width="120px" alt="logo">
         </a>
         <div class="d-lg-none ms-auto">
           <button class="navbar-toggler-custom" type="button"
@@ -571,7 +572,7 @@
   <div class="container">
     <div class="row g-4">
       <div class="col-lg-3 col-md-6 anim-fade-up d1">
-        <img src="{{ asset('frontend/image/logoLight.png') }}" alt="">
+         <img src="{{ asset('frontend/image/ourlogo.png') }}"  width="140px" alt="logo">
         <p class="footer-desc">
           Morbi cursus porttitor enim lobortis molestie. Duis gravida turpis dui, eget bibendum magna congue nec.
         </p>

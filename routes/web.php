@@ -9,13 +9,17 @@ use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\CheckoutController;
 use App\Http\Controllers\Frontend\ProductController;
 use App\Http\Controllers\Frontend\CouponController;
+use App\Http\Controllers\Frontend\ContactController;
+use App\Http\Controllers\Frontend\ReviewController;
+
 
 
 // ── Public Pages ──────────────────────────────
 Route::get('/',        [HomeController::class, 'index'])->name('home');
 Route::get('/shop',    [ShopController::class, 'index'])->name('shop');
 Route::get('/about',   fn() => view('frontend.about'))->name('about');
-Route::get('/contact', fn() => view('frontend.contact'))->name('contact');
+Route::get('/contact',  [ContactController::class, 'index'])->name('contact');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 Route::get('/wishlist',fn() => view('frontend.wishlist'))->name('wishlist');
 Route::get('/faq',     fn() => view('frontend.faq'))->name('faq');
 
@@ -77,4 +81,10 @@ Route::get('/order/success/{id}', [CheckoutController::class, 'success'])
 
 Route::post('/coupon/apply', [CouponController::class, 'apply'])
      ->name('coupon.apply')
+     ->middleware('auth');
+     
+    //  reviews
+   // reviews
+Route::post('/review', [ReviewController::class, 'store'])
+     ->name('review.store')
      ->middleware('auth');

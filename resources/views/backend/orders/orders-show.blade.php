@@ -107,7 +107,8 @@
                 <div class="fw-semibold">{{ $order->billing_phone ?? $order->phone ?? 'N/A' }}</div>
             </div>
             <div class="col-sm-6">
-                <label class="form-label text-muted small">Order Date</label>
+                <label class="form-label text-muted
+                 small">Order Date</label>
                 <div class="fw-semibold">{{ $order->created_at->format('d M Y, h:i A') }}</div>
             </div>
             <div class="col-12">
@@ -250,6 +251,13 @@
                 </div>
             </div>
         </div>
+
+        {{-- invoice --}}
+          <a href="{{ route('backend.orders.invoice', $order->id) }}"
+              target="_blank"
+              class="btn btn-success w-100 mb-2">
+               <i class="bx bx-printer me-1"></i> Print Invoice
+         </a>
 
         {{-- Back button --}}
         <a href="{{ route('backend.orders.index') }}" class="btn btn-outline-secondary w-100">

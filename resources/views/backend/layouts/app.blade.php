@@ -38,7 +38,7 @@
         <div class="app-brand demo">
           <a href="{{ route('backend.dashboard') }}" class="app-brand-link">
             <span class="app-brand-logo demo">
-              <img src="{{ asset('frontend/image/Logo.png') }}" alt="">
+              <img src="{{ asset('frontend/image/ourlogo.png') }}"  width="120px" alt="logo">
             </span>
           </a>
           <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
@@ -133,6 +133,17 @@
     <div>User Info</div>
   </a>
 </li>
+{{-- Messages --}}
+<li class="menu-item {{ request()->routeIs('backend.messages.*') ? 'active' : '' }}">
+  <a href="{{ route('backend.messages.index') }}" class="menu-link">
+    <i class="menu-icon tf-icons bx bx-envelope"></i>
+    <div>Messages</div>
+    @php $unreadMsgs = \App\Models\ContactMessage::where('is_read', false)->count(); @endphp
+    @if($unreadMsgs > 0)
+      <div class="badge bg-danger rounded-pill ms-auto">{{ $unreadMsgs }}</div>
+    @endif
+  </a>
+</li>
 {{-- Coupons --}}
 <li class="menu-item {{ request()->routeIs('backend.coupons.*') ? 'active' : '' }}">
   <a href="{{ route('backend.coupons.index') }}" class="menu-link">
@@ -161,6 +172,32 @@
             <a href="{{ route('backend.supplier-payments.index') }}" class="menu-link"><div>Payments</div></a>
         </li>
     </ul>
+</li>
+{{-- Invoices --}}
+<li class="menu-item {{ request()->routeIs('backend.invoices.*') ? 'active' : '' }}">
+    <a href="{{ route('backend.invoices.index') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-file"></i>
+        <div>Invoices</div>
+    </a>
+</li>
+
+{{-- Reviews --}}
+<li class="menu-item {{ request()->routeIs('backend.reviews.*') ? 'active' : '' }}">
+    <a href="{{ route('backend.reviews.index') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-star"></i>
+        <div>Reviews</div>
+        @php $pendingReviews = \App\Models\Review::where('status','pending')->count(); @endphp
+        @if($pendingReviews > 0)
+            <span class="badge bg-danger rounded-pill ms-auto">{{ $pendingReviews }}</span>
+        @endif
+    </a>
+</li>
+{{-- email notifications --}}
+<li class="menu-item {{ request()->routeIs('backend.emails.*') ? 'active' : '' }}">
+    <a href="{{ route('backend.emails.index') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-envelope"></i>
+        <div>Email Center</div>
+    </a>
 </li>
         </ul>
       </aside>

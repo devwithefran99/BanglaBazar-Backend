@@ -221,6 +221,12 @@
                        class="btn btn-sm btn-outline-primary">
                         <i class="bx bx-show me-1"></i> View
                     </a>
+                    <a href="{{ route('backend.orders.invoice', $order->id) }}"
+   target="_blank"
+   class="btn btn-sm btn-outline-success"
+   title="Print Invoice">
+    <i class="bx bx-printer"></i>
+</a>
                 </td>
             </tr>
             @empty

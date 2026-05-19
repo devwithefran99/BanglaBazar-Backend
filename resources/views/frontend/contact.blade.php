@@ -25,12 +25,13 @@
 <body>
 <!-- preloader  -->
 
-  <div id="preloader">
+ <div id="preloader">
   <div class="loader">
-    <img src="{{asset('frontend/image/Logo.png')}}" alt="Logo">  
-    <p>Loading...</p>   
+    <img src="{{ asset('frontend/image/favIcon.png') }}"  width="80px" alt="logo">
+    <p class="mt-5">Loading...</p>
   </div>
 </div>
+
 
 <!-- preloader ends -->
     
@@ -65,10 +66,9 @@
     <div class="d-flex align-items-center justify-content-between gap-3">
  
       <!-- Logo -->
-      <a href="#" class="logo-slot">
-        <img src="{{asset('frontend/image/Logo.png')}}" height="35" alt="logo">
-        <!-- Replace above div with <img src="your-logo.png')}}" height="42"> -->
-      </a>
+       <a href="#" class="logo-slot">
+          <img src="{{ asset('frontend/image/ourlogo.png') }}"  width="120px" alt="logo">
+        </a>
       <div class="d-lg-none ms-auto">   <!-- এখানে ms-auto যোগ করো -->
         <button class="navbar-toggler-custom" type="button"
                 data-bs-toggle="offcanvas" data-bs-target="#mobileNav">
@@ -285,45 +285,47 @@
       </div>
     </div>
  
-    <!-- Form Card -->
+      <!-- Form Card -->
     <div class="form-card">
       <div class="form-title">Just Say <span>Hello!</span></div>
       <div class="form-subtitle">
         Do you fancy saying hi to me or you want to get started with your project and you need my help? Feel free to contact us.
       </div>
  
-      <div class="form-row">
-        <div class="form-group">
-          <label>Your Name</label>
-          <input class="form-input" type="text" placeholder="Template Cookie" id="fname">
+      <form action="{{ route('contact.store') }}" method="POST" id="contactForm">
+        @csrf
+ 
+        <div class="form-row">
+          <div class="form-group">
+            <label>Your Name <span style="color:red">*</span></label>
+            <input class="form-input" type="text" name="name" id="fname" placeholder="Your full name">
+          </div>
+          <div class="form-group">
+            <label>Your Email <span style="color:red">*</span></label>
+            <input class="form-input" type="email" name="email" id="femail" placeholder="your@email.com">
+          </div>
         </div>
+ 
         <div class="form-group">
-          <label>Your Email</label>
-          <input class="form-input" type="email" placeholder="zakirsoft@gmail.com" id="femail">
+          <label>Subject <span style="color:red">*</span></label>
+          <input class="form-input" type="text" name="subject" id="fsubject" placeholder="What's this about?">
         </div>
-      </div>
  
-      <div class="form-group">
-        <label>Message</label>
-        <input class="form-input" type="text" placeholder="Hello!" id="fmessage" value="Hello!">
-      </div>
+        <div class="form-group">
+          <label>Message <span style="color:red">*</span></label>
+          <textarea class="form-textarea" name="message" id="fmessage" placeholder="Write your message here..."></textarea>
+        </div>
  
-      <div class="form-group">
-        <label>Subject</label>
-        <textarea class="form-textarea" placeholder="Subjects" id="fsubject"></textarea>
-      </div>
+        <button class="btn-send" type="submit" id="sendBtn">
+          <i class="bi bi-send-fill"></i> Send Message
+        </button>
  
-      <button class="btn-send" onclick="handleSend()">
-        <i class="bi bi-send-fill"></i> Send Message
-      </button>
- 
-      <div class="success-msg" id="successMsg">
-        <i class="bi bi-check-circle-fill"></i> Message sent successfully!
-      </div>
+      </form>
     </div>
  
-  </div>
- 
+</section>
+<!-- form part ends -->
+
   <!-- Map Section -->
  <div class="map-section">
     <div class="container">
@@ -362,23 +364,20 @@
         </div>
 
         <!-- Map Frame -->
-        <div class="map-frame-wrap">
-            <iframe 
-                id="mapFrame"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3689.5!2d91.812!3d22.32!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30ad8a986cb63b5%3A0x7d9c5f0b2b3c4d5e!2sKazi+Complex%2C+Agrabad+Access+Road%2C+Beparipara%2C+Chattogram!5e0!3m2!1sen!2sbd!4v1745000000000"
-                width="100%" 
-                height="450" 
-                style="border:0; border-radius: 12px;" 
-                allowfullscreen="" 
-                loading="lazy" 
-                referrerpolicy="no-referrer-when-downgrade">
-            </iframe>
-        </div>
+       <!-- Map Frame -->
+<div style="width:100%; height:450px; border-radius:12px; overflow:hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.10);">
+    <iframe 
+        id="mapFrame"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3689.5!2d91.812!3d22.32!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30ad8a986cb63b5%3A0x7d9c5f0b2b3c4d5e!2sKazi+Complex%2C+Agrabad+Access+Road%2C+Beparipara%2C+Chattogram!5e0!3m2!1sen!2sbd!4v1745000000000"
+        style="width:100%; height:100%; border:0; display:block;"
+        allowfullscreen="" 
+        loading="lazy" 
+        referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+</div>
 
     </div>
 </div>
-</section>
-<!-- form part ends -->
  <!-- footrer part starts -->
 
  <!-- add to cart popup -->
@@ -458,7 +457,7 @@
  
       <!-- Brand Column -->
       <div class="col-lg-3 col-md-6 anim-fade-up d1">
-        <img src="{{asset('frontend/image/logoLight.png')}}" alt="">
+        <img src="{{ asset('frontend/image/ourlogo.png') }}"  width="140px" alt="logo">
  
         <p class="footer-desc">
           Morbi cursus porttitor enim lobortis molestie. Duis gravida turpis dui, eget bibendum magna congue nec.
@@ -543,7 +542,11 @@
     <script src="https://cdn.jsdelivr.net/npm/mixitup@3/dist/mixitup.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="navbar-active.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ asset ('frontend/js/common.js') }}"></script>
 <script src="{{ asset ('frontend/js/contact.js') }}"></script>
+
+
+
 </body>
 </html>

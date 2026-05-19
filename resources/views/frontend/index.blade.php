@@ -26,8 +26,8 @@
 <!-- preloader -->
 <div id="preloader">
   <div class="loader">
-    <img src="{{ asset('frontend/image/ourlogo.png') }}"  width="130px" alt="logo">
-    <p>Loading...</p>
+    <img src="{{ asset('frontend/image/favIcon.png') }}"  width="80px" alt="logo">
+    <p class="mt-5">Loading...</p>
   </div>
 </div>
 
@@ -806,39 +806,46 @@ $categoryList = [
     </div>
   </section>
 
-  {{-- ── TESTIMONIALS ── --}}
-  <section id="feedback" class="py-5">
+{{-- ── TESTIMONIALS ── --}}
+@if(isset($testimonials) && $testimonials->count() > 0)
+<section id="feedback" class="py-5">
     <div class="container">
-      <h2 class="section-title text-start">Client <span style="color:#22c55e;">Testimonials</span></h2>
-      <div class="owl-carousel testimonial-slider">
-        @foreach([
-          ['clients (1).png','Robert Fox'],
-          ['clients (2).png','Dianne Russell'],
-          ['clients (3).png','Eleanor Pena'],
-          ['bigApple.png','Jenny Wilson'],
-        ] as [$img, $name])
-        <div class="testimonial-card">
-          <div class="quote">"</div>
-          <p class="testimonial-text">
-            Pellentesque eu nibh eget mauris congue mattis mattis nec tellus.
-            Phasellus imperdiet elit eu magna dictum.
-          </p>
-          <div class="client-info">
-            <div class="client-left">
-              <img src="{{ asset('frontend/image/' . $img) }}" class="client-img">
-              <div>
-                <p class="client-name">{{ $name }}</p>
-                <p class="client-role">Customer</p>
-              </div>
+        <h2 class="section-title text-start">
+            Client <span style="color:#22c55e;">Testimonials</span>
+        </h2>
+        <div class="owl-carousel testimonial-slider">
+            @foreach($testimonials as $review)
+            <div class="testimonial-card">
+                <div class="quote">"</div>
+                <p class="testimonial-text">
+                    {{ $review->body ?? 'Great product! Highly recommended.' }}
+                </p>
+                <div class="client-info">
+                    <div class="client-left">
+                        <div class="client-img"
+                             style="width:48px;height:48px;border-radius:50%;
+                                    background:#dcfce7;display:flex;align-items:center;
+                                    justify-content:center;font-size:18px;font-weight:700;
+                                    color:#16a34a;flex-shrink:0;">
+                            {{ strtoupper(substr($review->user->name ?? 'U', 0, 1)) }}
+                        </div>
+                        <div>
+                            <p class="client-name">{{ $review->user->name ?? 'Customer' }}</p>
+                            <p class="client-role">Verified Customer</p>
+                        </div>
+                    </div>
+                    <div class="stars">
+                        @for($s = 1; $s <= 5; $s++)
+                            <span style="color:{{ $s <= $review->rating ? '#f59e0b' : '#cbd5e1' }}; font-size:16px;">★</span>
+                        @endfor
+                    </div>
+                </div>
             </div>
-            <div class="stars">★★★★★</div>
-          </div>
+            @endforeach
         </div>
-        @endforeach
-      </div>
     </div>
-  </section>
-
+</section>
+@endif
 </main>
 
 <!-- Cart Drawer -->

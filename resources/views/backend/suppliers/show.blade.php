@@ -13,13 +13,23 @@
         <p class="text-muted mb-0 small">Supplier এর বিস্তারিত তথ্য</p>
     </div>
     <div class="d-flex gap-2">
-        <a href="{{ route('backend.suppliers.edit', $supplier) }}" class="btn btn-success">
-            <i class="bx bx-edit me-1"></i> Edit
-        </a>
-        <a href="{{ route('backend.suppliers.index') }}" class="btn btn-outline-secondary">
-            <i class="bx bx-arrow-back me-1"></i> Back
-        </a>
-    </div>
+    <a href="{{ route('backend.suppliers.purchase-invoice', $supplier->id) }}"
+       target="_blank"
+       class="btn btn-outline-success">
+        <i class="bx bx-printer me-1"></i> Purchase Invoice
+    </a>
+    <a href="{{ route('backend.suppliers.payment-invoice', $supplier->id) }}"
+       target="_blank"
+       class="btn btn-outline-primary">
+        <i class="bx bx-printer me-1"></i> Payment Invoice
+    </a>
+    <a href="{{ route('backend.suppliers.edit', $supplier) }}" class="btn btn-success">
+        <i class="bx bx-edit me-1"></i> Edit
+    </a>
+    <a href="{{ route('backend.suppliers.index') }}" class="btn btn-outline-secondary">
+        <i class="bx bx-arrow-back me-1"></i> Back
+    </a>
+</div>
 </div>
 
 <div class="row">

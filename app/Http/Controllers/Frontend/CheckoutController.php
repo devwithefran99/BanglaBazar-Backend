@@ -8,6 +8,8 @@ use App\Models\Product;
 use App\Models\HotDeal;
 use App\Models\Order;
 use App\Models\OrderItem;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderMail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -172,6 +174,14 @@ if ($item['product_type'] === 'hotdeal') {
             }
 
             DB::commit();
+
+            $order->load(['user', 'items']);
+
+              try {
+                  Mail::to($request->email)->send(new OrderMail($order, 'placed'));
+              } catch (\Exception $mailEx) {
+                  \Log::error('Order placed mail failed: ' . $mailEx->getMessage());
+              }
 
             return redirect()->route('order.success', ['id' => $order->id]);
 

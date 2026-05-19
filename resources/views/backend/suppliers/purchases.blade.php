@@ -167,15 +167,22 @@
                         </span>
                     </td>
                     <td class="text-center">
-                        <form action="{{ route('backend.purchases.destroy', $purchase) }}"
-                              method="POST" class="d-inline"
-                              onsubmit="return confirm('এই purchase record মুছে ফেলবেন?')">
-                            @csrf @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-icon btn-text-danger" title="Delete">
-                                <i class="bx bx-trash fs-5"></i>
-                            </button>
-                        </form>
-                    </td>
+   <a href="{{ route('backend.suppliers.purchase-invoice', $purchase->supplier_id) }}"
+       target="_blank"
+       class="btn btn-sm btn-icon btn-text-success"
+       title="Print Invoice">
+        <i class="bx bx-receipt fs-5"></i>
+    </a>
+
+    <form action="{{ route('backend.purchases.destroy', $purchase) }}"
+          method="POST" class="d-inline"
+          onsubmit="return confirm('এই purchase record মুছে ফেলবেন?')">
+        @csrf @method('DELETE')
+        <button type="submit" class="btn btn-sm btn-icon btn-text-danger" title="Delete">
+            <i class="bx bx-trash fs-5"></i>
+        </button>
+    </form>
+</td>
                 </tr>
                 @empty
                 <tr>
