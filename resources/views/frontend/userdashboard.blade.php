@@ -119,9 +119,7 @@
 </div>
 
 
-<!-- ════════════════════════════════════════
-     HEADER
-════════════════════════════════════════ -->
+<!-- HEADER -->
 <header>
     <section id="navigation">
 
@@ -293,9 +291,7 @@
     </section>
 </header>
 
-<!-- ════════════════════════════════════════
-     MAIN CONTENT
-════════════════════════════════════════ -->
+<!-- MAIN CONTENT -->
 <main>
     <section id="userDash" class="udb-wrap">
         <div class="container">
@@ -461,11 +457,156 @@
 
         </div>
     </section>
+
+    {{-- return part --}}
+
+    <section>
+        <div class="container">
+          {{-- New Request Form --}}
+@if(isset($deliveredOrders) && $deliveredOrders->count() > 0)
+<hr class="my-4">
+
+<div class="mb-3 d-flex align-items-center gap-2">
+    <div style="width:36px;height:36px;background:#f0fdf4;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+        <i class="bi bi-plus-circle" style="color:#22c55e;font-size:1.1rem;"></i>
+    </div>
+    <div>
+        <div class="fw-semibold" style="font-size:14px;">Submit New Request</div>
+        <div class="text-muted" style="font-size:11px;">Only delivered orders are eligible</div>
+    </div>
+</div>
+
+<form action="{{ route('return.store') }}" method="POST">
+    @csrf
+
+    {{-- Order Select --}}
+    <div class="mb-3">
+        <label class="form-label" style="font-size:12px;font-weight:600;color:#475569;letter-spacing:.3px;">
+            <i class="bi bi-receipt me-1"></i> SELECT ORDER
+        </label>
+        <select name="order_id" class="form-select form-select-sm" required
+                style="border-radius:10px;border:1.5px solid #e2e8f0;font-size:13px;padding:9px 12px;height:auto;">
+            <option value="">Choose a delivered order...</option>
+            @foreach($deliveredOrders as $order)
+                @php
+                    $hasActive = $returnRequests
+                        ->where('order_id', $order->id)
+                        ->whereIn('status', ['pending','approved'])
+                        ->count();
+                @endphp
+                @if(!$hasActive)
+                <option value="{{ $order->id }}">
+                    Order #{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}
+                    — ৳{{ number_format($order->total_price, 0) }}
+                    ({{ $order->created_at->format('d M Y') }})
+                </option>
+                @endif
+            @endforeach
+        </select>
+    </div>
+
+    {{-- Type --}}
+    <div class="mb-3">
+        <label class="form-label" style="font-size:12px;font-weight:600;color:#475569;letter-spacing:.3px;">
+            <i class="bi bi-arrow-left-right me-1"></i> REQUEST TYPE
+        </label>
+        <div class="d-flex gap-3">
+
+            <label style="flex:1;cursor:pointer;">
+                <input type="radio" name="type" value="return" checked class="d-none" id="typeReturn">
+                <div class="type-option" id="typeReturnBox"
+                     style="border:1.5px solid #22c55e;background:#f0fdf4;border-radius:12px;padding:12px;text-align:center;transition:all .2s;">
+                    <i class="bi bi-arrow-return-left d-block mb-1" style="font-size:1.2rem;color:#16a34a;"></i>
+                    <div style="font-size:12px;font-weight:600;color:#15803d;">Return Item</div>
+                    <div style="font-size:10px;color:#86efac;">Send item back</div>
+                </div>
+            </label>
+
+            <label style="flex:1;cursor:pointer;">
+                <input type="radio" name="type" value="refund" class="d-none" id="typeRefund">
+                <div class="type-option" id="typeRefundBox"
+                     style="border:1.5px solid #e2e8f0;background:#f8fafc;border-radius:12px;padding:12px;text-align:center;transition:all .2s;">
+                    <i class="bi bi-currency-exchange d-block mb-1" style="font-size:1.2rem;color:#64748b;"></i>
+                    <div style="font-size:12px;font-weight:600;color:#475569;">Refund</div>
+                    <div style="font-size:10px;color:#94a3b8;">Get money back</div>
+                </div>
+            </label>
+
+        </div>
+    </div>
+
+    {{-- Reason --}}
+    <div class="mb-3">
+        <label class="form-label" style="font-size:12px;font-weight:600;color:#475569;letter-spacing:.3px;">
+            <i class="bi bi-chat-square-text me-1"></i> REASON
+        </label>
+        <select name="reason" class="form-select form-select-sm" required
+                style="border-radius:10px;border:1.5px solid #e2e8f0;font-size:13px;padding:9px 12px;height:auto;">
+            <option value="">Select a reason...</option>
+            <option value="Wrong item received">Wrong item received</option>
+            <option value="Damaged product">Damaged product</option>
+            <option value="Product not as described">Product not as described</option>
+            <option value="Missing items in order">Missing items in order</option>
+            <option value="Changed my mind">Changed my mind</option>
+            <option value="Other">Other</option>
+        </select>
+    </div>
+
+    {{-- Description --}}
+    <div class="mb-4">
+        <label class="form-label" style="font-size:12px;font-weight:600;color:#475569;letter-spacing:.3px;">
+            <i class="bi bi-card-text me-1"></i> ADDITIONAL DETAILS
+            <span style="color:#94a3b8;font-weight:400;">(optional)</span>
+        </label>
+        <textarea name="description" rows="3"
+                  style="border-radius:10px;border:1.5px solid #e2e8f0;font-size:13px;padding:10px 12px;width:100%;outline:none;resize:none;font-family:inherit;"
+                  placeholder="Describe the issue in detail..."></textarea>
+    </div>
+
+    <button type="submit" class="udb-btn w-100 mb-4"
+            style="border-radius:12px;padding:12px;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;background-color:#15803d;color:#f0fdf4;border:none">
+        <i class="bi bi-send"></i> Submit Request
+    </button>
+</form>
+
+<script>
+// Type card toggle
+document.querySelectorAll('input[name="type"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+        document.getElementById('typeReturnBox').style.border    = '1.5px solid #e2e8f0';
+        document.getElementById('typeReturnBox').style.background = '#f8fafc';
+        document.getElementById('typeRefundBox').style.border    = '1.5px solid #e2e8f0';
+        document.getElementById('typeRefundBox').style.background = '#f8fafc';
+        document.querySelector('#typeReturnBox i').style.color   = '#64748b';
+        document.querySelector('#typeRefundBox i').style.color   = '#64748b';
+
+        if (this.value === 'return') {
+            document.getElementById('typeReturnBox').style.border    = '1.5px solid #22c55e';
+            document.getElementById('typeReturnBox').style.background = '#f0fdf4';
+            document.querySelector('#typeReturnBox i').style.color   = '#16a34a';
+        } else {
+            document.getElementById('typeRefundBox').style.border    = '1.5px solid #22c55e';
+            document.getElementById('typeRefundBox').style.background = '#f0fdf4';
+            document.querySelector('#typeRefundBox i').style.color   = '#16a34a';
+        }
+    });
+});
+</script>
+
+@else
+<hr class="my-3">
+<div class="text-center py-3" style="color:#94a3b8;font-size:12px;">
+    <i class="bi bi-bag-check d-block mb-1" style="font-size:1.5rem;"></i>
+    Only <strong>delivered</strong> orders are eligible for return/refund.
+</div>
+@endif
+        </div>
+    </section>
 </main>
 
-<!-- ════════════════════════════════════════
+<!-- 
      CART POPUP
-════════════════════════════════════════ -->
+ -->
 <div class="cp-overlay" id="cpOverlay"></div>
 
 <div class="cp-drawer" id="cpDrawer">
@@ -519,9 +660,9 @@
     </div>
 </div>
 
-<!-- ════════════════════════════════════════
+<!-- 
      FOOTER  (fixed: removed nested <footer>)
-════════════════════════════════════════ -->
+ -->
 <footer class="main-footer">
     <div class="container">
         <div class="row g-4">
@@ -557,8 +698,8 @@
                 <ul class="footer-links">
                     <li><a href="{{ route('contact') }}">Contact</a></li>
                     <li><a href="{{ route('faq') }}">FAQS</a></li>
-                    <li><a href="#">Terms &amp; Condition</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="{{ route('terms') }}">Terms &amp; Condition</a></li>
+                  <li><a href="{{ route('privacy') }}">Privacy Policy</a></li>
                 </ul>
             </div>
 

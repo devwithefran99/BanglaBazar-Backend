@@ -16,6 +16,7 @@ use App\Http\Controllers\Backend\SupplierPaymentController;
 use App\Http\Controllers\Backend\MessagesController;
 use App\Http\Controllers\Backend\EmailController;
 use App\Http\Controllers\Backend\ReviewController as BackendReviewController;
+use App\Http\Controllers\Backend\ReturnRequestController as AdminReturnController;
 
 // ── Admin Login (guest only) ─────────────────
 Route::middleware('guest')->group(function () {
@@ -88,6 +89,11 @@ Route::middleware('auth')->group(function () {
           Route::delete('reviews/{review}',        [BackendReviewController::class, 'destroy'])->name('reviews.destroy');
           Route::patch('reviews/{review}/toggle-featured', [BackendReviewController::class, 'toggleFeatured'])
            ->name('reviews.toggleFeatured');
+
+           // Return Requests
+          Route::get('return-requests',              [AdminReturnController::class, 'index'])->name('return.index');
+          Route::get('return-requests/{id}',         [AdminReturnController::class, 'show'])->name('return.show');
+          Route::post('return-requests/{id}/action', [AdminReturnController::class, 'action'])->name('return.action');
 
         
     });

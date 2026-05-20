@@ -199,6 +199,17 @@
         <div>Email Center</div>
     </a>
 </li>
+{{-- Return Requests --}}
+<li class="menu-item {{ request()->routeIs('backend.return.*') ? 'active' : '' }}">
+    <a href="{{ route('backend.return.index') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-rotate-left"></i>
+        <div>Return Requests</div>
+        @php $pendingReturns = \App\Models\ReturnRequest::where('status','pending')->count(); @endphp
+        @if($pendingReturns > 0)
+            <div class="badge bg-danger rounded-pill ms-auto">{{ $pendingReturns }}</div>
+        @endif
+    </a>
+</li>
         </ul>
       </aside>
       {{-- ===== / SIDEBAR ===== --}}

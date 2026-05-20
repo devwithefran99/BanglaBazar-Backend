@@ -11,6 +11,7 @@ use App\Http\Controllers\Frontend\ProductController;
 use App\Http\Controllers\Frontend\CouponController;
 use App\Http\Controllers\Frontend\ContactController;
 use App\Http\Controllers\Frontend\ReviewController;
+use App\Http\Controllers\Frontend\ReturnRequestController;
 
 
 
@@ -22,6 +23,8 @@ Route::get('/contact',  [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 Route::get('/wishlist',fn() => view('frontend.wishlist'))->name('wishlist');
 Route::get('/faq',     fn() => view('frontend.faq'))->name('faq');
+Route::get('/privacy-policy', fn() => view('frontend.privacy'))->name('privacy');
+Route::get('/terms-conditions', fn() => view('frontend.terms'))->name('terms');
 
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product');
 
@@ -59,6 +62,10 @@ Route::delete('/wishlist/{id}',      [WishlistController::class, 'remove'])->nam
 
 // Cart Routes (Protected by auth middleware)
 Route::middleware(['auth'])->group(function () {
+    // return request
+         Route::post('/return-request', [ReturnRequestController::class, 'store'])
+         ->name('return.store');
+
     Route::prefix('cart')->name('cart.')->group(function () {
         Route::get('/', [CartController::class, 'index'])->name('index');
         Route::post('/add', [CartController::class, 'add'])->name('add');
@@ -66,6 +73,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/remove/{id}', [CartController::class, 'remove'])->name('remove');
         Route::delete('/clear', [CartController::class, 'clear'])->name('clear');
         Route::get('/count', [CartController::class, 'count'])->name('count');
+
     });
 });
 

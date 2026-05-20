@@ -755,8 +755,8 @@
                 <ul class="footer-links">
                     <li><a href="{{ route('contact') }}">Contact</a></li>
                     <li><a href="{{ route('faq') }}">FAQS</a></li>
-                    <li><a href="#">Terms &amp; Condition</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="{{ route('terms') }}">Terms &amp; Condition</a></li>
+                  <li><a href="{{ route('privacy') }}">Privacy Policy</a></li>
                 </ul>
             </div>
             <div class="col-lg-2 col-md-3 col-6 anim-fade-up d4">

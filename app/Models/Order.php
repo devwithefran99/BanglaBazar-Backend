@@ -42,6 +42,10 @@ class Order extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+    public function returnRequest()
+    {
+        return $this->hasOne(ReturnRequest::class);
+    }
 
     // ✅ Helper: full billing name
     public function getBillingFullNameAttribute(): string

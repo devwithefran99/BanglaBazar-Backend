@@ -53,27 +53,27 @@
                             <label class="form-label small">To Email <span class="text-danger">*</span></label>
                             <input type="email" name="to" id="toEmail" class="form-control"
               placeholder="customer@email.com" 
-              value="{{ request('to') }}"
+             value="{{ request('prefill_to', request('to')) }}"
               required>
                         </div>
                         <div class="col-5">
                             <label class="form-label small">Name</label>
                           <input type="text" name="to_name" id="toName" class="form-control"
        placeholder="Customer Name"
-       value="{{ request('to_name') }}">
+    value="{{ request('prefill_to_name', request('to_name')) }}">
                         </div>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label small">Subject <span class="text-danger">*</span></label>
                         <input type="text" name="subject" class="form-control"
-                               placeholder="Email subject..." required>
+                               placeholder="Email subject..." value="{{ request('prefill_subject') }}" required>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label small">Message <span class="text-danger">*</span></label>
                         <textarea name="body" class="form-control" rows="6"
-                                  placeholder="Write your message..." required></textarea>
+                                  placeholder="Write your message..." required> {{ request('prefill_body') }}</textarea>
                     </div>
 
                     <button type="submit" class="btn btn-primary w-100">
