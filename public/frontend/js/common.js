@@ -76,6 +76,180 @@ document.querySelectorAll('.main-navbar .nav-item').forEach((el, i) => {
 })();
 
 /* ─────────────────────────────────────────────────────
+   4. NAV SEARCH – Lazy Search Dropdown
+   • 3+ letter টাইপ করলে search শুরু হবে
+   • 400ms debounce — প্রতি key press এ API call হবে না
+   • Result click করলে Shop page এ যাবে + category selected থাকবে
+───────────────────────────────────────────────────── */
+(function () {
+  // সব search-wrap এ (desktop + mobile) কাজ করবে
+ document.querySelectorAll('.search-wrap, .offcanvas-body .p-3.border-bottom').forEach(function (wrap) {
+    const input = wrap.querySelector('input[type="text"]');
+    const btn   = wrap.querySelector('button');
+    if (!input) return;
+
+    // Dropdown container তৈরি করো
+    const dropdown = document.createElement('div');
+    dropdown.className = 'search-dropdown';
+    wrap.appendChild(dropdown);
+    wrap.style.position = 'relative';
+
+    let debounceTimer = null;
+    let currentQuery  = '';
+
+    // ── Input event ──
+    input.addEventListener('input', function () {
+      const q = this.value.trim();
+      currentQuery = q;
+
+      clearTimeout(debounceTimer);
+      hideDropdown();
+
+      if (q.length < 3) return;
+
+      // Loading state
+      showLoading();
+
+      // 400ms debounce
+      debounceTimer = setTimeout(() => {
+        if (currentQuery === q) fetchSuggestions(q);
+      }, 400);
+    });
+
+    // ── Search button click ──
+    if (btn) {
+      btn.addEventListener('click', function () {
+        const q = input.value.trim();
+        if (q) goToShop(null, null, q);
+      });
+    }
+
+    // ── Enter key ──
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        const q = this.value.trim();
+        if (q) goToShop(null, null, q);
+      }
+      if (e.key === 'Escape') hideDropdown();
+    });
+
+    // ── Fetch from API ──
+    function fetchSuggestions(q) {
+      fetch('/search/suggestions?q=' + encodeURIComponent(q))
+        .then(res => res.json())
+        .then(data => {
+          if (currentQuery !== q) return; // stale response ignore
+          renderResults(data, q);
+        })
+        .catch(() => hideDropdown());
+    }
+
+    // ── Loading skeleton ──
+    function showLoading() {
+      dropdown.innerHTML = `
+        <div class="search-dd-loading">
+          <div class="search-dd-skeleton"></div>
+          <div class="search-dd-skeleton"></div>
+          <div class="search-dd-skeleton short"></div>
+        </div>`;
+      dropdown.classList.add('active');
+    }
+
+    // ── Render results ──
+    function renderResults(items, q) {
+      if (!items || items.length === 0) {
+        dropdown.innerHTML = `
+          <div class="search-dd-empty">
+            <i class="bi bi-search me-2"></i>
+            "<strong>${escHtml(q)}</strong>" No products were found for this.
+          </div>`;
+        dropdown.classList.add('active');
+        return;
+      }
+
+      const html = items.map(item => `
+        <div class="search-dd-item" 
+             data-id="${item.id}" 
+             data-type="${item.type}" 
+             data-category="${item.category || ''}">
+          <img src="${item.image}" 
+               alt="${escHtml(item.name)}" 
+               onerror="this.src='/frontend/image/Product Image (1).png'">
+          <div class="search-dd-info">
+            <div class="search-dd-name">${highlightMatch(item.name, q)}</div>
+            <div class="search-dd-meta">
+              <span class="search-dd-cat">
+                <i class="bi bi-tag-fill me-1"></i>${escHtml(item.category || 'Product')}
+              </span>
+              <span class="search-dd-price">${item.price}</span>
+            </div>
+          </div>
+          <i class="bi bi-arrow-right search-dd-arrow"></i>
+        </div>`).join('');
+
+      dropdown.innerHTML = html;
+      dropdown.classList.add('active');
+
+      // Item click handler
+      dropdown.querySelectorAll('.search-dd-item').forEach(el => {
+        el.addEventListener('click', function () {
+          const id       = this.dataset.id;
+          const type     = this.dataset.type;
+          const category = this.dataset.category;
+          goToShop(id, category, null, type);
+        });
+        // Hover effect
+        el.addEventListener('mouseenter', function () {
+          dropdown.querySelectorAll('.search-dd-item').forEach(x => x.classList.remove('hovered'));
+          this.classList.add('hovered');
+        });
+      });
+    }
+
+    // ── Shop এ navigate ──
+    function goToShop(productId, category, searchText, type) {
+      hideDropdown();
+      input.value = '';
+
+      if (productId) {
+        // Specific product এ যাও + category filter
+        const cat = category || 'all';
+        window.location.href = `/shop?category=${encodeURIComponent(cat)}&highlight=${productId}&type=${type || 'product'}`;
+      } else if (searchText) {
+        // Text search — shop page এ গিয়ে filter হবে
+        window.location.href = `/shop?search=${encodeURIComponent(searchText)}`;
+      }
+    }
+
+    // ── Helper: HTML escape ──
+    function escHtml(str) {
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // ── Helper: Highlight matched text ──
+    function highlightMatch(text, q) {
+      const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      return escHtml(text).replace(new RegExp('(' + escaped + ')', 'gi'), '<mark>$1</mark>');
+    }
+
+    function hideDropdown() {
+      dropdown.classList.remove('active');
+      dropdown.innerHTML = '';
+    }
+  });
+
+  // ── Outside click এ dropdown বন্ধ করো ──
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.search-wrap')) {
+      document.querySelectorAll('.search-dropdown').forEach(d => {
+        d.classList.remove('active');
+        d.innerHTML = '';
+      });
+    }
+  });
+})();
+
+/* ─────────────────────────────────────────────────────
    5. SCROLL-TRIGGERED ANIMATIONS
 ───────────────────────────────────────────────────── */
 (function () {
@@ -409,5 +583,3 @@ document.addEventListener('click', function (e) {
 
   window.location.href = `/product/${productId}?type=${productType}`;
 });
-
-

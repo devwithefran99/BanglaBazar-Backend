@@ -28,6 +28,8 @@ Route::get('/terms-conditions', fn() => view('frontend.terms'))->name('terms');
 
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product');
 
+Route::get('/search/suggestions', [ShopController::class, 'searchSuggestions'])->name('search.suggestions');
+
 // ── Auth (Guest only) ─────────────────────────
 Route::get('/signin',    [AuthController::class, 'showSignIn'])->name('signin');
 Route::post('/signin',   [AuthController::class, 'signIn'])->name('signin.post');

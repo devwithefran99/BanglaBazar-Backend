@@ -481,8 +481,8 @@
  
         <div class="footer-contact d-flex align-items-center flex-wrap">
           <a href="tel:2195550114">01616-239896</a>
-          <span class="separator">or</span>
-          <a href="mailto:Proxy@gmail.com">Proxy@gmail.com</a>
+          
+          <a href="mailto:banglabazar247bd@gmail.com">banglabazar247bd@gmail.com</a>
         </div>
       </div>
  

@@ -578,8 +578,8 @@
         </p>
         <div class="footer-contact d-flex align-items-center flex-wrap">
           <a href="tel:01616239896">01616-239896</a>
-          <span class="separator">or</span>
-          <a href="mailto:Proxy@gmail.com">Proxy@gmail.com</a>
+          
+          <a href="mailto:banglabazar247bd@gmail.com">banglabazar247bd@gmail.com</a>
         </div>
       </div>
       <div class="col-lg-2 col-md-3 col-6 anim-fade-up d2">

@@ -19,7 +19,7 @@ $(function () {
     }
   });
 
-  /* ── Search ── */
+  /* ── Search Input (shop page internal) ── */
   $('#searchInput').on('keyup', function () {
     applyFilter();
   });
@@ -62,19 +62,66 @@ $(function () {
     $('#results-count').text(count + ' Results Found');
   }
 
- 
+  /* ═══════════════════════════════════════════════════════
+     NAV SEARCH REDIRECT HANDLER
+  ═══════════════════════════════════════════════════════ */
+  (function handleNavSearchRedirect() {
+    const params       = new URLSearchParams(window.location.search);
+    const searchText   = params.get('search');
+    const highlightId  = params.get('highlight');
+    const highlightCat = params.get('category');
+
+    if (searchText) {
+      $('#searchInput').val(searchText);
+      if (highlightCat && highlightCat !== 'all') {
+        activeCategory = highlightCat;
+      }
+      applyFilter();
+      setTimeout(() => {
+        const input = document.getElementById('searchInput');
+        if (input) input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 300);
+    }
+
+    if (highlightId) {
+      if (highlightCat && highlightCat !== 'all') {
+        activeCategory = highlightCat;
+        $('.category-item').removeClass('active-cat');
+        $(`.category-item[data-filter="${highlightCat}"]`).addClass('active-cat');
+        applyFilter();
+      }
+      setTimeout(() => {
+        const $targetCol = $(`.product-col[data-product-id="${highlightId}"]`);
+        if ($targetCol.length) {
+          $targetCol[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+          $targetCol.addClass('search-highlight');
+          setTimeout(() => $targetCol.removeClass('search-highlight'), 3000);
+        }
+      }, 400);
+    }
+  })();
+
+}); // ← $(function) এর closing — এখানেই শেষ
+
+
 /* ═══════════════════════════════════
-   SIDEBAR TOGGLE (Mobile)
+   SIDEBAR TOGGLE (Mobile) — GLOBAL
+   onclick="toggleSidebar()" কাজ করার
+   জন্য এগুলো $(function) এর বাইরে
 ═══════════════════════════════════ */
+
 function closeSidebar() {
-  document.getElementById('filter-sidebar').classList.remove('show');
+  const sidebar = document.getElementById('filter-sidebar');
+  if (!sidebar) return;
+  sidebar.classList.remove('show');
   const backdrop = document.querySelector('.sidebar-backdrop');
   if (backdrop) backdrop.style.display = 'none';
 }
 
 function toggleSidebar() {
   const sidebar = document.getElementById('filter-sidebar');
-  let backdrop  = document.querySelector('.sidebar-backdrop');
+  if (!sidebar) return;
+  let backdrop = document.querySelector('.sidebar-backdrop');
 
   if (!backdrop) {
     backdrop = document.createElement('div');
@@ -93,10 +140,10 @@ function toggleSidebar() {
 
 document.addEventListener('click', function (e) {
   if (window.innerWidth >= 992) return;
-  const sidebar   = document.getElementById('filter-sidebar');
+  const sidebar = document.getElementById('filter-sidebar');
+  if (!sidebar) return;
   const filterBtn = e.target.closest('.filter-btn');
   if (!sidebar.contains(e.target) && !filterBtn) {
     if (sidebar.classList.contains('show')) closeSidebar();
   }
-})
-})
+});
