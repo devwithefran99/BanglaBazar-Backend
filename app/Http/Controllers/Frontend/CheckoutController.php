@@ -110,14 +110,32 @@ class CheckoutController extends Controller
             $subtotal = collect($orderData)->sum(fn($i) => $i['price'] * $i['quantity']);
 
             // ── Coupon discount apply ──
-            $discount = (float) $request->input('coupon_discount', 0);
-            $total    = max(0, $subtotal - $discount);
+$discount   = 0;
+$couponCode = null;
+
+if ($request->filled('coupon_code')) {
+    $coupon = \App\Models\Coupon::where('code', strtoupper($request->coupon_code))
+                                ->first();
+
+    if ($coupon) {
+        $result = $coupon->isValid($subtotal);
+
+        if ($result['valid']) {
+            // ✅ Server এ নিজে calculate করছে — client এর value ignore
+            $discount   = $coupon->calculateDiscount($subtotal);
+            $couponCode = $coupon->code;
+        }
+        // invalid হলে discount = 0, silently skip
+    }
+}
+
+$total = max(0, $subtotal - $discount);
 
             $order = Order::create([
                 'user_id'         => Auth::id(),
                 'total_price'     => $total,
-                'discount_amount' => $discount,
-                'coupon_code'     => $request->input('coupon_code'),
+                  'discount_amount' => $discount,
+                'coupon_code'     => $couponCode,
                 'status'          => 'pending',
                 'payment_method'  => $request->payment,
 
@@ -141,6 +159,29 @@ class CheckoutController extends Controller
             ]);
 
             foreach ($orderData as $item) {
+
+                // ✅ lockForUpdate() — transaction এর মধ্যে row lock করো
+                // এতে দুজন একসাথে order দিলেও একজনকে অপেক্ষা করতে হবে
+                if ($item['product_type'] === 'hotdeal') {
+                    $product = HotDeal::lockForUpdate()->find($item['product_id']);
+                } else {
+                    $product = Product::lockForUpdate()->find($item['product_id']);
+                }
+
+                // ✅ Product exist করে কিনা check
+                if (!$product) {
+                    throw new \Exception("'{$item['product_name']}' আর পাওয়া যাচ্ছে না।");
+                }
+
+                // ✅ Stock পর্যাপ্ত আছে কিনা check — race condition এর আসল fix এখানে
+                if ($product->stock < $item['quantity']) {
+                    throw new \Exception(
+                        "'{$product->name}' এর পর্যাপ্ত stock নেই। " .
+                        "চাহিদা: {$item['quantity']}, বর্তমান stock: {$product->stock}"
+                    );
+                }
+
+                // ✅ OrderItem তৈরি
                 OrderItem::create([
                     'order_id'     => $order->id,
                     'product_id'   => $item['product_id'],
@@ -150,24 +191,21 @@ class CheckoutController extends Controller
                     'price'        => $item['price'],
                 ]);
 
-              // ✅ Main product/hotdeal table stock decrement
-if ($item['product_type'] === 'hotdeal') {
-    HotDeal::where('id', $item['product_id'])->decrement('stock', $item['quantity']);
-} else {
-    Product::where('id', $item['product_id'])->decrement('stock', $item['quantity']);
-}
+                // ✅ Main product/hotdeal table stock decrement — check এর পরেই
+                $product->decrement('stock', $item['quantity']);
 
-// ✅ Linked Inventory table stock o decrement korun
-\App\Models\Inventory::where('product_id', $item['product_id'])
-                     ->where('product_type', $item['product_type'])
-                     ->decrement('stock', $item['quantity']);
+                // ✅ Linked Inventory table stock ও decrement করো
+                \App\Models\Inventory::where('product_id', $item['product_id'])
+                        ->where('product_type', $item['product_type'])
+                        ->lockForUpdate()
+                        ->first()
+                        ?->decrement('stock', $item['quantity']);
             }
 
             // ── Coupon use count বাড়াও ──
-            if ($request->filled('coupon_code')) {
-                \App\Models\Coupon::where('code', strtoupper($request->coupon_code))
-                                  ->increment('used_count');
-            }
+            if ($couponCode) {
+    \App\Models\Coupon::where('code', $couponCode)->increment('used_count');
+}
 
             if ($source === 'cart' && Auth::check()) {
                 Auth::user()->carts()->delete();
@@ -177,17 +215,17 @@ if ($item['product_type'] === 'hotdeal') {
 
             $order->load(['user', 'items']);
 
-              try {
-                  Mail::to($request->email)->send(new OrderMail($order, 'placed'));
-              } catch (\Exception $mailEx) {
-                  \Log::error('Order placed mail failed: ' . $mailEx->getMessage());
-              }
+            try {
+                Mail::to($request->email)->send(new OrderMail($order, 'placed'));
+            } catch (\Exception $mailEx) {
+                \Log::error('Order placed mail failed: ' . $mailEx->getMessage());
+            }
 
             return redirect()->route('order.success', ['id' => $order->id]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Order failed: ' . $e->getMessage());
+            return back()->with('error', $e->getMessage());
         }
     }
 

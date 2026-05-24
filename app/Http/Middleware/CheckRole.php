@@ -18,9 +18,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->redirectGuestsTo(fn() => route('login'));
 
+        // ── Custom Middleware Aliases ────────────────────
         $middleware->alias([
-            'is_admin' => \App\Http\Middleware\IsAdmin::class,
-            'role'     => \App\Http\Middleware\CheckRole::class,  // ← এটা যোগ হয়েছে
+            'is_admin'  => \App\Http\Middleware\IsAdmin::class,
+            'role'      => \App\Http\Middleware\CheckRole::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
@@ -32,12 +33,4 @@ return Application::configure(basePath: dirname(__DIR__))
             return response()->view('errors.404', [], 404);
         });
 
-        // 403 for unauthorized admin access
-        $exceptions->render(function (
-            \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException $e,
-            \Illuminate\Http\Request $request
-        ) {
-            return redirect()->route('signin')
-                ->with('error', 'You do not have permission to access that page.');
-        });
     })->create();

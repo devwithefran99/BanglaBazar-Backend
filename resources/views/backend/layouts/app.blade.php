@@ -210,6 +210,13 @@
         @endif
     </a>
 </li>
+{{-- Admin Profile --}}
+<li class="menu-item {{ request()->routeIs('backend.profile.*') ? 'active' : '' }}">
+    <a href="{{ route('backend.profile.index') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-user-circle"></i>
+        <div>Admin Profile</div>
+    </a>
+</li>
         </ul>
       </aside>
       {{-- ===== / SIDEBAR ===== --}}

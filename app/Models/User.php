@@ -11,9 +11,12 @@ class User extends Authenticatable
 
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
         'role',
+        'status',
+        'last_login_at',
         'phone',
         'address',
         'avatar',
@@ -29,6 +32,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password'          => 'hashed',
+            'last_login_at'     => 'datetime',
         ];
     }
 
@@ -43,14 +47,19 @@ class User extends Authenticatable
         return $this->hasMany(Wishlist::class);
     }
 
-   public function carts()
-{
-    return $this->hasMany(Cart::class);
-}
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
 
-    // ── Helper ─────────────────────────────
+    // ── Helpers ────────────────────────────
     public function isAdmin(): bool
     {
-        return $this->role === 'admin';
+        return in_array($this->role, ['admin', 'super_admin', 'staff']);
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === 'super_admin';
     }
 }

@@ -407,7 +407,6 @@
 
 {{-- Hidden inputs --}}
 <input type="hidden" name="coupon_code"     id="couponCode" value="">
-<input type="hidden" name="coupon_discount" id="couponDiscount" value="0">
 
 {{-- Totals --}}
 <div class="bl-totals">
@@ -628,7 +627,6 @@ function applyCoupon() {
 
       // Hidden inputs set করো
       document.getElementById('couponCode').value     = code;
-      document.getElementById('couponDiscount').value = data.discount;
 
     } else {
       msgEl.innerHTML = '<span class="text-danger">' + data.message + '</span>';
@@ -644,7 +642,6 @@ function resetCoupon() {
   document.getElementById('discountRow').style.display = 'none';
   document.getElementById('grandTotal').textContent = '৳' + originalTotal.toFixed(2);
   document.getElementById('couponCode').value     = '';
-  document.getElementById('couponDiscount').value = '0';
 }
 </script>
 
