@@ -5,14 +5,15 @@
   dir="ltr"
   data-theme="theme-default"
   data-assets-path="../assets/"
-  data-template="vertical-menu-template-free"
->
+  data-template="vertical-menu-template-free">
+
+  @php $errors = $errors ?? new \Illuminate\Support\MessageBag(); @endphp
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
   <title>@yield('title', 'Dashboard') | Admin Panel</title>
 
-  <link rel="icon" type="image/x-icon" href="{{ asset('backend/assets/img/favicon/favicon.ico') }}" />
+<link rel="icon" type="image/png" href="{{ asset('frontend/image/favIcon.png') }}">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -91,7 +92,7 @@
           <li class="menu-item {{ request()->routeIs('backend.products.*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
               <i class="menu-icon tf-icons bx bx-package"></i>
-              <div>Populer Products</div>
+              <div>Popular Products</div>
             </a>
             <ul class="menu-sub">
               <li class="menu-item {{ request()->routeIs('backend.products.create') ? 'active' : '' }}">
@@ -130,7 +131,7 @@
 <li class="menu-item {{ request()->routeIs('backend.customers.*') ? 'active' : '' }}">
   <a href="{{ route('backend.customers.index') }}" class="menu-link">
     <i class="menu-icon tf-icons bx bx-group"></i>
-    <div>User Info</div>
+    <div>Customers</div>
   </a>
 </li>
 {{-- Messages --}}
@@ -239,10 +240,25 @@
               </div>
             </div>
             <ul class="navbar-nav flex-row align-items-center ms-auto">
+               {{-- Notification Bell --}}
+<li class="nav-item me-2">
+  <a href="javascript:void(0);" class="nav-link position-relative" id="notifBell" title="Notifications">
+    <i class="bx bx-bell bx-sm"></i>
+    <span class="badge bg-danger rounded-pill position-absolute"
+          id="notifBadge"
+          style="top:-2px;right:-4px;font-size:10px;padding:2px 5px;display:none;">0</span>
+  </a>
+</li>    
               <li class="nav-item navbar-dropdown dropdown-user dropdown">
                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                   <div class="avatar avatar-online">
-                    <img src="{{ asset('backend/assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                   @if(auth()->user()->avatar)
+  <img src="{{ asset('storage/'.auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}" class="w-px-40 h-auto rounded-circle" style="object-fit:cover;width:40px;height:40px;" />
+@else
+  <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#22c55e,#16a34a);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;">
+    {{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 1)) }}
+  </div>
+@endif
                   </div>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
@@ -251,12 +267,18 @@
                       <div class="d-flex">
                         <div class="flex-shrink-0 me-3">
                           <div class="avatar avatar-online">
-                            <img src="{{ asset('backend/assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                          @if(auth()->user()->avatar)
+  <img src="{{ asset('storage/'.auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}" class="w-px-40 h-auto rounded-circle" style="object-fit:cover;width:40px;height:40px;" />
+@else
+  <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#22c55e,#16a34a);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;">
+    {{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 1)) }}
+  </div>
+@endif
                           </div>
                         </div>
                         <div class="flex-grow-1">
                           <span class="fw-semibold d-block">{{ auth()->user()->name ?? 'Admin' }}</span>
-                          <small class="text-muted">Admin</small>
+                         <small class="text-muted">{{ ucfirst(auth()->user()->role ?? 'Admin') }}</small>
                         </div>
                       </div>
                     </a>
@@ -308,6 +330,84 @@
     </div>
   </div>
   {{-- / layout-wrapper --}}
+
+  <script>
+(function () {
+  // Browser notification permission চাও
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+
+  let lastOrderCount   = 0;
+  let lastMsgCount     = 0;
+  let lastReturnCount  = 0;
+
+  function showBrowserNotif(title, body, url) {
+    if ('Notification' in window && Notification.permission === 'granted') {
+      const n = new Notification(title, {
+        body: body,
+        icon: '{{ asset('frontend/image/favIcon.png') }}',
+      });
+      n.onclick = function () {
+        window.focus();
+        window.location.href = url;
+        n.close();
+      };
+    }
+  }
+
+  function poll() {
+    fetch('{{ route('backend.notifications.poll') }}')
+      .then(r => r.json())
+      .then(data => {
+        const total = data.new_orders + data.new_messages + data.new_returns;
+
+        // Badge update
+        const badge = document.getElementById('notifBadge');
+        if (total > 0) {
+          badge.textContent = total;
+          badge.style.display = 'inline-block';
+          document.getElementById('notifBell').classList.add('text-danger');
+        } else {
+          badge.style.display = 'none';
+          document.getElementById('notifBell').classList.remove('text-danger');
+        }
+
+        // Browser notification — শুধু নতুন এলে
+        if (data.new_orders > lastOrderCount) {
+          showBrowserNotif(
+            '🛒 New Order!',
+            data.new_orders + ' টি নতুন order এসেছে।',
+            '{{ route('backend.orders.index') }}'
+          );
+        }
+        if (data.new_messages > lastMsgCount) {
+          showBrowserNotif(
+            '✉️ New Message!',
+            data.new_messages + ' টি নতুন message এসেছে।',
+            '{{ route('backend.messages.index') }}'
+          );
+        }
+        if (data.new_returns > lastReturnCount) {
+          showBrowserNotif(
+            '↩️ New Return Request!',
+            data.new_returns + ' টি নতুন return request এসেছে।',
+            '{{ route('backend.return.index') }}'
+          );
+        }
+
+        lastOrderCount  = data.new_orders;
+        lastMsgCount    = data.new_messages;
+        lastReturnCount = data.new_returns;
+      })
+      .catch(() => {}); // silent fail
+  }
+
+  // Page load এ একবার, তারপর প্রতি 30 সেকেন্ডে
+  poll();
+  setInterval(poll, 30000);
+})();
+</script>
 
   {{-- Scripts --}}
   <script src="{{ asset('backend/assets/vendor/libs/jquery/jquery.js') }}"></script>

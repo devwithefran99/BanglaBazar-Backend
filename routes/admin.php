@@ -22,7 +22,9 @@ use App\Http\Controllers\Backend\ReturnRequestController as AdminReturnControlle
 // ── Admin Login (guest only) ─────────────────────────────────────────────────
 Route::middleware('guest')->group(function () {
     Route::get('/login',  [AdminAuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AdminAuthController::class, 'login'])->name('login.post');
+   Route::post('/login', [AdminAuthController::class, 'login'])
+     ->name('login.post')
+     ->middleware('throttle:5,1');
 });
 
 // ── Admin Logout ─────────────────────────────────────────────────────────────
@@ -41,6 +43,21 @@ Route::middleware('is_admin')->group(function () {
     Route::patch('/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('backend.orders.updateStatus');
     Route::post('/orders/{orderId}/resend-mail', [EmailController::class, 'resendOrderMail'])->name('backend.orders.resendMail');
     Route::get('/orders/{id}/invoice',  [InvoiceController::class, 'orderInvoice'])->name('backend.orders.invoice');
+
+    // Notification polling
+Route::get('/notifications/poll', function () {
+    return response()->json([
+        'new_orders'   => \App\Models\Order::where('status', 'pending')
+                            ->where('created_at', '>=', now()->subMinutes(1))
+                            ->count(),
+        'new_messages' => \App\Models\ContactMessage::where('is_read', false)
+                            ->where('created_at', '>=', now()->subMinutes(1))
+                            ->count(),
+        'new_returns'  => \App\Models\ReturnRequest::where('status', 'pending')
+                            ->where('created_at', '>=', now()->subMinutes(1))
+                            ->count(),
+    ]);
+})->name('backend.notifications.poll');
 
     // ── Messages / Contact (সবাই) ─────────────────────────────────────────────
     Route::get('/messages',              [MessagesController::class, 'index'])->name('backend.messages.index');

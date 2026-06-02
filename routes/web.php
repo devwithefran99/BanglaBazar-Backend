@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\ShopController;
 use App\Http\Controllers\Frontend\AuthController;
@@ -15,12 +16,15 @@ use App\Http\Controllers\Frontend\ReturnRequestController;
 
 
 
+// ── Password Reset Routes ──────────────────────────
+Auth::routes(['register' => false, 'login' => false, 'logout' => false]);
+
 // ── Public Pages ──────────────────────────────
 Route::get('/',        [HomeController::class, 'index'])->name('home');
 Route::get('/shop',    [ShopController::class, 'index'])->name('shop');
 Route::get('/about',   fn() => view('frontend.about'))->name('about');
 Route::get('/contact',  [ContactController::class, 'index'])->name('contact');
-Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store')->middleware('throttle:10,1');
 Route::get('/wishlist',fn() => view('frontend.wishlist'))->name('wishlist');
 Route::get('/faq',     fn() => view('frontend.faq'))->name('faq');
 Route::get('/privacy-policy', fn() => view('frontend.privacy'))->name('privacy');
@@ -32,9 +36,9 @@ Route::get('/search/suggestions', [ShopController::class, 'searchSuggestions'])-
 
 // ── Auth (Guest only) ─────────────────────────
 Route::get('/signin',    [AuthController::class, 'showSignIn'])->name('signin');
-Route::post('/signin',   [AuthController::class, 'signIn'])->name('signin.post');
+Route::post('/signin',   [AuthController::class, 'signIn'])->name('signin.post')->middleware('throttle:5,1');
 Route::get('/register',  [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+Route::post('/register', [AuthController::class, 'register'])->name('register.post')->middleware('throttle:5,1');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -77,10 +81,14 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/count', [CartController::class, 'count'])->name('count');
 
     });
+
+//    profile & address
+      Route::post('/profile/update',  [UserDashboardController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/address/update',  [UserDashboardController::class, 'updateAddress'])->name('address.update');
 });
 
 // checkout 
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.show');
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.show')->middleware('auth');
 Route::post('/checkout/place', [CheckoutController::class, 'place'])->name('checkout.place')->middleware('auth');
 
 // Order Success

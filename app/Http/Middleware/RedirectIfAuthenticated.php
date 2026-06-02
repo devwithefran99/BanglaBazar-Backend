@@ -15,9 +15,10 @@ class RedirectIfAuthenticated
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
                 // Admin হলে admin panel এ
-                if (Auth::user()->role === 'admin') {
-                    return redirect()->route('backend.dashboard');
-                }
+                if (in_array(Auth::user()->role, ['super_admin', 'admin', 'staff'])) {
+    return redirect()->route('backend.dashboard');
+}
+return redirect()->route('userdashboard');
                 // Customer হলে user dashboard এ
                 return redirect()->route('userdashboard');
             }

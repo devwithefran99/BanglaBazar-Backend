@@ -1,36 +1,24 @@
 <?php
 
-use Illuminate\Foundation\Application;
-use Illuminate\Foundation\Configuration\Exceptions;
-use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Support\Facades\Route;
+namespace App\Http\Middleware;
 
-return Application::configure(basePath: dirname(__DIR__))
-    ->withRouting(
-        web: __DIR__.'/../routes/web.php',
-        commands: __DIR__.'/../routes/console.php',
-        health: '/up',
-        then: function () {
-            Route::middleware('web')
-                ->group(base_path('routes/admin.php'));
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
+
+class CheckRole
+{
+    public function handle(Request $request, Closure $next, string ...$roles): Response
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login');
         }
-    )
-    ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->redirectGuestsTo(fn() => route('login'));
 
-        // ── Custom Middleware Aliases ────────────────────
-        $middleware->alias([
-            'is_admin'  => \App\Http\Middleware\IsAdmin::class,
-            'role'      => \App\Http\Middleware\CheckRole::class,
-        ]);
-    })
-    ->withExceptions(function (Exceptions $exceptions): void {
+        if (!in_array(Auth::user()->role, $roles)) {
+            abort(403, 'Unauthorized.');
+        }
 
-        $exceptions->render(function (
-            \Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e,
-            \Illuminate\Http\Request $request
-        ) {
-            return response()->view('errors.404', [], 404);
-        });
-
-    })->create();
+        return $next($request);
+    }
+}

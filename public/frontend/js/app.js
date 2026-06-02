@@ -3,6 +3,25 @@
    ============================================================ */
 $(document).ready(function () {
 
+  console.log('owl check:', typeof $.fn.owlCarousel, $('.testimonial-slider').length);
+
+  $('.testimonial-slider').owlCarousel({
+  loop: true,
+  margin: 20,
+  autoplay: true,
+  autoplayTimeout: 2000,
+  autoplayHoverPause: true,
+  dots: false,
+  nav: false,
+  smartSpeed: 800,
+  autoplaySpeed: 800,
+  responsive: {
+    0:   { items: 1 },
+    768: { items: 2 },
+    992: { items: 3 }
+  }
+});
+
   // ✅ শুধু #heroBanner এর ভেতরের .slide নেওয়া হচ্ছে
   const $hero  = $('#heroBanner');
   const slides = $hero.find('.slide');
@@ -184,25 +203,6 @@ $(function () {
 });
 
 
-/* ============================================================
-   TESTIMONIAL SLIDER — Owl Carousel
-   ============================================================ */
-$('.testimonial-slider').owlCarousel({
-  loop: true,
-  margin: 20,
-  autoplay: true,
-  autoplayTimeout: 2000,
-  autoplayHoverPause: true,
-  dots: false,
-  nav: false,
-  smartSpeed: 800,
-  autoplaySpeed: 800,
-  responsive: {
-    0:   { items: 1 },
-    768: { items: 2 },
-    992: { items: 3 }
-  }
-});
 
 
 /* ============================================================

@@ -18,8 +18,12 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
-    {
-        Paginator::useBootstrap();
+   public function boot(): void
+{
+    Paginator::useBootstrap();
+
+    if (config('app.env') === 'production') {
+        \URL::forceScheme('https');
     }
+}
 }

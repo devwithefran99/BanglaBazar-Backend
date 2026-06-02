@@ -107,7 +107,14 @@ class CheckoutController extends Controller
         DB::beginTransaction();
         try {
             // ── Subtotal calculate ──
-            $subtotal = collect($orderData)->sum(fn($i) => $i['price'] * $i['quantity']);
+           $subtotal = 0;
+foreach ($orderData as $item) {
+    $product = $item['product_type'] === 'hotdeal'
+        ? \App\Models\HotDeal::find($item['product_id'])
+        : \App\Models\Product::find($item['product_id']);
+    if (!$product) continue;
+    $subtotal += $product->price * $item['quantity'];
+}
 
             // ── Coupon discount apply ──
 $discount   = 0;
@@ -224,8 +231,8 @@ $total = max(0, $subtotal - $discount);
             return redirect()->route('order.success', ['id' => $order->id]);
 
         } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', $e->getMessage());
+           \Log::error('Checkout error: ' . $e->getMessage());
+return back()->with('error', 'Something went wrong. Please try again.');
         }
     }
 

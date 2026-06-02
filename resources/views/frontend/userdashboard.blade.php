@@ -1,547 +1,253 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="wishlist-url" content="{{ route('wishlist.toggle') }}">
-    <title>Shop | BanglaBazar</title>
-     <link rel="icon" type="image/png" href="{{ asset('frontend/image/favIcon.png') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ asset('frontend/css/common.css') }}">
-    <link rel="stylesheet" href="{{ asset('frontend/css/userDashboard.css') }}">
-    <link rel="stylesheet" href="{{ asset('frontend/css/responsive.css') }}">
+@extends('frontend.layouts.app')
 
-    <style>
-        /* ── Responsive patches ── */
+@section('title', 'My Account')
+@section('meta_description', 'BanglaBazar আপনার account — order history, billing address এবং profile manage করুন।')
 
-        /* Stats row: wrap on small screens */
-        .udb-stats {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        .udb-stat {
-            flex: 1 1 100px;
-            min-width: 90px;
-        }
+@push('styles')
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ asset('frontend/css/userDashboard.css') }}">
+  <style>
+    .udb-stats { display:flex; flex-wrap:wrap; gap:1rem; }
+    .udb-stat  { flex:1 1 100px; min-width:90px; }
 
-        /* Profile + Billing row: stack on mobile */
-        .udb-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        .udb-row .udb-card {
-            flex: 1 1 280px;
-            min-width: 0;
-        }
+    /* Profile avatar fix */
+    .udb-profile-inner img {
+      width: 72px !important;
+      height: 72px !important;
+      border-radius: 50% !important;
+      object-fit: cover !important;
+      flex-shrink: 0;
+    }
+  </style>
+@endpush
 
-        /* Greeting text */
-        .udb-greeting h2 {
-            font-size: clamp(1.1rem, 4vw, 1.6rem);
-        }
+@section('content')
 
-        /* Table: hide less-important columns on xs */
-        @media (max-width: 575.98px) {
-            .udb-hide-xs { display: none !important; }
-
-            .udb-table td,
-            .udb-table th {
-                padding: 0.45rem 0.35rem;
-                font-size: 11px;
-            }
-
-            /* Profile card: stack vertically */
-            .udb-profile-inner {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-            .udb-profile-inner img {
-                margin-bottom: .75rem;
-            }
-
-            /* Stat values smaller */
-            .udb-stat-val {
-                font-size: 1.3rem !important;
-            }
-        }
-
-        /* Medium: two stats per row */
-        @media (min-width: 576px) and (max-width: 767.98px) {
-            .udb-stat {
-                flex: 1 1 calc(50% - .5rem);
-            }
-        }
-
-        /* Topbar hidden on xs — Bootstrap already handles this via d-none d-md-block */
-
-        /* Cart drawer: full-width on mobile */
-        @media (max-width: 575.98px) {
-            .cp-drawer {
-                width: 100% !important;
-                max-width: 100% !important;
-            }
-        }
-
-        /* Footer columns: already using Bootstrap grid, but ensure text wraps */
-        .footer-desc {
-            word-break: break-word;
-        }
-
-        /* Order product image: smaller on xs */
-        @media (max-width: 400px) {
-            .order-thumb {
-                width: 34px !important;
-                height: 34px !important;
-            }
-        }
-
-        /* Offcanvas mobile search fix */
-        .offcanvas-body .form-control:focus {
-            box-shadow: none;
-            border-color: var(--green, #22c55e);
-        }
-    </style>
-</head>
-<body>
-
-<!-- ── Preloader ── -->
-<div id="preloader">
-  <div class="loader">
-    <img src="{{ asset('frontend/image/favIcon.png') }}"  width="80px" alt="logo">
-    <p class="mt-5">Loading...</p>
-  </div>
-</div>
-
-
-<!-- HEADER -->
-<header>
-    <section id="navigation">
-
-        <!-- TOP BAR -->
-        <div class="topbar d-none d-md-block">
-            <div class="container">
-                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                    <div>
-                        <i class="bi bi-geo-alt-fill text-success me-1"></i>
-                        Store Location: 5th Floor, Kazi Complex, Beparipara, Agrabad Access Road, Chattogram
-                    </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <span class="sep">|</span>
-                        <a href="{{ route('signin') }}"><i class="bi bi-person me-1"></i>Sign In /</a>
-                        <a href="{{ route('register') }}"><i class="bi bi-person me-1"></i>Sign Up</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- MIDDLE BAR -->
-        <div class="middlebar d-flex align-items-center justify-content-between">
-            <div class="container">
-                <div class="d-flex align-items-center justify-content-between gap-3">
-
-                    <!-- Logo -->
-                    <a href="#" class="logo-slot">
-          <img src="{{ asset('frontend/image/ourlogo.png') }}"  width="120px" alt="logo">
-        </a>
-
-                    <!-- Hamburger (mobile/tablet) -->
-                    <div class="d-lg-none ms-auto">
-                        <button class="navbar-toggler-custom" type="button"
-                                data-bs-toggle="offcanvas" data-bs-target="#mobileNav">
-                            <i class="bi bi-list"></i>
-                        </button>
-                    </div>
-
-                    <!-- Search (lg+ only) -->
-                    <div class="search-wrap flex-grow-1 mx-3 d-none d-lg-flex">
-                        <input type="text" placeholder="Search for products..."/>
-                        <button><i class="bi bi-search me-1"></i>Search</button>
-                    </div>
-
-                    <!-- Icons (lg+) -->
-                    <div class="d-none d-lg-flex align-items-center gap-2">
-                        <a href="{{ route('wishlist') }}" class="icon-btn">
-                            <i class="bi bi-heart"></i>
-                            <span class="badge-dot" id="wishlistCount">
-                                {{ Auth::check() ? Auth::user()->wishlists()->count() : 0 }}
-                            </span>
-                        </a>
-                        <a href="#" class="icon-btn cart-btn" id="navCartBtn">
-                            <i class="bi bi-bag"></i>
-                            <span class="badge-dot" id="cartCount">
-                                {{ Auth::check() ? Auth::user()->carts()->count() : 0 }}
-                            </span>
-                        </a>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <!-- MAIN NAVBAR (desktop) -->
-        <nav class="main-navbar">
-            <div class="container">
-                <div class="d-flex align-items-center justify-content-between">
-
-                    <ul class="nav d-none d-lg-flex">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('home') }}">
-                                <i class="bi bi-house-door-fill me-1"></i> Home
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('shop') }}">
-                                <i class="bi bi-shop me-1"></i> Shop
-                            </a>
-                        </li>
-                        <li class="nav-item dropdown-custom">
-                            <a class="nav-link" href="#">
-                                <i class="bi bi-file-earmark-text me-1"></i> Pages
-                            </a>
-                            <ul class="submenu">
-                                <li><a href="{{ route('wishlist') }}">Wishlist</a></li>
-                                <li><a href="{{ route('userdashboard') }}">Order History</a></li>
-                                <li><a href="{{ route('checkout.show') }}">CheckOut</a></li>
-                                <li><a href="{{ route('signin') }}">Sign In</a></li>
-                                <li><a href="{{ route('register') }}">Sign Up</a></li>
-                                <li><a href="{{ route('faq') }}">FAQS</a></li>
-                                <li><a href="{{ route('userdashboard') }}">My Account</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('about') }}"><i class="bi bi-info-circle me-1"></i> About Us</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('contact') }}"><i class="bi bi-telephone me-1"></i> Contact Us</a>
-                        </li>
-                    </ul>
-
-                    <div class="nav-phone d-none d-lg-flex">
-                        <i class="bi bi-telephone-fill"></i>
-                        01616-239896
-                    </div>
-
-                </div>
-            </div>
-        </nav>
-
-        <!-- OFFCANVAS (mobile sidebar) -->
-        <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileNav">
-            <div class="offcanvas-header">
-                <img src="{{ asset('frontend/image/Logo.png') }}" alt="">
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-            </div>
-            <div class="offcanvas-body">
-
-                <!-- Mobile search -->
-                <div class="p-3 border-bottom">
-                    <div class="d-flex">
-                        <input type="text" class="form-control" placeholder="Search products..."/>
-                        <button class="btn ms-2" style="background:var(--green);color:#fff;">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <nav class="d-flex flex-column">
-                    <a class="nav-link" href="{{ route('home') }}">
-                        <span><i class="bi bi-house-door-fill me-2 text-success"></i>Home</span>
-                        <i class="bi bi-chevron-down arrow"></i>
-                    </a>
-                    <a class="nav-link" href="{{ route('shop') }}">
-                        <span><i class="bi bi-shop me-2 text-success"></i>Shop</span>
-                        <i class="bi bi-chevron-down arrow"></i>
-                    </a>
-                    <div class="mobile-menu-item">
-                        <a class="nav-link mobile-toggle" href="javascript:void(0)">
-                            <span><i class="bi bi-file-earmark-text me-2 text-success"></i>Pages</span>
-                            <i class="bi bi-chevron-down arrow"></i>
-                        </a>
-                        <ul class="mobile-submenu">
-                            <li><a href="{{ route('wishlist') }}">Wishlist</a></li>
-                            <li><a href="{{ route('userdashboard') }}">Order History</a></li>
-                            <li><a href="{{ route('checkout.show') }}">CheckOut</a></li>
-                            <li><a href="{{ route('signin') }}">Sign In</a></li>
-                            <li><a href="{{ route('register') }}">Sign Up</a></li>
-                            <li><a href="{{ route('faq') }}">FAQS</a></li>
-                            <li><a href="{{ route('userdashboard') }}">My Account</a></li>
-                        </ul>
-                    </div>
-                    <a class="nav-link" href="{{ route('about') }}">
-                        <span><i class="bi bi-info-circle me-2 text-success"></i>About Us</span>
-                    </a>
-                    <a class="nav-link" href="{{ route('contact') }}">
-                        <span><i class="bi bi-telephone me-2 text-success"></i>Contact Us</span>
-                    </a>
-                </nav>
-
-                <div class="offcanvas-phone">
-                    <i class="bi bi-telephone-fill"></i> 01616-239896
-                </div>
-
-            </div>
-        </div>
-
-    </section>
-</header>
-
-<!-- MAIN CONTENT -->
 <main>
-    <section id="userDash" class="udb-wrap">
-        <div class="container">
+  <section id="userDash" class="udb-wrap">
+    <div class="container">
 
-            <!-- Greeting -->
-            <div class="udb-greeting">
-                <h2 id="udbGreeting">Good evening, {{ Auth::user()->name }} ✦</h2>
-                <p>Here's a summary of your account activity</p>
-            </div>
+      {{-- Greeting --}}
+      <div class="udb-greeting">
+        <h2 id="udbGreeting">Good evening, {{ Auth::user()->name }} ✦</h2>
+        <p>Here's a summary of your account activity</p>
+      </div>
 
-            <!-- Stats -->
-            <div class="udb-stats">
-                <div class="udb-stat">
-                    <div class="udb-stat-label">Orders</div>
-                    <div class="udb-stat-val">{{ Auth::user()->orders->count() }}</div>
-                </div>
-                <div class="udb-stat">
-                    <div class="udb-stat-label">Spent</div>
-                    <div class="udb-stat-val green">
-                        ৳{{ number_format(Auth::user()->orders->sum('total_price'), 0) }}
-                    </div>
-                </div>
-                <div class="udb-stat">
-                    <div class="udb-stat-label">Tier</div>
-                    <div class="udb-stat-val gold">VIP</div>
-                </div>
-            </div>
-
-            <!-- Profile + Billing -->
-            <div class="udb-row">
-
-                <!-- Profile -->
-                <div class="udb-card udb-profile-card">
-                    <div class="udb-profile-inner">
-                        @if(Auth::user()->avatar)
-                            <img src="{{ asset('storage/'.Auth::user()->avatar) }}" alt="">
-                        @else
-                            <img src="https://i.pravatar.cc/300?img=68" alt="">
-                        @endif
-                        <div class="udb-profile-info">
-                            <h4>{{ Auth::user()->name }}</h4>
-                            <div>
-                                <span class="udb-vip">
-                                    <i class="bi bi-star-fill"></i> VIP Member
-                                </span>
-                            </div>
-                            <button class="udb-btn-green" onclick="editProfile()">
-                                <i class="bi bi-person-pen me-1"></i> Edit Profile
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Billing -->
-                <div class="udb-card">
-                    <div class="udb-card-label">Billing Address</div>
-                    <div class="udb-billing-name">{{ Auth::user()->name }}</div>
-                    <div class="udb-billing-addr">4540 Parker Rd<br>Allentown, NM 3834</div>
-                    <button class="udb-btn-outline" onclick="editAddress()">
-                        <i class="bi bi-pencil me-1"></i> Edit Address
-                    </button>
-                </div>
-
-            </div>
-
-            <!-- Recent Orders -->
-            <div class="udb-card udb-orders-card">
-                <div class="udb-orders-head">
-                    <h5>Recent Orders</h5>
-                    <a href="#" class="udb-view-all" onclick="viewAllOrders()">View all →</a>
-                </div>
-                <div class="table-responsive">
-                    <table class="udb-table">
-                        <thead>
-                            <tr>
-                                <th>Image</th>
-                                <th>Product</th>
-                                <th class="udb-hide-mobile d-none d-md-table-cell">Date</th>
-                                <th>Total</th>
-                                <th class="d-none d-sm-table-cell">Qty</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        @forelse(Auth::user()->orders->take(5) as $order)
-                            @php
-                                $firstItem = $order->items->first();
-                                $imgSrc = asset('frontend/image/Product Image.png');
-                                if ($firstItem) {
-                                    if ($firstItem->product_type === 'hotdeal') {
-                                        $p = \App\Models\HotDeal::find($firstItem->product_id);
-                                    } else {
-                                        $p = \App\Models\Product::find($firstItem->product_id);
-                                    }
-                                    if ($p && $p->image) {
-                                        $imgSrc = asset('storage/' . $p->image);
-                                    }
-                                }
-                                $itemCount  = $order->items->count();
-                                $firstName  = $firstItem ? $firstItem->product_name : 'N/A';
-                                $extraCount = $itemCount - 1;
-                            @endphp
-                            <tr>
-                                <!-- Image -->
-                                <td>
-                                    <img src="{{ $imgSrc }}"
-                                         alt="{{ $firstName }}"
-                                         onerror="this.src='{{ asset('frontend/image/Product Image.png') }}'"
-                                         class="order-thumb"
-                                         style="width:44px;height:44px;border-radius:8px;object-fit:cover;
-                                                border:1.5px solid #f1f5f9;">
-                                </td>
-                                <!-- Product Name -->
-                                <td class="td-n">
-                                    <div style="font-weight:700;font-size:13px;color:#0f172a;">
-                                        {{ Str::limit($firstName, 20) }}
-                                    </div>
-                                    @if($extraCount > 0)
-                                        <div style="font-size:11px;color:#94a3b8;">+{{ $extraCount }} more</div>
-                                    @endif
-                                    <div style="font-size:11px;color:#94a3b8;">
-                                        Order #{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}
-                                    </div>
-                                </td>
-                                <!-- Date (hidden on mobile) -->
-                                <td class="td-d udb-hide-mobile d-none d-md-table-cell">
-                                    {{ $order->created_at->format('d M Y') }}
-                                </td>
-                                <!-- Total -->
-                                <td class="td-p" style="font-weight:700;color:#22c55e;">
-                                    ৳{{ number_format($order->total_price, 0) }}
-                                </td>
-                                <!-- Qty (hidden on xs) -->
-                                <td class="d-none d-sm-table-cell">
-                                    <span class="udb-qty">{{ $order->items->sum('quantity') }}</span>
-                                </td>
-                                <!-- Status -->
-                                <td>
-                                    @if($order->status == 'pending')
-                                        <span class="udb-status udb-s-proc">Processing</span>
-                                    @elseif($order->status == 'confirmed')
-                                        <span class="udb-status udb-s-proc">Confirmed</span>
-                                    @elseif($order->status == 'shipped')
-                                        <span class="udb-status udb-s-way">On Way</span>
-                                    @elseif($order->status == 'delivered')
-                                        <span class="udb-status udb-s-done">Done</span>
-                                    @elseif($order->status == 'cancelled')
-                                        <span class="udb-status" style="background:#fee2e2;color:#dc2626;">Cancelled</span>
-                                    @else
-                                        <span class="udb-status udb-s-proc">{{ ucfirst($order->status) }}</span>
-                                    @endif
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" class="text-center py-3 text-muted">No orders yet.</td>
-                            </tr>
-                        @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
+      {{-- Stats --}}
+      <div class="udb-stats">
+        <div class="udb-stat">
+          <div class="udb-stat-label">Orders</div>
+          <div class="udb-stat-val">{{ Auth::user()->orders->count() }}</div>
         </div>
-    </section>
+        <div class="udb-stat">
+          <div class="udb-stat-label">Spent</div>
+          <div class="udb-stat-val green">৳{{ number_format(Auth::user()->orders->sum('total_price'), 0) }}</div>
+        </div>
+        <div class="udb-stat">
+          <div class="udb-stat-label">Tier</div>
+          <div class="udb-stat-val gold">VIP</div>
+        </div>
+      </div>
 
-    {{-- return part --}}
+      {{-- Profile + Billing --}}
+      <div class="udb-row">
 
-    <section>
-        <div class="container">
-          {{-- New Request Form --}}
-@if(isset($deliveredOrders) && $deliveredOrders->count() > 0)
-<hr class="my-4">
+        <div class="udb-card udb-profile-card">
+          <div class="udb-profile-inner">
+            @if(Auth::user()->avatar)
+              <img src="{{ asset('storage/'.Auth::user()->avatar) }}" alt="">
+            @else
+              <div style="width:72px;height:72px;border-radius:50%;
+                          background:linear-gradient(135deg,#22c55e,#16a34a);
+                          display:flex;align-items:center;justify-content:center;
+                          font-size:28px;font-weight:700;color:#fff;flex-shrink:0;">
+                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+              </div>
+            @endif
+            <div class="udb-profile-info">
+              <h4>{{ Auth::user()->name }}</h4>
+              <div>
+                <span class="udb-vip"><i class="bi bi-star-fill"></i> VIP Member</span>
+              </div>
+              <button class="udb-btn-green" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                <i class="bi bi-person-pen me-1"></i> Edit Profile
+              </button>
+            </div>
+          </div>
+        </div>
 
-<div class="mb-3 d-flex align-items-center gap-2">
-    <div style="width:36px;height:36px;background:#f0fdf4;border-radius:10px;display:flex;align-items:center;justify-content:center;">
-        <i class="bi bi-plus-circle" style="color:#22c55e;font-size:1.1rem;"></i>
+        <div class="udb-card">
+          <div class="udb-card-label">Billing Address</div>
+          <div class="udb-billing-name">{{ Auth::user()->name }}</div>
+          <div class="udb-billing-addr">
+            @if(Auth::user()->address)
+              {{ Auth::user()->address }}
+            @else
+              <span class="text-muted" style="font-size:13px;font-style:italic;">No address saved yet.</span>
+            @endif
+          </div>
+          <button class="udb-btn-outline" data-bs-toggle="modal" data-bs-target="#editAddressModal">
+            <i class="bi bi-pencil me-1"></i> Edit Address
+          </button>
+        </div>
+
+      </div>
+
+      {{-- Recent Orders --}}
+      <div class="udb-card udb-orders-card">
+        <div class="udb-orders-head">
+          <h5>Recent Orders</h5>
+          <a href="#" class="udb-view-all" onclick="viewAllOrders()">View all →</a>
+        </div>
+        <div class="table-responsive">
+          <table class="udb-table">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Product</th>
+                <th class="udb-hide-mobile d-none d-md-table-cell">Date</th>
+                <th>Total</th>
+                <th class="d-none d-sm-table-cell">Qty</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+            @forelse(Auth::user()->orders->take(5) as $order)
+              @php
+                $firstItem  = $order->items->first();
+                $imgSrc     = asset('frontend/image/Product Image.png');
+                if ($firstItem) {
+                  $p = $firstItem->product_type === 'hotdeal'
+                    ? \App\Models\HotDeal::find($firstItem->product_id)
+                    : \App\Models\Product::find($firstItem->product_id);
+                  if ($p && $p->image) $imgSrc = asset('storage/'.$p->image);
+                }
+                $itemCount  = $order->items->count();
+                $firstName  = $firstItem ? $firstItem->product_name : 'N/A';
+                $extraCount = $itemCount - 1;
+              @endphp
+              <tr>
+                <td>
+                  <img src="{{ $imgSrc }}" alt="{{ $firstName }}"
+                       onerror="this.src='{{ asset('frontend/image/Product Image.png') }}'"
+                       class="order-thumb"
+                       style="width:44px;height:44px;border-radius:8px;object-fit:cover;border:1.5px solid #f1f5f9;">
+                </td>
+                <td class="td-n">
+                  <div style="font-weight:700;font-size:13px;color:#0f172a;">{{ Str::limit($firstName, 20) }}</div>
+                  @if($extraCount > 0)
+                    <div style="font-size:11px;color:#94a3b8;">+{{ $extraCount }} more</div>
+                  @endif
+                  <div style="font-size:11px;color:#94a3b8;">Order #{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}</div>
+                </td>
+                <td class="td-d udb-hide-mobile d-none d-md-table-cell">{{ $order->created_at->format('d M Y') }}</td>
+                <td class="td-p" style="font-weight:700;color:#22c55e;">৳{{ number_format($order->total_price, 0) }}</td>
+                <td class="d-none d-sm-table-cell">
+                  <span class="udb-qty">{{ $order->items->sum('quantity') }}</span>
+                </td>
+                <td>
+                  @if($order->status == 'pending')
+                    <span class="udb-status udb-s-proc">Processing</span>
+                  @elseif($order->status == 'confirmed')
+                    <span class="udb-status udb-s-proc">Confirmed</span>
+                  @elseif($order->status == 'shipped')
+                    <span class="udb-status udb-s-way">On Way</span>
+                  @elseif($order->status == 'delivered')
+                    <span class="udb-status udb-s-done">Done</span>
+                  @elseif($order->status == 'cancelled')
+                    <span class="udb-status" style="background:#fee2e2;color:#dc2626;">Cancelled</span>
+                  @else
+                    <span class="udb-status udb-s-proc">{{ ucfirst($order->status) }}</span>
+                  @endif
+                </td>
+              </tr>
+            @empty
+              <tr>
+                <td colspan="6" class="text-center py-3 text-muted">No orders yet.</td>
+              </tr>
+            @endforelse
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
-    <div>
-        <div class="fw-semibold" style="font-size:14px;">Submit New Request</div>
-        <div class="text-muted" style="font-size:11px;">Only delivered orders are eligible</div>
-    </div>
-</div>
+  </section>
 
-<form action="{{ route('return.store') }}" method="POST">
-    @csrf
+  {{-- Return/Refund --}}
+  <section>
+    <div class="container">
+      @if(isset($deliveredOrders) && $deliveredOrders->count() > 0)
+      <hr class="my-4">
+      <div class="mb-3 d-flex align-items-center gap-2">
+        <div style="width:36px;height:36px;background:#f0fdf4;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+          <i class="bi bi-plus-circle" style="color:#22c55e;font-size:1.1rem;"></i>
+        </div>
+        <div>
+          <div class="fw-semibold" style="font-size:14px;">Submit New Request</div>
+          <div class="text-muted" style="font-size:11px;">Only delivered orders are eligible</div>
+        </div>
+      </div>
 
-    {{-- Order Select --}}
-    <div class="mb-3">
-        <label class="form-label" style="font-size:12px;font-weight:600;color:#475569;letter-spacing:.3px;">
+      <form action="{{ route('return.store') }}" method="POST">
+        @csrf
+        <div class="mb-3">
+          <label class="form-label" style="font-size:12px;font-weight:600;color:#475569;letter-spacing:.3px;">
             <i class="bi bi-receipt me-1"></i> SELECT ORDER
-        </label>
-        <select name="order_id" class="form-select form-select-sm" required
-                style="border-radius:10px;border:1.5px solid #e2e8f0;font-size:13px;padding:9px 12px;height:auto;">
+          </label>
+          <select name="order_id" class="form-select form-select-sm" required
+                  style="border-radius:10px;border:1.5px solid #e2e8f0;font-size:13px;padding:9px 12px;height:auto;">
             <option value="">Choose a delivered order...</option>
             @foreach($deliveredOrders as $order)
-                @php
-                    $hasActive = $returnRequests
-                        ->where('order_id', $order->id)
-                        ->whereIn('status', ['pending','approved'])
-                        ->count();
-                @endphp
-                @if(!$hasActive)
-                <option value="{{ $order->id }}">
-                    Order #{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}
-                    — ৳{{ number_format($order->total_price, 0) }}
-                    ({{ $order->created_at->format('d M Y') }})
-                </option>
-                @endif
+              @php
+                $hasActive = $returnRequests
+                  ->where('order_id', $order->id)
+                  ->whereIn('status', ['pending','approved'])
+                  ->count();
+              @endphp
+              @if(!$hasActive)
+              <option value="{{ $order->id }}">
+                Order #{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}
+                — ৳{{ number_format($order->total_price, 0) }}
+                ({{ $order->created_at->format('d M Y') }})
+              </option>
+              @endif
             @endforeach
-        </select>
-    </div>
-
-    {{-- Type --}}
-    <div class="mb-3">
-        <label class="form-label" style="font-size:12px;font-weight:600;color:#475569;letter-spacing:.3px;">
-            <i class="bi bi-arrow-left-right me-1"></i> REQUEST TYPE
-        </label>
-        <div class="d-flex gap-3">
-
-            <label style="flex:1;cursor:pointer;">
-                <input type="radio" name="type" value="return" checked class="d-none" id="typeReturn">
-                <div class="type-option" id="typeReturnBox"
-                     style="border:1.5px solid #22c55e;background:#f0fdf4;border-radius:12px;padding:12px;text-align:center;transition:all .2s;">
-                    <i class="bi bi-arrow-return-left d-block mb-1" style="font-size:1.2rem;color:#16a34a;"></i>
-                    <div style="font-size:12px;font-weight:600;color:#15803d;">Return Item</div>
-                    <div style="font-size:10px;color:#86efac;">Send item back</div>
-                </div>
-            </label>
-
-            <label style="flex:1;cursor:pointer;">
-                <input type="radio" name="type" value="refund" class="d-none" id="typeRefund">
-                <div class="type-option" id="typeRefundBox"
-                     style="border:1.5px solid #e2e8f0;background:#f8fafc;border-radius:12px;padding:12px;text-align:center;transition:all .2s;">
-                    <i class="bi bi-currency-exchange d-block mb-1" style="font-size:1.2rem;color:#64748b;"></i>
-                    <div style="font-size:12px;font-weight:600;color:#475569;">Refund</div>
-                    <div style="font-size:10px;color:#94a3b8;">Get money back</div>
-                </div>
-            </label>
-
+          </select>
         </div>
-    </div>
 
-    {{-- Reason --}}
-    <div class="mb-3">
-        <label class="form-label" style="font-size:12px;font-weight:600;color:#475569;letter-spacing:.3px;">
+        <div class="mb-3">
+          <label class="form-label" style="font-size:12px;font-weight:600;color:#475569;letter-spacing:.3px;">
+            <i class="bi bi-arrow-left-right me-1"></i> REQUEST TYPE
+          </label>
+          <div class="d-flex gap-3">
+            <label style="flex:1;cursor:pointer;">
+              <input type="radio" name="type" value="return" checked class="d-none" id="typeReturn">
+              <div class="type-option" id="typeReturnBox"
+                   style="border:1.5px solid #22c55e;background:#f0fdf4;border-radius:12px;padding:12px;text-align:center;transition:all .2s;">
+                <i class="bi bi-arrow-return-left d-block mb-1" style="font-size:1.2rem;color:#16a34a;"></i>
+                <div style="font-size:12px;font-weight:600;color:#15803d;">Return Item</div>
+                <div style="font-size:10px;color:#86efac;">Send item back</div>
+              </div>
+            </label>
+            <label style="flex:1;cursor:pointer;">
+              <input type="radio" name="type" value="refund" class="d-none" id="typeRefund">
+              <div class="type-option" id="typeRefundBox"
+                   style="border:1.5px solid #e2e8f0;background:#f8fafc;border-radius:12px;padding:12px;text-align:center;transition:all .2s;">
+                <i class="bi bi-currency-exchange d-block mb-1" style="font-size:1.2rem;color:#64748b;"></i>
+                <div style="font-size:12px;font-weight:600;color:#475569;">Refund</div>
+                <div style="font-size:10px;color:#94a3b8;">Get money back</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" style="font-size:12px;font-weight:600;color:#475569;letter-spacing:.3px;">
             <i class="bi bi-chat-square-text me-1"></i> REASON
-        </label>
-        <select name="reason" class="form-select form-select-sm" required
-                style="border-radius:10px;border:1.5px solid #e2e8f0;font-size:13px;padding:9px 12px;height:auto;">
+          </label>
+          <select name="reason" class="form-select form-select-sm" required
+                  style="border-radius:10px;border:1.5px solid #e2e8f0;font-size:13px;padding:9px 12px;height:auto;">
             <option value="">Select a reason...</option>
             <option value="Wrong item received">Wrong item received</option>
             <option value="Damaged product">Damaged product</option>
@@ -549,203 +255,249 @@
             <option value="Missing items in order">Missing items in order</option>
             <option value="Changed my mind">Changed my mind</option>
             <option value="Other">Other</option>
-        </select>
-    </div>
+          </select>
+        </div>
 
-    {{-- Description --}}
-    <div class="mb-4">
-        <label class="form-label" style="font-size:12px;font-weight:600;color:#475569;letter-spacing:.3px;">
+        <div class="mb-4">
+          <label class="form-label" style="font-size:12px;font-weight:600;color:#475569;letter-spacing:.3px;">
             <i class="bi bi-card-text me-1"></i> ADDITIONAL DETAILS
             <span style="color:#94a3b8;font-weight:400;">(optional)</span>
-        </label>
-        <textarea name="description" rows="3"
-                  style="border-radius:10px;border:1.5px solid #e2e8f0;font-size:13px;padding:10px 12px;width:100%;outline:none;resize:none;font-family:inherit;"
-                  placeholder="Describe the issue in detail..."></textarea>
-    </div>
-
-    <button type="submit" class="udb-btn w-100 mb-4"
-            style="border-radius:12px;padding:12px;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;background-color:#15803d;color:#f0fdf4;border:none">
-        <i class="bi bi-send"></i> Submit Request
-    </button>
-</form>
-
-<script>
-// Type card toggle
-document.querySelectorAll('input[name="type"]').forEach(function(radio) {
-    radio.addEventListener('change', function() {
-        document.getElementById('typeReturnBox').style.border    = '1.5px solid #e2e8f0';
-        document.getElementById('typeReturnBox').style.background = '#f8fafc';
-        document.getElementById('typeRefundBox').style.border    = '1.5px solid #e2e8f0';
-        document.getElementById('typeRefundBox').style.background = '#f8fafc';
-        document.querySelector('#typeReturnBox i').style.color   = '#64748b';
-        document.querySelector('#typeRefundBox i').style.color   = '#64748b';
-
-        if (this.value === 'return') {
-            document.getElementById('typeReturnBox').style.border    = '1.5px solid #22c55e';
-            document.getElementById('typeReturnBox').style.background = '#f0fdf4';
-            document.querySelector('#typeReturnBox i').style.color   = '#16a34a';
-        } else {
-            document.getElementById('typeRefundBox').style.border    = '1.5px solid #22c55e';
-            document.getElementById('typeRefundBox').style.background = '#f0fdf4';
-            document.querySelector('#typeRefundBox i').style.color   = '#16a34a';
-        }
-    });
-});
-</script>
-
-@else
-<hr class="my-3">
-<div class="text-center py-3" style="color:#94a3b8;font-size:12px;">
-    <i class="bi bi-bag-check d-block mb-1" style="font-size:1.5rem;"></i>
-    Only <strong>delivered</strong> orders are eligible for return/refund.
-</div>
-@endif
+          </label>
+          <textarea name="description" rows="3"
+                    style="border-radius:10px;border:1.5px solid #e2e8f0;font-size:13px;padding:10px 12px;width:100%;outline:none;resize:none;font-family:inherit;"
+                    placeholder="Describe the issue in detail..."></textarea>
         </div>
-    </section>
+
+        <button type="submit" class="udb-btn w-100 mb-4"
+                style="border-radius:12px;padding:12px;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;background-color:#15803d;color:#f0fdf4;border:none">
+          <i class="bi bi-send"></i> Submit Request
+        </button>
+      </form>
+
+      @else
+      <hr class="my-3">
+      <div class="text-center py-3" style="color:#94a3b8;font-size:12px;">
+        <i class="bi bi-bag-check d-block mb-1" style="font-size:1.5rem;"></i>
+        Only <strong>delivered</strong> orders are eligible for return/refund.
+      </div>
+      @endif
+    </div>
+  </section>
 </main>
 
-<!-- 
-     CART POPUP
- -->
+{{-- CART DRAWER --}}
 <div class="cp-overlay" id="cpOverlay"></div>
-
 <div class="cp-drawer" id="cpDrawer">
-    <div class="cp-header">
-        <div class="cp-title">
-            <img src="{{ asset('frontend/image/Logo.png') }}" alt="">
-        </div>
-        <button class="cp-close" id="cpClose" aria-label="Close cart">
-            <i class="bi bi-x-lg"></i>
-        </button>
+  <div class="cp-header">
+    <div class="cp-title"><img src="{{ asset('frontend/image/Logo.png') }}" alt=""></div>
+    <button class="cp-close" id="cpClose"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <div class="cp-items" id="cpItems"></div>
+  <div class="cp-empty" id="cpEmpty" style="display:flex;">
+    <i class="bi bi-bag-x"></i><p>Your cart is empty</p>
+    <a href="{{ route('shop') }}" class="cp-shop-link">Browse Products →</a>
+  </div>
+  <div class="cp-footer" id="cpFooter" style="display:none;">
+    <div class="cp-subtotal">
+      <span class="cp-sub-label"><span id="cpProductCount">0</span> Product</span>
+      <span class="cp-sub-price" id="cpTotal">৳0.00</span>
     </div>
-
-    <div class="cp-items" id="cpItems">
-        <div class="cp-item" data-id="1">
-            <div class="cp-item-img"><img src="{{ asset('frontend/image/hotProduct1 (2).png') }}" alt=""></div>
-            <div class="cp-item-info">
-                <div class="cp-item-name">Fresh Indian Orange</div>
-                <div class="cp-item-meta">1 kg × <strong>$12.00</strong></div>
-            </div>
-            <button class="cp-remove" onclick="cpRemoveItem(this)" aria-label="Remove">
-                <i class="bi bi-x"></i>
-            </button>
-        </div>
-        <div class="cp-item" data-id="2">
-            <div class="cp-item-img"><img src="{{ asset('frontend/image/hotProduct1 (1).png') }}" alt=""></div>
-            <div class="cp-item-info">
-                <div class="cp-item-name">Green Apple</div>
-                <div class="cp-item-meta">1 kg × <strong>$14.00</strong></div>
-            </div>
-            <button class="cp-remove" onclick="cpRemoveItem(this)" aria-label="Remove">
-                <i class="bi bi-x"></i>
-            </button>
-        </div>
-    </div>
-
-    <div class="cp-empty" id="cpEmpty">
-        <i class="bi bi-bag-x"></i>
-        <p>Your cart is empty</p>
-        <a href="{{ route('shop') }}" class="cp-shop-link">Browse Products →</a>
-    </div>
-
-    <div class="cp-footer" id="cpFooter">
-        <div class="cp-subtotal">
-            <span class="cp-sub-label"><span id="cpProductCount">2</span> Product</span>
-            <span class="cp-sub-price" id="cpTotal">$26.00</span>
-        </div>
-        <a href="{{ route('checkout.show') }}?source=cart" class="cp-checkout-btn">
-            <i class="bi bi-bag-check-fill me-1"></i> Checkout
-        </a>
-        <a href="#" class="cp-cart-link">Go To Cart</a>
-    </div>
+    <a href="{{ route('checkout.show') }}" class="cp-checkout-btn">
+      <i class="bi bi-bag-check-fill me-1"></i> Checkout
+    </a>
+  </div>
 </div>
 
-<!-- 
-     FOOTER  (fixed: removed nested <footer>)
- -->
-<footer class="main-footer">
-    <div class="container">
-        <div class="row g-4">
-
-            <!-- Brand -->
-            <div class="col-lg-3 col-md-6 anim-fade-up d1">
-                 <img src="{{ asset('frontend/image/ourlogo.png') }}"  width="140px" alt="logo">
-                <p class="footer-desc">
-                    Morbi cursus porttitor enim lobortis molestie. Duis gravida turpis dui,
-                    eget bibendum magna congue nec.
-                </p>
-                <div class="footer-contact d-flex align-items-center flex-wrap">
-                    <a href="tel:01616239896">01616-239896</a>
-                    
-                    <a href="mailto:banglabazar247bd@gmail.com">banglabazar247bd@gmail.com</a>
-                </div>
-            </div>
-
-            <!-- My Account -->
-            <div class="col-lg-2 col-md-3 col-6 anim-fade-up d2">
-                <h6 class="footer-col-title">My Account</h6>
-                <ul class="footer-links">
-                    <li><a href="{{ route('userdashboard') }}">My Account</a></li>
-                    <li><a href="{{ route('userdashboard') }}">Order History</a></li>
-                    <li><a href="#" class="active">Shopping Cart</a></li>
-                    <li><a href="{{ route('wishlist') }}">Wishlist</a></li>
-                </ul>
-            </div>
-
-            <!-- Helps -->
-            <div class="col-lg-2 col-md-3 col-6 anim-fade-up d3">
-                <h6 class="footer-col-title">Helps</h6>
-                <ul class="footer-links">
-                    <li><a href="{{ route('contact') }}">Contact</a></li>
-                    <li><a href="{{ route('faq') }}">FAQS</a></li>
-                    <li><a href="{{ route('terms') }}">Terms &amp; Condition</a></li>
-                  <li><a href="{{ route('privacy') }}">Privacy Policy</a></li>
-                </ul>
-            </div>
-
-            <!-- Proxy -->
-            <div class="col-lg-2 col-md-3 col-6 anim-fade-up d4">
-                <h6 class="footer-col-title">Proxy</h6>
-                <ul class="footer-links">
-                    <li><a href="{{ route('about') }}">About</a></li>
-                    <li><a href="{{ route('shop') }}">Shop</a></li>
-                    <li><a href="#">Product</a></li>
-                </ul>
-            </div>
-
-            <!-- Categories -->
-            <div class="col-lg-3 col-md-3 col-6 anim-fade-up d5">
-                <h6 class="footer-col-title">Categories</h6>
-                <ul class="footer-links">
-                    <li><a href="{{ route('shop') }}">Fruit &amp; Vegetables</a></li>
-                    <li><a href="{{ route('shop') }}">Meat &amp; Fish</a></li>
-                    <li><a href="{{ route('shop') }}">Bread &amp; Bakery</a></li>
-                    <li><a href="{{ route('shop') }}">Beauty &amp; Health</a></li>
-                </ul>
-            </div>
-
+{{-- Edit Profile Modal --}}
+<div class="modal fade" id="editProfileModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:18px;border:none;">
+      <div class="modal-header border-0 pb-0">
+        <h6 class="modal-title fw-bold" style="font-size:15px;">Edit Profile</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body pt-2">
+        <div class="text-center mb-3">
+          <div id="avatarPreview" style="width:72px;height:72px;border-radius:50%;
+               background:linear-gradient(135deg,#22c55e,#16a34a);
+               display:flex;align-items:center;justify-content:center;
+               font-size:28px;font-weight:700;color:#fff;margin:0 auto 8px;overflow:hidden;">
+            @if(Auth::user()->avatar)
+              <img src="{{ asset('storage/'.Auth::user()->avatar) }}" style="width:100%;height:100%;object-fit:cover;">
+            @else
+              {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+            @endif
+          </div>
+          <label for="avatarInput" style="font-size:12px;color:#22c55e;cursor:pointer;font-weight:600;">Change Photo</label>
+          <input type="file" id="avatarInput" accept="image/*" class="d-none">
         </div>
-    </div>
-
-    <!-- Bottom Bar -->
-    <div class="footer-bottom mt-4">
-        <div class="container">
-            <div class="row align-items-center anim-fade-in d6">
-                <div class="col-md-6 mySign">
-                    <p>BanglaBazar24/7 eCommerce © 2026. All Rights Reserved
-                        <span>Powered By <a href="https://github.com/devwithefran99">devwithErfan</a></span>
-                    </p>
-                </div>
-            </div>
+        <div class="mb-3">
+          <label style="font-size:12px;font-weight:600;color:#475569;letter-spacing:.3px;">FULL NAME</label>
+          <input type="text" id="profileName" class="form-control form-control-sm mt-1"
+                 style="border-radius:10px;border:1.5px solid #e2e8f0;font-size:13px;padding:9px 12px;height:auto;"
+                 value="{{ Auth::user()->name }}" placeholder="Your full name">
         </div>
+        <div class="mb-3">
+          <label style="font-size:12px;font-weight:600;color:#475569;letter-spacing:.3px;">PHONE</label>
+          <input type="text" id="profilePhone" class="form-control form-control-sm mt-1"
+                 style="border-radius:10px;border:1.5px solid #e2e8f0;font-size:13px;padding:9px 12px;height:auto;"
+                 value="{{ Auth::user()->phone ?? '' }}" placeholder="01XXXXXXXXX">
+        </div>
+        <div id="profileAlert" class="d-none" style="border-radius:10px;font-size:13px;padding:9px 12px;"></div>
+      </div>
+      <div class="modal-footer border-0 pt-0">
+        <button type="button" class="btn btn-sm" data-bs-dismiss="modal"
+                style="border-radius:10px;font-size:13px;border:1.5px solid #e2e8f0;padding:7px 18px;">Cancel</button>
+        <button type="button" id="saveProfileBtn"
+                style="border-radius:10px;font-size:13px;padding:7px 20px;background:#22c55e;color:#fff;border:none;font-weight:600;">
+          Save Changes
+        </button>
+      </div>
     </div>
-</footer>
+  </div>
+</div>
 
-<!-- Scripts -->
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/mixitup@3/dist/mixitup.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{{ asset('frontend/js/common.js') }}"></script>
-<script src="{{ asset('frontend/js/userDashboard.js') }}"></script>
-</body>
-</html>
+{{-- Edit Address Modal --}}
+<div class="modal fade" id="editAddressModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:18px;border:none;">
+      <div class="modal-header border-0 pb-0">
+        <h6 class="modal-title fw-bold" style="font-size:15px;">Edit Address</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body pt-2">
+        <div class="mb-3">
+          <label style="font-size:12px;font-weight:600;color:#475569;letter-spacing:.3px;">FULL ADDRESS</label>
+          <textarea id="addressInput" class="form-control form-control-sm mt-1" rows="3"
+                    style="border-radius:10px;border:1.5px solid #e2e8f0;font-size:13px;padding:9px 12px;resize:none;"
+                    placeholder="House, Road, Area, City">{{ Auth::user()->address ?? '' }}</textarea>
+        </div>
+        <div id="addressAlert" class="d-none" style="border-radius:10px;font-size:13px;padding:9px 12px;"></div>
+      </div>
+      <div class="modal-footer border-0 pt-0">
+        <button type="button" class="btn btn-sm" data-bs-dismiss="modal"
+                style="border-radius:10px;font-size:13px;border:1.5px solid #e2e8f0;padding:7px 18px;">Cancel</button>
+        <button type="button" id="saveAddressBtn"
+                style="border-radius:10px;font-size:13px;padding:7px 20px;background:#22c55e;color:#fff;border:none;font-weight:600;">
+          Save Address
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@endsection
+
+@push('scripts')
+  <script src="{{ asset('frontend/js/userDashboard.js') }}"></script>
+  <script>
+  const PROFILE_UPDATE_URL = "{{ route('profile.update') }}";
+  const ADDRESS_UPDATE_URL = "{{ route('address.update') }}";
+  const CSRF = "{{ csrf_token() }}";
+
+  // Type card toggle
+  document.querySelectorAll('input[name="type"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      document.getElementById('typeReturnBox').style.border     = '1.5px solid #e2e8f0';
+      document.getElementById('typeReturnBox').style.background = '#f8fafc';
+      document.getElementById('typeRefundBox').style.border     = '1.5px solid #e2e8f0';
+      document.getElementById('typeRefundBox').style.background = '#f8fafc';
+      document.querySelector('#typeReturnBox i').style.color    = '#64748b';
+      document.querySelector('#typeRefundBox i').style.color    = '#64748b';
+      if (this.value === 'return') {
+        document.getElementById('typeReturnBox').style.border     = '1.5px solid #22c55e';
+        document.getElementById('typeReturnBox').style.background = '#f0fdf4';
+        document.querySelector('#typeReturnBox i').style.color    = '#16a34a';
+      } else {
+        document.getElementById('typeRefundBox').style.border     = '1.5px solid #22c55e';
+        document.getElementById('typeRefundBox').style.background = '#f0fdf4';
+        document.querySelector('#typeRefundBox i').style.color    = '#16a34a';
+      }
+    });
+  });
+
+  // Avatar preview
+  document.getElementById('avatarInput').addEventListener('change', function () {
+    const file = this.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      document.getElementById('avatarPreview').innerHTML =
+        `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;">`;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Save Profile
+  document.getElementById('saveProfileBtn').addEventListener('click', function () {
+    const btn   = this;
+    const alert = document.getElementById('profileAlert');
+    const name  = document.getElementById('profileName').value.trim();
+    const phone = document.getElementById('profilePhone').value.trim();
+    const avatarFile = document.getElementById('avatarInput').files[0];
+
+    if (!name) {
+      alert.className   = 'alert alert-danger';
+      alert.textContent = 'Name is required.';
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('_token', CSRF);
+    formData.append('name', name);
+    formData.append('phone', phone);
+    if (avatarFile) formData.append('avatar', avatarFile);
+
+    btn.disabled = true; btn.textContent = 'Saving...';
+
+    fetch(PROFILE_UPDATE_URL, { method: 'POST', body: formData })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          alert.className = 'alert alert-success';
+          alert.textContent = data.message;
+          setTimeout(() => location.reload(), 1000);
+        } else {
+          alert.className = 'alert alert-danger';
+          alert.textContent = 'Something went wrong.';
+        }
+      })
+      .catch(() => { alert.className = 'alert alert-danger'; alert.textContent = 'Network error.'; })
+      .finally(() => { btn.disabled = false; btn.textContent = 'Save Changes'; });
+  });
+
+  // Save Address
+  document.getElementById('saveAddressBtn').addEventListener('click', function () {
+    const btn     = this;
+    const alert   = document.getElementById('addressAlert');
+    const address = document.getElementById('addressInput').value.trim();
+
+    if (!address) {
+      alert.className = 'alert alert-danger';
+      alert.textContent = 'Address cannot be empty.';
+      return;
+    }
+
+    btn.disabled = true; btn.textContent = 'Saving...';
+
+    fetch(ADDRESS_UPDATE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF },
+      body: JSON.stringify({ address })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.success) {
+        alert.className = 'alert alert-success';
+        alert.textContent = data.message;
+        setTimeout(() => location.reload(), 1000);
+      } else {
+        alert.className = 'alert alert-danger';
+        alert.textContent = 'Something went wrong.';
+      }
+    })
+    .catch(() => { alert.className = 'alert alert-danger'; alert.textContent = 'Network error.'; })
+    .finally(() => { btn.disabled = false; btn.textContent = 'Save Address'; });
+  });
+  </script>
+@endpush

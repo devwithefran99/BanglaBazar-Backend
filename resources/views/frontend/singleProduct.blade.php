@@ -1,188 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="wishlist-url" content="{{ route('wishlist.toggle') }}">
-    <title>{{ $item->name ?? 'Product' }} | BanglaBazar</title>
-     <link rel="icon" type="image/png" href="{{ asset('frontend/image/favIcon.png') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
-    <link rel="stylesheet" href="{{ asset('frontend/css/common.css') }}">
-    <link rel="stylesheet" href="{{ asset('frontend/css/pages.css') }}">
-    <link rel="stylesheet" href="{{ asset('frontend/css/responsive.css') }}">
-</head>
-<body>
-
-<!-- preloader -->
-<div id="preloader">
-  <div class="loader">
-    <img src="{{ asset('frontend/image/favIcon.png') }}"  width="80px" alt="logo">
-    <p class="mt-5">Loading...</p>
-  </div>
-</div>
-
-<!-- preloader ends -->
-
-<!-- header -->
-<header>
-    <section id="navigation">
-        <div class="topbar d-none d-md-block">
-            <div class="container">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <i class="bi bi-geo-alt-fill text-success me-1"></i>
-                        Store Location: 4th Floor,Kazi Complex,Beparipara,Agrabad Access Road,Chattogram
-                    </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <span class="sep">|</span>
-                        <a href="{{ route('signin') }}"><i class="bi bi-person me-1"></i>Sign In /</a>
-                        <a href="{{ route('register') }}"><i class="bi bi-person me-1"></i>Sign Up</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="middlebar d-flex align-items-center justify-content-between">
-            <div class="container">
-                <div class="d-flex align-items-center justify-content-between gap-3">
-                    <a href="#" class="logo-slot">
-          <img src="{{ asset('frontend/image/ourlogo.png') }}"  width="120px" alt="logo">
-        </a>
-                    <div class="d-lg-none ms-auto">
-                        <button class="navbar-toggler-custom" type="button"
-                                data-bs-toggle="offcanvas" data-bs-target="#mobileNav">
-                            <i class="bi bi-list"></i>
-                        </button>
-                    </div>
-                    <div class="search-wrap flex-grow-1 mx-3">
-                        <input type="text" placeholder="Search for products..."/>
-                        <button><i class="bi bi-search me-1"></i>Search</button>
-                    </div>
-                    <div class="d-none d-lg-flex align-items-center gap-2">
-                        <a href="{{ route('wishlist') }}" class="icon-btn">
-                            <i class="bi bi-heart"></i>
-                            <span class="badge-dot" id="wishlistCount">
-                                {{ Auth::check() ? Auth::user()->wishlists()->count() : 0 }}
-                            </span>
-                        </a>
-                        <a href="#" class="icon-btn cart-btn" id="navCartBtn">
-                            <i class="bi bi-bag"></i>
-                            <span class="badge-dot" id="cartCount">
-                                {{ Auth::check() ? Auth::user()->carts()->count() : 0 }}
-                            </span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <nav class="main-navbar">
-            <div class="container">
-                <div class="d-flex align-items-center justify-content-between">
-                    <ul class="nav d-none d-lg-flex">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('home') }}">
-                                <i class="bi bi-house-door-fill me-1"></i> Home
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('shop') }}">
-                                <i class="bi bi-shop me-1"></i> Shop
-                            </a>
-                        </li>
-                        <li class="nav-item dropdown-custom">
-                            <a class="nav-link" href="#">
-                                <i class="bi bi-file-earmark-text me-1"></i> Pages
-                            </a>
-                            <ul class="submenu">
-                                <li><a href="{{ route('wishlist') }}">Wishlist</a></li>
-                                <li><a href="{{ route('userdashboard') }}">Order History</a></li>
-                               <li><a href="{{ route('checkout.show') }}">CheckOut</a></li>
-                                <li><a href="{{ route('signin') }}">Sign In</a></li>
-                                <li><a href="{{ route('register') }}">Sign Up</a></li>
-                                <li><a href="{{ route('faq') }}">FAQS</a></li>
-                                <li><a href="{{ route('userdashboard') }}">My Account</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('about') }}">
-                                <i class="bi bi-info-circle me-1"></i> About Us
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('contact') }}">
-                                <i class="bi bi-telephone me-1"></i> Contact Us
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="nav-phone d-none d-lg-flex">
-                        <i class="bi bi-telephone-fill"></i> 01616-239896
-                    </div>
-                </div>
-            </div>
-        </nav>
-
-        <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileNav">
-            <div class="offcanvas-header">
-                <img src="{{ asset('frontend/image/Logo.png') }}" alt="">
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-            </div>
-            <div class="offcanvas-body">
-                <div class="p-3 border-bottom">
-                    <div class="d-flex">
-                        <input type="text" class="form-control" placeholder="Search products..."/>
-                        <button class="btn ms-2" style="background:var(--green);color:#fff;">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
-                </div>
-                <nav class="d-flex flex-column">
-                    <a class="nav-link" href="{{ route('home') }}">
-                        <span><i class="bi bi-house-door-fill me-2 text-success"></i>Home</span>
-                        <i class="bi bi-chevron-down arrow"></i>
-                    </a>
-                    <a class="nav-link" href="{{ route('shop') }}">
-                        <span><i class="bi bi-shop me-2 text-success"></i>Shop</span>
-                        <i class="bi bi-chevron-down arrow"></i>
-                    </a>
-                    <div class="mobile-menu-item">
-                        <a class="nav-link mobile-toggle" href="javascript:void(0)">
-                            <span><i class="bi bi-file-earmark-text me-2 text-success"></i>Pages</span>
-                            <i class="bi bi-chevron-down arrow"></i>
-                        </a>
-                        <ul class="mobile-submenu">
-                            <li><a href="{{ route('wishlist') }}">Wishlist</a></li>
-                            <li><a href="{{ route('userdashboard') }}">Order History</a></li>
-                            <li><a href="{{ route('checkout.show') }}">CheckOut</a></li>
-                            <li><a href="{{ route('signin') }}">Sign In</a></li>
-                            <li><a href="{{ route('register') }}">Sign Up</a></li>
-                            <li><a href="{{ route('faq') }}">FAQS</a></li>
-                            <li><a href="{{ route('userdashboard') }}">My Account</a></li>
-                        </ul>
-                    </div>
-                    <a class="nav-link" href="{{ route('about') }}">
-                        <span><i class="bi bi-info-circle me-2 text-success"></i>About Us</span>
-                    </a>
-                    <a class="nav-link" href="{{ route('contact') }}">
-                        <span><i class="bi bi-telephone me-2 text-success"></i>Contact Us</span>
-                    </a>
-                </nav>
-                <div class="offcanvas-phone">
-                    <i class="bi bi-telephone-fill"></i> 01616-239896
-                </div>
-            </div>
-        </div>
-    </section>
-</header>
-<!-- header ends -->
+@extends('frontend.layouts.app')
 
 @php
-    /* ── helpers ── */
     $hasImage   = !empty($item->image);
     $imageSrc   = $hasImage ? asset('storage/' . $item->image) : asset('frontend/image/Product Image (1).png');
     $hasSale    = $item->hasSale();
@@ -191,48 +9,47 @@
     $inWishlist = Auth::check()
                     ? Auth::user()->wishlists->pluck('product_id')->contains($item->id)
                     : false;
-  $checkoutUrl = url('/checkout') . '?source=buynow&type=' . $type . '&id=' . $item->id . '&qty=1';
+    $checkoutUrl = url('/checkout') . '?source=buynow&type=' . $type . '&id=' . $item->id . '&qty=1';
 @endphp
 
-<!-- product detail section -->
-<section>
+@section('title', $item->name ?? 'Product')
+@section('meta_description', $item->description ? Str::limit($item->description, 160) : 'Buy ' . ($item->name ?? 'product') . ' at the best price from BanglaBazar — fresh quality delivered to your door.')
+@section('og_title', ($item->name ?? 'Product') . ' | BanglaBazar24/7')
+@section('og_description', $item->description ? Str::limit($item->description, 160) : 'Shop fresh quality products at BanglaBazar.')
+@section('og_image', $imageSrc)
+
+@push('styles')
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+  <link rel="stylesheet" href="{{ asset('frontend/css/pages.css') }}">
+@endpush
+
+@section('content')
+
+{{-- PRODUCT DETAIL --}}
+<section id="productDetail">
     <div class="container">
         <div class="pd-wrap">
 
-            {{-- ── GALLERY ── --}}
+            {{-- GALLERY --}}
             <div class="pd-gallery">
                 <div class="pd-thumbs" id="thumbs">
-                    {{-- Main product image as first thumb --}}
                     <div class="pd-thumb active" onclick="switchMain(this, '{{ $imageSrc }}')">
                         <img src="{{ $imageSrc }}" alt="{{ $item->name }}">
                     </div>
-                    {{-- Fallback extra thumbs if no additional images
-                    <div class="pd-thumb" onclick="switchMain(this, '{{ asset('frontend/image/chechout (1).png') }}')">
-                        <img src="{{ asset('frontend/image/chechout (1).png') }}" alt="">
-                    </div>
-                    <div class="pd-thumb" onclick="switchMain(this, '{{ asset('frontend/image/chechout (2).png') }}')">
-                        <img src="{{ asset('frontend/image/chechout (2).png') }}" alt="">
-                    </div>
-                    <div class="pd-thumb" onclick="switchMain(this, '{{ asset('frontend/image/chechout (3).png') }}')">
-                        <img src="{{ asset('frontend/image/chechout (3).png') }}" alt="">
-                    </div> --}}
                 </div>
                 <div class="pd-main-img-wrap">
                     <img id="mainImg" src="{{ $imageSrc }}" alt="{{ $item->name }}">
                 </div>
             </div>
 
-            {{-- ── PRODUCT INFO ── --}}
+            {{-- PRODUCT INFO --}}
             <div class="pd-info">
-
-                {{-- Stock badge --}}
                 @if($item->stock > 0)
                     <span class="pd-badge">In Stock</span>
                 @else
                     <span class="pd-badge" style="background:#fee2e2;color:#dc2626;">Out of Stock</span>
                 @endif
-
-                {{-- Type badge (Hot Deal) --}}
                 @if($type === 'hotdeal')
                     <span class="pd-badge" style="background:#fff7ed;color:#ea580c;margin-left:6px;">🔥 Hot Deal</span>
                 @endif
@@ -240,24 +57,24 @@
                 <h1 class="pd-title">{{ $item->name }}</h1>
 
                 <div class="pd-rating">
-    <div class="pd-stars">
-        @php $avg = $item->avg_rating ?? 0; @endphp
-        @for($s = 1; $s <= 5; $s++)
-        <svg class="pd-star{{ $s <= round($avg) ? '' : ' empty' }}" viewBox="0 0 24 24">
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-        </svg>
-        @endfor
-    </div>
-    <span class="pd-reviews">
-        {{ $item->review_count > 0 ? $item->review_count . ' Reviews' : 'No reviews yet' }}
-    </span>
-    <span class="pd-sku">• SKU: {{ str_pad($item->id, 6, '0', STR_PAD_LEFT) }}</span>
-</div>
-                {{-- Price row --}}
+                    <div class="pd-stars">
+                        @php $avg = $item->avg_rating ?? 0; @endphp
+                        @for($s = 1; $s <= 5; $s++)
+                        <svg class="pd-star{{ $s <= round($avg) ? '' : ' empty' }}" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        @endfor
+                    </div>
+                    <span class="pd-reviews">
+                        {{ $item->review_count > 0 ? $item->review_count . ' Reviews' : 'No reviews yet' }}
+                    </span>
+                    <span class="pd-sku">• SKU: {{ str_pad($item->id, 6, '0', STR_PAD_LEFT) }}</span>
+                </div>
+
                 <div class="pd-price-row">
                     @if($hasSale)
                         <span class="pd-price-old">৳{{ number_format($item->old_price, 2) }}</span>
-                       <span class="pd-price-now" id="pdPriceNow">৳{{ number_format($item->price, 2) }}</span>
+                        <span class="pd-price-now" id="pdPriceNow">৳{{ number_format($item->price, 2) }}</span>
                         <span class="pd-discount">{{ $salePct }}% Off</span>
                     @else
                         <span class="pd-price-now" id="pdPriceNow">৳{{ number_format($item->price, 2) }}</span>
@@ -266,7 +83,6 @@
 
                 <div class="pd-divider"></div>
 
-                {{-- Description short --}}
                 <p class="pd-desc">
                     @if($item->description)
                         {{ Str::limit($item->description, 200) }}
@@ -275,7 +91,6 @@
                     @endif
                 </p>
 
-                {{-- Quantity selector --}}
                 <div class="pd-qty-row">
                     <span class="pd-qty-label">Quantity:</span>
                     <div class="pd-qty">
@@ -283,46 +98,31 @@
                         <span class="pd-qty-num" id="qtyNum">1</span>
                         <button class="pd-qty-btn" onclick="changeQty(1)">+</button>
                     </div>
-                    <span style="font-size:12px;color:#94a3b8;margin-left:8px;">
-                        ({{ $item->stock }} available)
-                    </span>
+                    <span style="font-size:12px;color:#94a3b8;margin-left:8px;">({{ $item->stock }} available)</span>
                 </div>
 
-                {{-- Action buttons --}}
                 <div class="pd-btns">
-                    {{-- Add to Cart --}}
                     @if($item->stock > 0)
-                        <button class="pd-btn-cart"
-                                id="pdCartBtn"
+                        <button class="pd-btn-cart" id="pdCartBtn"
                                 data-product-id="{{ $item->id }}"
                                 data-product-type="{{ $type }}"
                                 onclick="pdAddToCart()">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                                 stroke="currentColor" stroke-width="2.2">
-                                <circle cx="9" cy="21" r="1"/>
-                                <circle cx="20" cy="21" r="1"/>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
                                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
                             </svg>
                             Add to Cart
                         </button>
-
-                        {{-- Buy Now → Checkout --}}
-                        <a id="pdBuyNowBtn"
-                           href="{{ $checkoutUrl }}"
-                           class="pd-btn-buy">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                                 stroke="currentColor" stroke-width="2.2">
+                        <a id="pdBuyNowBtn" href="{{ $checkoutUrl }}" class="pd-btn-buy">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                                 <path d="M5 12h14M12 5l7 7-7 7"/>
                             </svg>
                             Buy Now
                         </a>
                     @else
-                        <button class="pd-btn-cart" disabled style="opacity:.5;cursor:not-allowed;">
-                            Out of Stock
-                        </button>
+                        <button class="pd-btn-cart" disabled style="opacity:.5;cursor:not-allowed;">Out of Stock</button>
                     @endif
 
-                    {{-- Wishlist --}}
                     <button class="wishlist-btn"
                             data-product-id="{{ $item->id }}"
                             data-product-type="{{ $type }}"
@@ -336,18 +136,12 @@
                     </button>
                 </div>
 
-                {{-- Payment badges --}}
                 <div class="pd-pay-row">
                     <span class="pd-pay-label">Pay via:</span>
-                    <span class="pd-pay-badge">
-                        <span class="pd-pay-dot"></span> Cash on Delivery
-                    </span>
-                    <span class="pd-pay-badge">
-                        <span class="pd-pay-dot bkash"></span> bKash
-                    </span>
+                    <span class="pd-pay-badge"><span class="pd-pay-dot"></span> Cash on Delivery</span>
+                    <span class="pd-pay-badge"><span class="pd-pay-dot bkash"></span> bKash</span>
                 </div>
 
-                {{-- Category if available --}}
                 @if($item->category)
                 <div style="margin-top:12px;font-size:13px;color:#64748b;">
                     <strong>Category:</strong>
@@ -357,16 +151,14 @@
                     </span>
                 </div>
                 @endif
-
-            </div>{{-- /pd-info --}}
-        </div>{{-- /pd-wrap --}}
+            </div>
+        </div>
 
         <div class="pd-toast" id="toast"></div>
     </div>
 </section>
-<!-- product detail section ends -->
 
-<!-- tabs: description / additional info / reviews -->
+{{-- TABS --}}
 <section id="details">
     <div class="container">
         <div class="tab-wrap">
@@ -376,7 +168,7 @@
                 <button class="tab-btn" onclick="switchTab('feedback', this)">Customer Feedback</button>
             </nav>
 
-            {{-- ── DESCRIPTION ── --}}
+            {{-- DESCRIPTION --}}
             <div class="tab-panel active" id="tab-desc">
                 <div class="desc-grid">
                     <div>
@@ -385,15 +177,10 @@
                             @if($item->description)
                                 {{ $item->description }}
                             @else
-                                Our product is carefully sourced and quality-checked before delivery.
-                                We ensure maximum freshness and satisfaction for every order placed
-                                through BanglaBazar.
+                                Our product is carefully sourced and quality-checked before delivery. We ensure maximum freshness and satisfaction for every order placed through BanglaBazar.
                             @endif
                         </p>
-                        <p class="desc-body">
-                            Each item is hand-selected for quality, carefully packaged and stored
-                            to preserve natural freshness from source to your doorstep.
-                        </p>
+                        <p class="desc-body">Each item is hand-selected for quality, carefully packaged and stored to preserve natural freshness from source to your doorstep.</p>
                         <ul class="desc-list">
                             <li>Premium quality — carefully selected</li>
                             <li>Fast and safe delivery</li>
@@ -405,24 +192,20 @@
                         </ul>
                         <div class="desc-badges">
                             <span class="desc-badge green">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                                     stroke="currentColor" stroke-width="2">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                                 </svg>
                                 Premium Quality
                             </span>
                             <span class="desc-badge gold">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                                     stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="10"/>
-                                    <path d="M12 8v4l3 3"/>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
                                 </svg>
                                 Fast Delivery
                             </span>
                             @if($hasSale)
                             <span class="desc-badge green">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                                     stroke="currentColor" stroke-width="2">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <polyline points="20 6 9 17 4 12"/>
                                 </svg>
                                 {{ $salePct }}% Discount
@@ -436,40 +219,17 @@
                 </div>
             </div>
 
-            {{-- ── ADDITIONAL INFORMATION ── --}}
+            {{-- ADDITIONAL INFO --}}
             <div class="tab-panel" id="tab-info">
                 <table class="info-table">
-                    <tr>
-                        <td>Product Name</td>
-                        <td>{{ $item->name }}</td>
-                    </tr>
+                    <tr><td>Product Name</td><td>{{ $item->name }}</td></tr>
                     @if($item->category)
-                    <tr>
-                        <td>Category</td>
-                        <td>
-                            <span class="info-chip green">{{ ucfirst($item->category) }}</span>
-                        </td>
-                    </tr>
+                    <tr><td>Category</td><td><span class="info-chip green">{{ ucfirst($item->category) }}</span></td></tr>
                     @endif
-                    <tr>
-                        <td>Sale Price</td>
-                        <td style="color:#22c55e;font-weight:700;">
-                            ৳{{ number_format($item->price, 2) }}
-                        </td>
-                    </tr>
+                    <tr><td>Sale Price</td><td style="color:#22c55e;font-weight:700;">৳{{ number_format($item->price, 2) }}</td></tr>
                     @if($hasSale)
-                    <tr>
-                        <td>Original Price</td>
-                        <td style="text-decoration:line-through;color:#94a3b8;">
-                            ৳{{ number_format($item->old_price, 2) }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>You Save</td>
-                        <td style="color:#ef4444;font-weight:700;">
-                            ৳{{ $saleAmt }} ({{ $salePct }}% OFF)
-                        </td>
-                    </tr>
+                    <tr><td>Original Price</td><td style="text-decoration:line-through;color:#94a3b8;">৳{{ number_format($item->old_price, 2) }}</td></tr>
+                    <tr><td>You Save</td><td style="color:#ef4444;font-weight:700;">৳{{ $saleAmt }} ({{ $salePct }}% OFF)</td></tr>
                     @endif
                     <tr>
                         <td>Stock Status</td>
@@ -484,543 +244,340 @@
                     </tr>
                     <tr>
                         <td>Product Type</td>
-                        <td>
-                            <span class="info-chip {{ $type === 'hotdeal' ? 'neutral' : 'green' }}">
-                                {{ $type === 'hotdeal' ? '🔥 Hot Deal' : '⭐ Regular Product' }}
-                            </span>
-                        </td>
+                        <td><span class="info-chip {{ $type === 'hotdeal' ? 'neutral' : 'green' }}">{{ $type === 'hotdeal' ? '🔥 Hot Deal' : '⭐ Regular Product' }}</span></td>
                     </tr>
-                    <tr>
-                        <td>SKU</td>
-                        <td>{{ str_pad($item->id, 6, '0', STR_PAD_LEFT) }}</td>
-                    </tr>
+                    <tr><td>SKU</td><td>{{ str_pad($item->id, 6, '0', STR_PAD_LEFT) }}</td></tr>
                     @if($type === 'hotdeal' && isset($item->deal_ends_at) && $item->deal_ends_at)
-                    <tr>
-                        <td>Deal Ends</td>
-                        <td style="color:#ef4444;font-weight:600;">
-                            {{ $item->deal_ends_at->format('d M Y, h:i A') }}
-                        </td>
-                    </tr>
+                    <tr><td>Deal Ends</td><td style="color:#ef4444;font-weight:600;">{{ $item->deal_ends_at->format('d M Y, h:i A') }}</td></tr>
                     @endif
                 </table>
             </div>
 
-          {{-- ── CUSTOMER FEEDBACK (real data) ── --}}
-<div class="tab-panel" id="tab-feedback">
+            {{-- CUSTOMER FEEDBACK --}}
+            <div class="tab-panel" id="tab-feedback">
+                @php
+                    $approvedReviews = $item->approvedReviews()->with('user')->latest()->get();
+                    $avgRating       = $item->avg_rating;
+                    $reviewCount     = $item->review_count;
+                    $dist = [];
+                    for ($i = 5; $i >= 1; $i--) {
+                        $dist[$i] = $approvedReviews->where('rating', $i)->count();
+                    }
+                    $userReview = Auth::check()
+                        ? $item->reviews()->where('user_id', Auth::id())->first()
+                        : null;
+                @endphp
 
-    @php
-        $approvedReviews = $item->approvedReviews()->with('user')->latest()->get();
-        $avgRating       = $item->avg_rating;
-        $reviewCount     = $item->review_count;
+                <div class="fb-summary">
+                    <div style="text-align:center">
+                        @if($avgRating)
+                            <div class="fb-big-score">{{ $avgRating }}</div>
+                            <div style="display:flex;gap:3px;justify-content:center;margin:6px 0">
+                                @for($i = 1; $i <= 5; $i++)
+                                <svg class="fb-star{{ $i <= round($avgRating) ? '' : ' empty' }}" viewBox="0 0 24 24">
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                </svg>
+                                @endfor
+                            </div>
+                            <div class="fb-score-label">{{ $reviewCount }} {{ Str::plural('review', $reviewCount) }}</div>
+                        @else
+                            <div style="font-size:32px;color:#cbd5e1;">☆☆☆☆☆</div>
+                            <div class="fb-score-label" style="margin-top:6px;">No reviews yet</div>
+                            <div style="font-size:13px;color:#94a3b8;margin-top:4px;">Be the first to review!</div>
+                        @endif
+                    </div>
 
-        // rating distribution (1–5 এর count)
-        $dist = [];
-        for ($i = 5; $i >= 1; $i--) {
-            $dist[$i] = $approvedReviews->where('rating', $i)->count();
-        }
-
-        // current user already review দিয়েছে কিনা
-        $userReview = Auth::check()
-            ? $item->reviews()->where('user_id', Auth::id())->first()
-            : null;
-    @endphp
-
-    {{-- ── Summary ── --}}
-    <div class="fb-summary">
-        <div style="text-align:center">
-            @if($avgRating)
-                <div class="fb-big-score">{{ $avgRating }}</div>
-                <div style="display:flex;gap:3px;justify-content:center;margin:6px 0">
-                    @for($i = 1; $i <= 5; $i++)
-                        <svg class="fb-star{{ $i <= round($avgRating) ? '' : ' empty' }}"
-                             viewBox="0 0 24 24">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                    @endfor
-                </div>
-                <div class="fb-score-label">{{ $reviewCount }} {{ Str::plural('review', $reviewCount) }}</div>
-            @else
-                <div style="font-size:32px;color:#cbd5e1;">☆☆☆☆☆</div>
-                <div class="fb-score-label" style="margin-top:6px;">No reviews yet</div>
-                <div style="font-size:13px;color:#94a3b8;margin-top:4px;">Be the first to review!</div>
-            @endif
-        </div>
-
-        {{-- Rating bars ── only show when reviews exist --}}
-        @if($reviewCount > 0)
-        <div class="fb-bars">
-            @for($i = 5; $i >= 1; $i--)
-            @php $pct = $reviewCount > 0 ? round(($dist[$i] / $reviewCount) * 100) : 0; @endphp
-            <div class="fb-bar-row">
-                <span class="fb-bar-label">{{ $i }}</span>
-                <div class="fb-bar-track">
-                    <div class="fb-bar-fill" style="width:{{ $pct }}%"></div>
-                </div>
-                <span class="fb-bar-count">{{ $dist[$i] }}</span>
-            </div>
-            @endfor
-        </div>
-        @endif
-    </div>
-
-    {{-- ── Write a Review ── --}}
-    <div class="fb-write" id="writeReviewBox">
-
-        @auth
-            @if($userReview)
-                {{-- Already reviewed --}}
-                <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;
-                            padding:14px 18px;font-size:14px;color:#16a34a;">
-                    ✓ You have already reviewed this product.
-                    @if($userReview->status === 'pending')
-                        <span style="color:#f59e0b;"> (Awaiting Verification)</span>
+                    @if($reviewCount > 0)
+                    <div class="fb-bars">
+                        @for($i = 5; $i >= 1; $i--)
+                        @php $pct = $reviewCount > 0 ? round(($dist[$i] / $reviewCount) * 100) : 0; @endphp
+                        <div class="fb-bar-row">
+                            <span class="fb-bar-label">{{ $i }}</span>
+                            <div class="fb-bar-track"><div class="fb-bar-fill" style="width:{{ $pct }}%"></div></div>
+                            <span class="fb-bar-count">{{ $dist[$i] }}</span>
+                        </div>
+                        @endfor
+                    </div>
                     @endif
                 </div>
-            @else
-                {{-- Star rating input --}}
-                <div style="margin-bottom:12px;">
-                    <div style="font-size:14px;color:#64748b;margin-bottom:8px;font-weight:500;">
-                        Rate this product:
-                    </div>
-                    <div class="review-stars" id="reviewStars">
-                        @for($i = 1; $i <= 5; $i++)
-                        <svg class="rv-star" data-value="{{ $i }}" viewBox="0 0 24 24"
-                             style="width:32px;height:32px;cursor:pointer;fill:#e2e8f0;
-                                    transition:fill .15s;stroke:none;">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                        @endfor
-                        <span id="ratingLabel"
-                              style="font-size:13px;color:#94a3b8;margin-left:10px;
-                                     font-weight:500;transition:color .2s;">
-                            Click to rate
-                        </span>
-                    </div>
+
+                <div class="fb-write" id="writeReviewBox">
+                    @auth
+                        @if($userReview)
+                            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:14px 18px;font-size:14px;color:#16a34a;">
+                                ✓ You have already reviewed this product.
+                                @if($userReview->status === 'pending')
+                                    <span style="color:#f59e0b;"> (Awaiting Verification)</span>
+                                @endif
+                            </div>
+                        @else
+                            <div style="margin-bottom:12px;">
+                                <div style="font-size:14px;color:#64748b;margin-bottom:8px;font-weight:500;">Rate this product:</div>
+                                <div class="review-stars" id="reviewStars">
+                                    @for($i = 1; $i <= 5; $i++)
+                                    <svg class="rv-star" data-value="{{ $i }}" viewBox="0 0 24 24"
+                                         style="width:32px;height:32px;cursor:pointer;fill:#e2e8f0;transition:fill .15s;stroke:none;">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                    @endfor
+                                    <span id="ratingLabel" style="font-size:13px;color:#94a3b8;margin-left:10px;font-weight:500;">Click to rate</span>
+                                </div>
+                            </div>
+                            <div id="reviewCommentBox" style="max-height:0;overflow:hidden;transition:max-height .35s ease;">
+                                <textarea id="reviewBody" placeholder="Optional: Share your experience..."
+                                          style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e2e8f0;
+                                                 font-size:14px;resize:none;outline:none;margin-bottom:10px;
+                                                 font-family:inherit;color:#374151;" rows="3"></textarea>
+                                <div style="display:flex;gap:8px;">
+                                    <button type="button" onclick="submitReview()"
+                                            style="padding:8px 20px;background:#16a34a;color:#fff;border:none;
+                                                   border-radius:8px;font-size:14px;cursor:pointer;font-weight:500;">
+                                        Submit Review
+                                    </button>
+                                    <button type="button" onclick="cancelReview()"
+                                            style="padding:8px 16px;background:transparent;border:1px solid #e2e8f0;
+                                                   border-radius:8px;font-size:14px;cursor:pointer;color:#64748b;">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="reviewSuccess"
+                                 style="display:none;background:#f0fdf4;border:1px solid #bbf7d0;
+                                        border-radius:8px;padding:12px 16px;font-size:14px;color:#16a34a;">
+                                ✓ Review submitted! Thank you for sharing your experience.
+                            </div>
+                        @endif
+                    @else
+                        <div style="font-size:14px;color:#64748b;padding:12px 0;">
+                            <a href="{{ route('signin') }}" style="color:#16a34a;font-weight:600;">Sign in</a> to leave a review.
+                        </div>
+                    @endauth
                 </div>
 
-                {{-- Optional comment box (hidden by default) --}}
-                <div id="reviewCommentBox"
-                     style="max-height:0;overflow:hidden;transition:max-height .35s ease;">
-                    <textarea id="reviewBody"
-                              placeholder="Optional: Share your experience..."
-                              style="width:100%;padding:10px 12px;border-radius:8px;
-                                     border:1px solid #e2e8f0;font-size:14px;
-                                     resize:none;outline:none;margin-bottom:10px;
-                                     font-family:inherit;color:#374151;"
-                              rows="3"></textarea>
-                    <div style="display:flex;gap:8px;">
-                        <button type="button" onclick="submitReview()"
-        style="padding:8px 20px;background:#16a34a;color:#fff;
-               border:none;border-radius:8px;font-size:14px;
-               cursor:pointer;font-weight:500;">
-    Submit Review
-</button>
-                        <button type="button" onclick="cancelReview()"
-                                style="padding:8px 16px;background:transparent;
-                                       border:1px solid #e2e8f0;border-radius:8px;
-                                       font-size:14px;cursor:pointer;color:#64748b;">
-                            Cancel
-                        </button>
+                @if($approvedReviews->count() > 0)
+                <div class="fb-list" style="margin-top:24px;">
+                    @foreach($approvedReviews as $review)
+                    <div class="fb-item" style="padding:16px 0;border-top:1px solid #f1f5f9;">
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                            <div style="width:36px;height:36px;border-radius:50%;background:#dcfce7;
+                                        display:flex;align-items:center;justify-content:center;
+                                        font-size:14px;font-weight:600;color:#16a34a;flex-shrink:0;">
+                                {{ strtoupper(substr($review->user->name ?? 'U', 0, 1)) }}
+                            </div>
+                            <div>
+                                <div style="font-size:14px;font-weight:600;color:#1e293b;">{{ $review->user->name ?? 'User' }}</div>
+                                <div style="font-size:12px;color:#94a3b8;">{{ $review->created_at->format('d M Y') }}</div>
+                            </div>
+                            <div style="margin-left:auto;display:flex;gap:2px;">
+                                @for($s = 1; $s <= 5; $s++)
+                                <svg viewBox="0 0 24 24"
+                                     style="width:14px;height:14px;fill:{{ $s <= $review->rating ? '#f59e0b' : '#e2e8f0' }};stroke:none;">
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                </svg>
+                                @endfor
+                                <span style="font-size:12px;color:#f59e0b;margin-left:4px;font-weight:600;">{{ $review->rating_label }}</span>
+                            </div>
+                        </div>
+                        @if($review->body)
+                        <p style="font-size:14px;color:#475569;margin:0;line-height:1.6;padding-left:46px;">
+                            {{ $review->body }}
+                        </p>
+                        @endif
                     </div>
+                    @endforeach
                 </div>
-
-                {{-- Success message (hidden) --}}
-                <div id="reviewSuccess"
-                     style="display:none;background:#f0fdf4;border:1px solid #bbf7d0;
-                            border-radius:8px;padding:12px 16px;font-size:14px;color:#16a34a;">
-                    ✓ Review submitted! Thank you for sharing your experience.
-                </div>
-            @endif
-        @else
-            <div style="font-size:14px;color:#64748b;padding:12px 0;">
-                <a href="{{ route('signin') }}"
-                   style="color:#16a34a;font-weight:600;">Sign in</a>
-                to leave a review.
+                @endif
             </div>
-        @endauth
-    </div>
 
-    {{-- ── Reviews List ── --}}
-    @if($approvedReviews->count() > 0)
-    <div class="fb-list" style="margin-top:24px;">
-        @foreach($approvedReviews as $review)
-        <div class="fb-item" style="padding:16px 0;border-top:1px solid #f1f5f9;">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
-                {{-- Avatar --}}
-                <div style="width:36px;height:36px;border-radius:50%;background:#dcfce7;
-                            display:flex;align-items:center;justify-content:center;
-                            font-size:14px;font-weight:600;color:#16a34a;flex-shrink:0;">
-                    {{ strtoupper(substr($review->user->name ?? 'U', 0, 1)) }}
-                </div>
-                <div>
-                    <div style="font-size:14px;font-weight:600;color:#1e293b;">
-                        {{ $review->user->name ?? 'User' }}
-                    </div>
-                    <div style="font-size:12px;color:#94a3b8;">
-                        {{ $review->created_at->format('d M Y') }}
-                    </div>
-                </div>
-                {{-- Stars --}}
-                <div style="margin-left:auto;display:flex;gap:2px;">
-                    @for($s = 1; $s <= 5; $s++)
-                    <svg viewBox="0 0 24 24"
-                         style="width:14px;height:14px;
-                                fill:{{ $s <= $review->rating ? '#f59e0b' : '#e2e8f0' }};
-                                stroke:none;">
-                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                    </svg>
-                    @endfor
-                    <span style="font-size:12px;color:#f59e0b;margin-left:4px;font-weight:600;">
-                        {{ $review->rating_label }}
-                    </span>
-                </div>
-            </div>
-            @if($review->body)
-            <p style="font-size:14px;color:#475569;margin:0;line-height:1.6;padding-left:46px;">
-                {{ $review->body }}
-            </p>
-            @endif
         </div>
-        @endforeach
     </div>
-    @endif
+</section>
 
+{{-- CART DRAWER --}}
+<div class="cp-overlay" id="cpOverlay"></div>
+<div class="cp-drawer" id="cpDrawer">
+    <div class="cp-header">
+        <div class="cp-title"><img src="{{ asset('frontend/image/Logo.png') }}" alt=""></div>
+        <button class="cp-close" id="cpClose"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="cp-items" id="cpItems"></div>
+    <div class="cp-empty" id="cpEmpty">
+        <i class="bi bi-bag-x"></i>
+        <p>Your cart is empty</p>
+        <a href="{{ route('shop') }}" class="cp-shop-link">Browse Products →</a>
+    </div>
+    <div class="cp-footer" id="cpFooter">
+        <div class="cp-subtotal">
+            <span class="cp-sub-label"><span id="cpProductCount">0</span> Product</span>
+            <span class="cp-sub-price" id="cpTotal">৳0.00</span>
+        </div>
+        <a href="{{ route('checkout.show') }}" class="cp-checkout-btn">
+            <i class="bi bi-bag-check-fill me-1"></i> Checkout
+        </a>
+    </div>
 </div>
 
-        </div>
-    </div>
-</section>
-<!-- tabs end -->
+@endsection
 
-<main></main>
+@push('scripts')
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+  <script src="{{ asset('frontend/js/pages.js') }}"></script>
+  <script>
+  const PD_MAX_STOCK  = {{ $item->stock ?? 1 }};
+  const PD_PRODUCT_ID = {{ $item->id ?? 0 }};
+  const PD_TYPE       = '{{ $type }}';
+  const PD_BASE_PRICE = {{ $item->price ?? 0 }};
 
-<!-- cart popup -->
-<section>
-    <div class="cp-overlay" id="cpOverlay"></div>
-    <div class="cp-drawer" id="cpDrawer">
-        <div class="cp-header">
-            <div class="cp-title">
-                <img src="{{ asset('frontend/image/Logo.png') }}" alt="">
-            </div>
-            <button class="cp-close" id="cpClose" aria-label="Close cart">
-                <i class="bi bi-x-lg"></i>
-            </button>
-        </div>
-        <div class="cp-items" id="cpItems"></div>
-        <div class="cp-empty" id="cpEmpty">
-            <i class="bi bi-bag-x"></i>
-            <p>Your cart is empty</p>
-            <a href="{{ route('shop') }}" class="cp-shop-link">Browse Products →</a>
-        </div>
-        <div class="cp-footer" id="cpFooter">
-            <div class="cp-subtotal">
-                <span class="cp-sub-label"><span id="cpProductCount">0</span> Product</span>
-                <span class="cp-sub-price" id="cpTotal">৳0.00</span>
-            </div>
-          <a href="{{ route('checkout.show') }}" class="cp-checkout-btn">
-                <i class="bi bi-bag-check-fill me-1"></i> Checkout
-            </a>
-            <a href="#" class="cp-cart-link">Go To Cart</a>
-        </div>
-    </div>
-</section>
-<!-- cart popup ends -->
+  function showPdToast(msg, type = 'success') {
+      const toast = document.getElementById('toast');
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.style.background = type === 'error' ? '#ef4444' : '#22c55e';
+      toast.classList.add('show');
+      clearTimeout(toast._t);
+      toast._t = setTimeout(() => toast.classList.remove('show'), 2800);
+  }
 
-<!-- footer -->
-<footer class="main-footer">
-    <div class="container">
-        <div class="row g-4">
-            <div class="col-lg-3 col-md-6 anim-fade-up d1">
-               <img src="{{ asset('frontend/image/ourlogo.png') }}"  width="140px" alt="logo">
-                <p class="footer-desc">
-                    Morbi cursus porttitor enim lobortis molestie. Duis gravida turpis dui, eget bibendum magna congue nec.
-                </p>
-                <div class="footer-contact d-flex align-items-center flex-wrap">
-                    <a href="tel:01616239896">01616-239896</a>
-                    
-                    <a href="mailto:banglabazar247bd@gmail.com">banglabazar247bd@gmail.com</a>
-                </div>
-            </div>
-            <div class="col-lg-2 col-md-3 col-6 anim-fade-up d2">
-                <h6 class="footer-col-title">My Account</h6>
-                <ul class="footer-links">
-                    <li><a href="{{ route('userdashboard') }}">My Account</a></li>
-                    <li><a href="{{ route('userdashboard') }}">Order History</a></li>
-                    <li><a href="#">Shopping Cart</a></li>
-                    <li><a href="{{ route('wishlist') }}">Wishlist</a></li>
-                </ul>
-            </div>
-            <div class="col-lg-2 col-md-3 col-6 anim-fade-up d3">
-                <h6 class="footer-col-title">Helps</h6>
-                <ul class="footer-links">
-                    <li><a href="{{ route('contact') }}">Contact</a></li>
-                    <li><a href="{{ route('faq') }}">FAQS</a></li>
-                    <li><a href="{{ route('terms') }}">Terms &amp; Condition</a></li>
-                  <li><a href="{{ route('privacy') }}">Privacy Policy</a></li>
-                </ul>
-            </div>
-            <div class="col-lg-2 col-md-3 col-6 anim-fade-up d4">
-                <h6 class="footer-col-title">Proxy</h6>
-                <ul class="footer-links">
-                    <li><a href="{{ route('about') }}">About</a></li>
-                    <li><a href="{{ route('shop') }}">Shop</a></li>
-                    <li><a href="#">Product</a></li>
-                </ul>
-            </div>
-            <div class="col-lg-3 col-md-3 col-6 anim-fade-up d5">
-                <h6 class="footer-col-title">Categories</h6>
-                <ul class="footer-links">
-                    <li><a href="{{ route('shop') }}">Fruit &amp; Vegetables</a></li>
-                    <li><a href="{{ route('shop') }}">Meat &amp; Fish</a></li>
-                    <li><a href="{{ route('shop') }}">Bread &amp; Bakery</a></li>
-                    <li><a href="{{ route('shop') }}">Beauty &amp; Health</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="footer-bottom mt-4">
-        <div class="container">
-            <div class="row align-items-center anim-fade-in d6">
-                <div class="col-md-6 mySign">
-                    <p>BanglaBazar24/7 eCommerce © 2026. All Rights Reserved
-                        <span>Powered By <a href="https://github.com/devwithefran99">devwithErfan</a></span>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
-<!-- footer ends -->
+  function changeQty(delta) {
+      const el = document.getElementById('qtyNum');
+      let qty  = parseInt(el.textContent) + delta;
+      if (qty > PD_MAX_STOCK) {
+          showPdToast('⚠️ স্টকে মাত্র ' + PD_MAX_STOCK + 'টি পণ্য আছে!', 'error');
+          qty = PD_MAX_STOCK;
+      }
+      qty = Math.max(1, qty);
+      el.textContent = qty;
+      updatePrice(qty);
+      updateBuyNow(qty);
+  }
 
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{{ asset('frontend/js/common.js') }}"></script>
-<script src="{{ asset('frontend/js/pages.js') }}"></script>
-@stack('scripts')
+  function updatePrice(qty) {
+      const priceEl = document.getElementById('pdPriceNow');
+      if (priceEl) priceEl.textContent = '৳' + (PD_BASE_PRICE * qty).toFixed(2);
+  }
 
-<script>
+  function updateBuyNow(qty) {
+      const buyBtn = document.getElementById('pdBuyNowBtn');
+      if (buyBtn) buyBtn.href = '/checkout?source=buynow&type=' + PD_TYPE + '&id=' + PD_PRODUCT_ID + '&qty=' + qty;
+  }
 
-const PD_MAX_STOCK  = {{ $item->stock ?? 1 }};
-const PD_PRODUCT_ID = {{ $item->id ?? 0 }};
-const PD_TYPE       = '{{ $type }}';
-const PD_BASE_PRICE = {{ $item->price ?? 0 }}; // ✅ base price
- 
-/* ── Toast helper ── */
-function showPdToast(msg, type = 'success') {
-    const toast = document.getElementById('toast');
-    if (!toast) return;
-    toast.textContent = msg;
-    toast.style.background = type === 'error' ? '#ef4444' : '#22c55e';
-    toast.classList.add('show');
-    clearTimeout(toast._t);
-    toast._t = setTimeout(() => toast.classList.remove('show'), 2800);
-}
- 
-/* ── Qty change ── */
-function changeQty(delta) {
-    const el  = document.getElementById('qtyNum');
-    const inp = document.getElementById('qtyInput'); // manual input field (optional)
-    let qty   = parseInt(el.textContent) + delta;
- 
-    // ✅ out of stock check
-    if (qty > PD_MAX_STOCK) {
-        showPdToast('⚠️ স্টকে মাত্র ' + PD_MAX_STOCK + 'টি পণ্য আছে!', 'error');
-        qty = PD_MAX_STOCK;
-    }
- 
-    qty = Math.max(1, qty);
-    el.textContent = qty;
- 
-    updatePrice(qty);
-    updateBuyNow(qty);
-}
- 
-/* ── Manual input change ── */
-function onQtyInput(input) {
-    let qty = parseInt(input.value);
-    if (isNaN(qty) || qty < 1) qty = 1;
- 
-    if (qty > PD_MAX_STOCK) {
-        showPdToast('⚠️ স্টকে মাত্র ' + PD_MAX_STOCK + 'টি পণ্য আছে!', 'error');
-        qty = PD_MAX_STOCK;
-        input.value = qty;
-    }
- 
-    document.getElementById('qtyNum').textContent = qty;
-    updatePrice(qty);
-    updateBuyNow(qty);
-}
- 
-/* ── Price update ── */
-function updatePrice(qty) {
-    const priceEl = document.getElementById('pdPriceNow');
-    if (priceEl) {
-        const total = (PD_BASE_PRICE * qty).toFixed(2);
-        priceEl.textContent = '৳' + parseFloat(total).toLocaleString('en-IN', { minimumFractionDigits: 2 });
-    }
-}
- 
-/* ── Buy Now URL update ── */
-function updateBuyNow(qty) {
-    const buyBtn = document.getElementById('pdBuyNowBtn');
-    if (buyBtn) {
-       buyBtn.href = '/checkout?source=buynow&type=' + PD_TYPE + '&id=' + PD_PRODUCT_ID + '&qty=' + qty;
-    }
-}
- 
-/* ── Add to Cart ── */
-function pdAddToCart() {
-    const qty = parseInt(document.getElementById('qtyNum').textContent) || 1;
- 
-    if (PD_MAX_STOCK <= 0) {
-        showPdToast('❌ পণ্যটি স্টকে নেই!', 'error');
-        return;
-    }
- 
-    fetch('{{ route("cart.add") }}', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-        },
-        body: JSON.stringify({
-            product_id:   PD_PRODUCT_ID,
-            product_type: PD_TYPE,
-            quantity:     qty,
-        }),
-    })
-    .then(r => r.json())
-    .then(data => {
-        if (data.success) {
-            const badge = document.getElementById('cartCount');
-            if (badge) badge.textContent = data.cart_count ?? (parseInt(badge.textContent) + 1);
-            showPdToast('✅ Cart এ যোগ হয়েছে!');
-        } else {
-            showPdToast('❌ ' + (data.message || 'Failed to add'), 'error');
-        }
-    })
-    .catch(() => {
-        showPdToast('⚠️ Please login first.', 'error');
-    });
-}
- 
-/* ── Thumbnail switcher ── */
-function switchMain(thumb, src) {
-    document.getElementById('mainImg').src = src;
-    document.querySelectorAll('.pd-thumb').forEach(t => t.classList.remove('active'));
-    thumb.classList.add('active');
-}
- 
-/* ── Tab switcher ── */
-function switchTab(id, btn) {
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('tab-' + id).classList.add('active');
-    btn.classList.add('active');
-}
-/* ── Review System ── */
-(function () {
-    const PRODUCT_ID   = {{ $item->id }};
-    const PRODUCT_TYPE = '{{ $type }}';
-    const SUBMIT_URL   = '{{ route("review.store") }}';
-    const CSRF         = '{{ csrf_token() }}';
+  function pdAddToCart() {
+      const qty = parseInt(document.getElementById('qtyNum').textContent) || 1;
+      if (PD_MAX_STOCK <= 0) { showPdToast('❌ পণ্যটি স্টকে নেই!', 'error'); return; }
+      fetch('{{ route("cart.add") }}', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+          },
+          body: JSON.stringify({ product_id: PD_PRODUCT_ID, product_type: PD_TYPE, quantity: qty }),
+      })
+      .then(r => r.json())
+      .then(data => {
+          if (data.success) {
+              const badge = document.getElementById('cartCount');
+              if (badge) badge.textContent = data.cart_count ?? (parseInt(badge.textContent) + 1);
+              showPdToast('✅ Cart এ যোগ হয়েছে!');
+          } else {
+              showPdToast('❌ ' + (data.message || 'Failed to add'), 'error');
+          }
+      })
+      .catch(() => showPdToast('⚠️ Please login first.', 'error'));
+  }
 
-    const labels = { 1:'Poor', 2:'Fair', 3:'Good', 4:'Very Good', 5:'Excellent' };
-    let selectedRating = 0;
+  function switchMain(thumb, src) {
+      document.getElementById('mainImg').src = src;
+      document.querySelectorAll('.pd-thumb').forEach(t => t.classList.remove('active'));
+      thumb.classList.add('active');
+  }
 
-    const stars      = document.querySelectorAll('.rv-star');
-    const labelEl    = document.getElementById('ratingLabel');
-    const commentBox = document.getElementById('reviewCommentBox');
-    const successBox = document.getElementById('reviewSuccess');
-    const writeBox   = document.getElementById('writeReviewBox');
-    const bodyInput  = document.getElementById('reviewBody');
+  function switchTab(id, btn) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + id).classList.add('active');
+      btn.classList.add('active');
+  }
 
-    if (!stars.length) return;
+  (function () {
+      const PRODUCT_ID   = {{ $item->id }};
+      const PRODUCT_TYPE = '{{ $type }}';
+      const SUBMIT_URL   = '{{ route("review.store") }}';
+      const CSRF         = '{{ csrf_token() }}';
+      const labels       = { 1:'Poor', 2:'Fair', 3:'Good', 4:'Very Good', 5:'Excellent' };
+      let selectedRating = 0;
 
-    stars.forEach(star => {
-        star.addEventListener('mouseenter', () => {
-            const val = +star.dataset.value;
-            highlightStars(val);
-            if (labelEl) { labelEl.textContent = labels[val]; labelEl.style.color = '#f59e0b'; }
-        });
-    });
+      const stars      = document.querySelectorAll('.rv-star');
+      const labelEl    = document.getElementById('ratingLabel');
+      const commentBox = document.getElementById('reviewCommentBox');
+      const successBox = document.getElementById('reviewSuccess');
+      const writeBox   = document.getElementById('writeReviewBox');
+      const bodyInput  = document.getElementById('reviewBody');
 
-    document.getElementById('reviewStars')
-        ?.addEventListener('mouseleave', () => {
-            highlightStars(selectedRating);
-            if (labelEl) {
-                labelEl.textContent = selectedRating ? labels[selectedRating] : 'Click to rate';
-                labelEl.style.color = selectedRating ? '#f59e0b' : '#94a3b8';
-            }
-        });
+      if (!stars.length) return;
 
-    stars.forEach(star => {
-        star.addEventListener('click', () => {
-            selectedRating = +star.dataset.value;
-            highlightStars(selectedRating);
-            if (labelEl) { labelEl.textContent = labels[selectedRating]; labelEl.style.color = '#f59e0b'; }
-            if (commentBox) commentBox.style.maxHeight = '200px';
-        });
-    });
+      stars.forEach(star => {
+          star.addEventListener('mouseenter', () => {
+              const val = +star.dataset.value;
+              highlightStars(val);
+              if (labelEl) { labelEl.textContent = labels[val]; labelEl.style.color = '#f59e0b'; }
+          });
+      });
 
-    function highlightStars(upTo) {
-        stars.forEach(s => {
-            s.style.fill = +s.dataset.value <= upTo ? '#f59e0b' : '#e2e8f0';
-        });
-    }
+      document.getElementById('reviewStars')?.addEventListener('mouseleave', () => {
+          highlightStars(selectedRating);
+          if (labelEl) {
+              labelEl.textContent = selectedRating ? labels[selectedRating] : 'Click to rate';
+              labelEl.style.color = selectedRating ? '#f59e0b' : '#94a3b8';
+          }
+      });
 
-    window.submitReview = async function () {
-        if (!selectedRating) {
-            showPdToast('Please select a star rating first.', 'error');
-            return;
-        }
-        const body = bodyInput ? bodyInput.value.trim() : '';
-        const btn  = writeBox?.querySelector('button');
-        if (btn) { btn.disabled = true; btn.textContent = 'Submitting...'; }
+      stars.forEach(star => {
+          star.addEventListener('click', () => {
+              selectedRating = +star.dataset.value;
+              highlightStars(selectedRating);
+              if (labelEl) { labelEl.textContent = labels[selectedRating]; labelEl.style.color = '#f59e0b'; }
+              if (commentBox) commentBox.style.maxHeight = '200px';
+          });
+      });
 
-        try {
-            const res = await fetch(SUBMIT_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': CSRF,
-                    'Accept':       'application/json',
-                },
-                body: JSON.stringify({
-                    product_id:   PRODUCT_ID,
-                    product_type: PRODUCT_TYPE,
-                    rating:       selectedRating,
-                    body:         body || null,
-                }),
-            });
-            const data = await res.json();
-            if (data.success) {
-                if (commentBox) commentBox.style.maxHeight = '0';
-                if (successBox) successBox.style.display = 'block';
-                highlightStars(0);
-                showPdToast('✓ Review submitted!', 'success');
-            } else {
-                showPdToast(data.message || 'Something went wrong.', 'error');
-                if (btn) { btn.disabled = false; btn.textContent = 'Submit Review'; }
-            }
-        } catch (err) {
-            showPdToast('Network error. Please try again.', 'error');
-            if (btn) { btn.disabled = false; btn.textContent = 'Submit Review'; }
-        }
-    };
+      function highlightStars(upTo) {
+          stars.forEach(s => { s.style.fill = +s.dataset.value <= upTo ? '#f59e0b' : '#e2e8f0'; });
+      }
 
-    window.cancelReview = function () {
-        selectedRating = 0;
-        highlightStars(0);
-        if (commentBox) commentBox.style.maxHeight = '0';
-        if (labelEl)    { labelEl.textContent = 'Click to rate'; labelEl.style.color = '#94a3b8'; }
-        if (bodyInput)  bodyInput.value = '';
-    };
+      window.submitReview = async function () {
+          if (!selectedRating) { showPdToast('Please select a star rating first.', 'error'); return; }
+          const body = bodyInput ? bodyInput.value.trim() : '';
+          const btn  = writeBox?.querySelector('button');
+          if (btn) { btn.disabled = true; btn.textContent = 'Submitting...'; }
+          try {
+              const res  = await fetch(SUBMIT_URL, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF, 'Accept': 'application/json' },
+                  body: JSON.stringify({ product_id: PRODUCT_ID, product_type: PRODUCT_TYPE, rating: selectedRating, body: body || null }),
+              });
+              const data = await res.json();
+              if (data.success) {
+                  if (commentBox) commentBox.style.maxHeight = '0';
+                  if (successBox) successBox.style.display = 'block';
+                  highlightStars(0);
+                  showPdToast('✓ Review submitted!', 'success');
+              } else {
+                  showPdToast(data.message || 'Something went wrong.', 'error');
+                  if (btn) { btn.disabled = false; btn.textContent = 'Submit Review'; }
+              }
+          } catch (err) {
+              showPdToast('Network error. Please try again.', 'error');
+              if (btn) { btn.disabled = false; btn.textContent = 'Submit Review'; }
+          }
+      };
 
-})();
-</script>
-
-
-</body>
-</html>
+      window.cancelReview = function () {
+          selectedRating = 0;
+          highlightStars(0);
+          if (commentBox) commentBox.style.maxHeight = '0';
+          if (labelEl)    { labelEl.textContent = 'Click to rate'; labelEl.style.color = '#94a3b8'; }
+          if (bodyInput)  bodyInput.value = '';
+      };
+  })();
+  </script>
+@endpush
