@@ -15,8 +15,8 @@ window.addEventListener('load', function () {
     setTimeout(() => {
       preloader.style.display = 'none';
       preloader.remove();
-    }, 800);
-  }, 1200);
+    }, 300);
+  }, 500);
 });
 
 /* ─────────────────────────────────────────────────────

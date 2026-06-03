@@ -114,5 +114,5 @@
     const REGISTER_URL = "{{ route('register.post') }}";
     const CSRF_TOKEN   = "{{ csrf_token() }}";
   </script>
-  <script src="{{ asset('frontend/js/signPages.js') }}"></script>
+  <script src="{{ asset('frontend/js/signPages.js') }}" defer></script>
 @endpush

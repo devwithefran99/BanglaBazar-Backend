@@ -389,7 +389,7 @@
 @endsection
 
 @push('scripts')
-  <script src="{{ asset('frontend/js/userDashboard.js') }}"></script>
+  <script src="{{ asset('frontend/js/userDashboard.js') }}" defer></script>
   <script>
   const PROFILE_UPDATE_URL = "{{ route('profile.update') }}";
   const ADDRESS_UPDATE_URL = "{{ route('address.update') }}";

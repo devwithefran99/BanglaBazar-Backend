@@ -146,6 +146,6 @@
 @endsection
 
 @push('scripts')
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="{{ asset('frontend/js/contact.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+  <script src="{{ asset('frontend/js/contact.js') }}" defer></script>
 @endpush

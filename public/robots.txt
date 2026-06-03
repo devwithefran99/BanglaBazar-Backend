@@ -1,2 +1,18 @@
 User-agent: *
-Disallow:
+Allow: /
+
+# Private pages — index করবে না
+Disallow: /my-account
+Disallow: /cart
+Disallow: /checkout
+Disallow: /order/
+Disallow: /admin
+Disallow: /backend
+Disallow: /profile/
+Disallow: /address/
+Disallow: /coupon/
+Disallow: /return-request
+Disallow: /search/suggestions
+
+# Sitemap location
+Sitemap: https://banglabazar247.store/sitemap.xml

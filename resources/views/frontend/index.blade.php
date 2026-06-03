@@ -662,7 +662,7 @@
 @endsection
 
 @push('scripts')
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-  <script src="{{ asset('frontend/js/wishlist.js') }}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" defer></script>
+  <script src="{{ asset('frontend/js/wishlist.js') }}" defer></script>
   <script src="{{ asset('frontend/js/app.js') }}"></script>
 @endpush

@@ -12,6 +12,7 @@ use App\Http\Controllers\Frontend\ProductController;
 use App\Http\Controllers\Frontend\CouponController;
 use App\Http\Controllers\Frontend\ContactController;
 use App\Http\Controllers\Frontend\ReviewController;
+use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\Frontend\ReturnRequestController;
 
 
@@ -22,13 +23,13 @@ Auth::routes(['register' => false, 'login' => false, 'logout' => false]);
 // ── Public Pages ──────────────────────────────
 Route::get('/',        [HomeController::class, 'index'])->name('home');
 Route::get('/shop',    [ShopController::class, 'index'])->name('shop');
-Route::get('/about',   fn() => view('frontend.about'))->name('about');
+Route::get('/about',            [PageController::class, 'about'])->name('about');
 Route::get('/contact',  [ContactController::class, 'index'])->name('contact');
-Route::post('/contact', [ContactController::class, 'store'])->name('contact.store')->middleware('throttle:10,1');
-Route::get('/wishlist',fn() => view('frontend.wishlist'))->name('wishlist');
-Route::get('/faq',     fn() => view('frontend.faq'))->name('faq');
-Route::get('/privacy-policy', fn() => view('frontend.privacy'))->name('privacy');
-Route::get('/terms-conditions', fn() => view('frontend.terms'))->name('terms');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store')->middleware('throttle:3,1');
+Route::get('/wishlist',         [PageController::class, 'wishlist'])->name('wishlist');
+Route::get('/faq',              [PageController::class, 'faq'])->name('faq');
+Route::get('/privacy-policy',   [PageController::class, 'privacy'])->name('privacy');
+Route::get('/terms-conditions', [PageController::class, 'terms'])->name('terms');
 
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product');
 

@@ -118,5 +118,5 @@
 @endsection
 
 @push('scripts')
-  <script src="{{ asset('frontend/js/pages.js') }}"></script>
+  <script src="{{ asset('frontend/js/pages.js') }}" defer></script>
 @endpush
