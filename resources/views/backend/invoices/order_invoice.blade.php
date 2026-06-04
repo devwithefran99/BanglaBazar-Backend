@@ -395,11 +395,11 @@
     {{-- Header --}}
     <div class="inv-header">
         <div>
-            <div class="brand-name">MyShop</div>
+            <div class="brand-name">Banglabazar24/7</div>
             <div class="brand-meta">
-                Dhaka, Bangladesh<br>
-                support@myshop.com<br>
-                +880 1700-000000
+                Chattogram, Bangladesh<br>
+                banglabazar247bd@gmail.com<br>
+                +8801740-604565
             </div>
         </div>
         <div class="inv-title-block">
@@ -514,7 +514,7 @@
     {{-- Footer --}}
     <div class="inv-footer">
         <div>
-            <div class="footer-brand">MyShop</div>
+            <div class="footer-brand">Banglabazar24/7</div>
             <div>Thank you for your order.</div>
         </div>
         <div style="text-align:right;">

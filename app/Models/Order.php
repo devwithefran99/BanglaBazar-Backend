@@ -26,6 +26,11 @@ class Order extends Model
         // legacy columns (still in use)
         'address',
         'phone',
+
+        // Stread Fast Courier
+        'steadfast_consignment_id',
+        'steadfast_tracking_code',
+
     ];
 
     protected $casts = [

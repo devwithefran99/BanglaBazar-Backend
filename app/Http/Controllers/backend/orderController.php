@@ -90,4 +90,58 @@ if ($oldStatus !== $newStatus && in_array($newStatus, $mailableStatuses)) {
 
         return back()->with('success', 'Order #' . str_pad($id, 4, '0', STR_PAD_LEFT) . ' status updated to ' . ucfirst($request->status));
     }
+
+
+    // ✅ Send to Steadfast
+public function sendToSteadfast(Request $request, $id)
+{
+    $order = Order::findOrFail($id);
+
+    // Already sent check
+    if ($order->steadfast_consignment_id) {
+        return back()->with('error', 'এই order টা already Steadfast এ পাঠানো হয়েছে! Consignment ID: ' . $order->steadfast_consignment_id);
+    }
+
+    $apiKey    = env('STEADFAST_API_KEY');
+    $apiSecret = env('STEADFAST_API_SECRET');
+    $baseUrl   = env('STEADFAST_BASE_URL', 'https://portal.steadfast.com.bd/public/v1');
+
+    $recipientName    = trim(($order->billing_first_name ?? '') . ' ' . ($order->billing_last_name ?? '')) ?: ($order->user->name ?? 'Customer');
+    $recipientPhone   = $order->billing_phone ?? $order->phone ?? '';
+    $recipientAddress = $order->billing_address ?? $order->address ?? '';
+    $codAmount        = $order->total_price ?? 0;
+    $note             = 'Order #' . str_pad($order->id, 4, '0', STR_PAD_LEFT) . ' — BanglaBazar';
+
+    try {
+        $response = \Illuminate\Support\Facades\Http::withHeaders([
+            'Api-Key'    => $apiKey,
+            'Secret-Key' => $apiSecret,
+            'Content-Type' => 'application/json',
+        ])->post($baseUrl . '/create_order', [
+            'invoice'            => 'BB-' . str_pad($order->id, 4, '0', STR_PAD_LEFT),
+            'recipient_name'     => $recipientName,
+            'recipient_phone'    => $recipientPhone,
+            'recipient_address'  => $recipientAddress,
+            'cod_amount'         => $codAmount,
+            'note'               => $note,
+        ]);
+
+        $data = $response->json();
+
+        if ($response->successful() && isset($data['consignment']['consignment_id'])) {
+            $order->update([
+                'steadfast_consignment_id' => $data['consignment']['consignment_id'],
+                'steadfast_tracking_code'  => $data['consignment']['tracking_code'] ?? null,
+            ]);
+
+            return back()->with('success', '✅ Steadfast এ পাঠানো হয়েছে! Consignment ID: ' . $data['consignment']['consignment_id']);
+        } else {
+            $errorMsg = $data['message'] ?? $data['errors'] ?? 'Unknown error';
+            return back()->with('error', '❌ Steadfast Error: ' . (is_array($errorMsg) ? json_encode($errorMsg) : $errorMsg));
+        }
+
+    } catch (\Exception $e) {
+        return back()->with('error', '❌ Connection Error: ' . $e->getMessage());
+    }
+}
 }

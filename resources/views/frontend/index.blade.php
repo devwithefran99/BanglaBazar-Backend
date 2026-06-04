@@ -21,13 +21,13 @@
         <div class="main-slider position-relative overflow-hidden rounded">
           <div class="slides position-relative w-100 h-100">
             <div class="slide active">
-              <a href="{{ route('shop') }}"><img src="{{ asset('frontend/image/sorishaBnr.png') }}" class="w-100" alt=""></a>
+              <a href="{{ route('shop') }}"><img src="{{ asset('frontend/image/sorishaBnr.png') }}" class="w-100" alt="সরিষা তেল ও মশলা — BanglaBazar এ সেরা দামে"></a>
             </div>
             <div class="slide">
-              <a href="{{ route('shop') }}"><img src="{{ asset('frontend/image/hilshaBnr.png') }}" class="w-100" alt=""></a>
+              <a href="{{ route('shop') }}"><img src="{{ asset('frontend/image/hilshaBnr.png') }}" class="w-100" alt="তাজা ইলিশ মাছ — BanglaBazar এ অর্ডার করুন"></a>
             </div>
             <div class="slide">
-              <a href="{{ route('shop') }}"><img src="{{ asset('frontend/image/bannerOffer.png') }}" class="w-100" alt=""></a>
+              <a href="{{ route('shop') }}"><img src="{{ asset('frontend/image/bannerOffer.png') }}" class="w-100" alt="BanglaBazar বিশেষ অফার — সীমিত সময়ের ছাড়"></a>
             </div>
           </div>
           <button class="slider-prev">&#10094;</button>
@@ -38,10 +38,10 @@
       <div class="col-12 col-md-4">
         <div class="row g-2 h-100">
           <div class="col-6 col-md-12">
-            <a href="{{ route('shop') }}"><img src="{{ asset('frontend/image/khasiBnr.png') }}" class="w-100" alt=""></a>
+            <a href="{{ route('shop') }}"><img src="{{ asset('frontend/image/khasiBnr.png') }}" class="w-100" alt="তাজা খাসির মাংস — BanglaBazar Chattogram"></a>
           </div>
           <div class="col-6 col-md-12">
-            <a href="{{ route('shop') }}"><img src="{{ asset('frontend/image/bannerSm2.png') }}" class="w-100 h-100 rounded object-fit-cover" alt=""></a>
+            <a href="{{ route('shop') }}"><img src="{{ asset('frontend/image/bannerSm2.png') }}" class="w-100 h-100 rounded object-fit-cover" alt="BanglaBazar — তাজা পণ্য দ্রুত ডেলিভারি"></a>
           </div>
         </div>
       </div>
@@ -51,19 +51,19 @@
     <div class="bg-light border border-secondary-subtle rounded-3 mt-3 p-2">
       <div class="row text-center g-0">
         <div class="col-3 border-end border-secondary-subtle d-flex flex-column align-items-center justify-content-center py-2 px-1">
-          <img src="{{ asset('frontend/gif/wallet-security.gif') }}" alt="" class="mb-1" style="width:36px;height:36px;object-fit:contain;">
+          <img src="{{ asset('frontend/gif/wallet-security.gif') }}" alt="wallet" class="mb-1" style="width:36px;height:36px;object-fit:contain;">
           <p class="mb-0 text-dark" style="font-size:10px;line-height:1.3;">Cash On<br>Delivery</p>
         </div>
         <div class="col-3 border-end border-secondary-subtle d-flex flex-column align-items-center justify-content-center py-2 px-1">
-          <img src="{{ asset('frontend/gif/truck.gif') }}" alt="" class="mb-1" style="width:36px;height:36px;object-fit:contain;">
+          <img src="{{ asset('frontend/gif/truck.gif') }}" alt="truck" class="mb-1" style="width:36px;height:36px;object-fit:contain;">
           <p class="mb-0 text-dark" style="font-size:10px;line-height:1.3;">Fast<br>Delivery</p>
         </div>
         <div class="col-3 border-end border-secondary-subtle d-flex flex-column align-items-center justify-content-center py-2 px-1">
-          <img src="{{ asset('frontend/gif/helpdesk.gif') }}" alt="" class="mb-1" style="width:36px;height:36px;object-fit:contain;">
+          <img src="{{ asset('frontend/gif/helpdesk.gif') }}" alt="helpdesk" class="mb-1" style="width:36px;height:36px;object-fit:contain;">
           <p class="mb-0 text-dark" style="font-size:10px;line-height:1.3;">Customer<br>Support</p>
         </div>
         <div class="col-3 d-flex flex-column align-items-center justify-content-center py-2 px-1">
-          <img src="{{ asset('frontend/gif/deal.gif') }}" alt="" class="mb-1" style="width:36px;height:36px;object-fit:contain;">
+          <img src="{{ asset('frontend/gif/deal.gif') }}" alt="deal" class="mb-1" style="width:36px;height:36px;object-fit:contain;">
           <p class="mb-0 text-dark" style="font-size:10px;line-height:1.3;">Best<br>Deals</p>
         </div>
       </div>
@@ -604,7 +604,7 @@
 <div class="qv-backdrop" id="qvBackdrop">
   <div class="qv-modal" role="dialog" aria-modal="true">
     <button class="qv-close" id="qvClose"><i class="bi bi-x"></i></button>
-    <div class="qv-img-side"><img id="qvImg" src="" alt=""></div>
+    <div class="qv-img-side"><img id="qvImg" src="" alt="quick-view"></div>
     <div class="qv-info-side">
       <span class="qv-category" id="qvCat">Vegetables</span>
       <h2 class="qv-title" id="qvTitle"></h2>
@@ -639,7 +639,7 @@
 <div class="cp-overlay" id="cpOverlay"></div>
 <div class="cp-drawer" id="cpDrawer">
   <div class="cp-header">
-    <div class="cp-title"><img src="{{ asset('frontend/image/Logo.png') }}" alt=""></div>
+    <div class="cp-title"><img src="{{ asset('frontend/image/Logo.png') }}" alt="Logo"></div>
     <button class="cp-close" id="cpClose"><i class="bi bi-x-lg"></i></button>
   </div>
   <div class="cp-items" id="cpItems"></div>

@@ -227,6 +227,21 @@
    title="Print Invoice">
     <i class="bx bx-printer"></i>
 </a>
+
+@if($order->steadfast_consignment_id)
+    <span class="btn btn-sm btn-success disabled" title="Consignment: {{ $order->steadfast_consignment_id }}">
+        <i class="bx bx-check"></i>
+    </span>
+@else
+    <form action="{{ route('backend.orders.sendToSteadfast', $order->id) }}" method="POST" style="display:inline;">
+        @csrf
+        <button type="submit" class="btn btn-sm btn-info"
+                title="Send to Steadfast"
+                onclick="return confirm('Steadfast এ পাঠাবেন?')">
+            <i class="bx bx-transfer"></i>
+        </button>
+    </form>
+@endif
                 </td>
             </tr>
             @empty

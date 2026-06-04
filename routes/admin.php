@@ -44,6 +44,9 @@ Route::middleware('is_admin')->group(function () {
     Route::post('/orders/{orderId}/resend-mail', [EmailController::class, 'resendOrderMail'])->name('backend.orders.resendMail');
     Route::get('/orders/{id}/invoice',  [InvoiceController::class, 'orderInvoice'])->name('backend.orders.invoice');
 
+
+    Route::post('/orders/{id}/send-to-steadfast', [OrderController::class, 'sendToSteadfast'])->name('backend.orders.sendToSteadfast');
+
     // Notification polling
 Route::get('/notifications/poll', function () {
     return response()->json([
@@ -105,9 +108,9 @@ Route::get('/notifications/poll', function () {
         Route::post('inventory/{inventory}/adjust-stock', [InventoryController::class, 'adjustStock'])
              ->name('inventory.adjust-stock');
 
-        // ════════════════════════════════════════════════════════════════════
+        // 
         // নিচের সব routes — শুধু super_admin ও admin
-        // ════════════════════════════════════════════════════════════════════
+     
         Route::middleware('role:super_admin,admin')->group(function () {
 
             // Products, HotDeals, Categories

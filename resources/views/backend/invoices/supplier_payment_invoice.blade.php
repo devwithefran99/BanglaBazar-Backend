@@ -313,11 +313,11 @@
     {{-- Header --}}
     <div class="inv-header">
         <div>
-            <div class="brand-name">MyShop</div>
+            <div class="brand-name">Banglabazar24/7</div>
             <div class="brand-meta">
-                Dhaka, Bangladesh<br>
-                accounts@myshop.com<br>
-                +880 1700-000000
+                Chattogram, Bangladesh<br>
+                banglabazar247bd@gmail.com<br>
+                +8801740-604565
             </div>
         </div>
         <div class="inv-title-block">
@@ -358,7 +358,7 @@
                     <strong>Generated:</strong> {{ now()->format('d M Y') }}<br>
                     <strong>Supplier ID:</strong> #{{ str_pad($supplier->id, 4, '0', STR_PAD_LEFT) }}<br>
                     <strong>Total Payments:</strong> {{ $payments->count() }}<br>
-                    <strong>Paid By:</strong> MyShop Accounts
+                    <strong>Paid By:</strong> Banglabazar24/7 Accounts
                 </div>
             </div>
         </div>
@@ -461,7 +461,7 @@
     {{-- Footer --}}
     <div class="inv-footer">
         <div>
-            <div class="footer-brand">MyShop — Accounts</div>
+            <div class="footer-brand">Banglabazar24/7 — Accounts</div>
             <div>System generated document.</div>
         </div>
         <div style="text-align:right;">

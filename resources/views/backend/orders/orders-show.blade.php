@@ -252,6 +252,26 @@
             </div>
         </div>
 
+        {{-- Steadfast --}}
+@if($order->steadfast_consignment_id)
+    <div class="alert alert-success py-2 px-3 mb-2" style="font-size:13px;">
+        <i class="bx bx-check-circle me-1"></i>
+        <strong>Steadfast এ পাঠানো হয়েছে</strong><br>
+        <span class="text-muted">Consignment: {{ $order->steadfast_consignment_id }}</span><br>
+        @if($order->steadfast_tracking_code)
+            <span class="text-muted">Tracking: {{ $order->steadfast_tracking_code }}</span>
+        @endif
+    </div>
+@else
+    <form action="{{ route('backend.orders.sendToSteadfast', $order->id) }}" method="POST" class="mb-2">
+        @csrf
+        <button type="submit" class="btn btn-info w-100"
+                onclick="return confirm('Order #{{ str_pad($order->id, 4, \'0\', STR_PAD_LEFT) }} Steadfast এ পাঠাবেন?')">
+            <i class="bx bx-transfer me-1"></i> Send to Steadfast
+        </button>
+    </form>
+@endif
+
         {{-- invoice --}}
           <a href="{{ route('backend.orders.invoice', $order->id) }}"
               target="_blank"
