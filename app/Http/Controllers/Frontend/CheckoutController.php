@@ -247,4 +247,24 @@ return back()->with('error', 'Something went wrong. Please try again.');
 
         return view('frontend.order-success', compact('order'));
     }
+
+    public function buyNow(Request $request)
+{
+    $request->validate([
+        'product_id'   => 'required|integer',
+        'product_type' => 'required|string',
+        'quantity'     => 'required|integer|min:1',
+    ]);
+
+    // Session এ buy now data store করো
+    session([
+        'buy_now' => [
+            'product_id'   => $request->product_id,
+            'product_type' => $request->product_type,
+            'quantity'     => $request->quantity,
+        ]
+    ]);
+
+    return response()->json(['success' => true]);
+}
 }

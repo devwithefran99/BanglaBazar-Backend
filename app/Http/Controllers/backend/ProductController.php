@@ -43,7 +43,7 @@ class ProductController extends Controller
 
         $product = Product::create([
             'name'        => $request->name,
-            'slug'        => Str::slug($request->name) . '-' . time(),
+            'slug'        => Str::slug($request->name),
             'description' => $request->description,
             'price'       => $request->price,
             'old_price'   => $request->old_price ?: null,
@@ -102,7 +102,7 @@ class ProductController extends Controller
 
         $product->update([
             'name'        => $request->name,
-            'slug'        => Str::slug($request->name) . '-' . $product->id,
+            'slug'        => Str::slug($request->name),
             'description' => $request->description,
             'price'       => $request->price,
             'old_price'   => $request->old_price ?: null,

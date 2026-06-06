@@ -266,7 +266,7 @@
     <form action="{{ route('backend.orders.sendToSteadfast', $order->id) }}" method="POST" class="mb-2">
         @csrf
         <button type="submit" class="btn btn-info w-100"
-                onclick="return confirm('Order #{{ str_pad($order->id, 4, \'0\', STR_PAD_LEFT) }} Steadfast এ পাঠাবেন?')">
+               onclick="return confirm('Order #{{ $order->id }} Steadfast এ পাঠাবেন?')">
             <i class="bx bx-transfer me-1"></i> Send to Steadfast
         </button>
     </form>

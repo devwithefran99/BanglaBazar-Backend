@@ -31,7 +31,7 @@ Route::get('/faq',              [PageController::class, 'faq'])->name('faq');
 Route::get('/privacy-policy',   [PageController::class, 'privacy'])->name('privacy');
 Route::get('/terms-conditions', [PageController::class, 'terms'])->name('terms');
 
-Route::get('/product/{id}', [ProductController::class, 'show'])->name('product');
+Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product');
 
 Route::get('/search/suggestions', [ShopController::class, 'searchSuggestions'])->name('search.suggestions');
 
@@ -72,6 +72,9 @@ Route::middleware(['auth'])->group(function () {
     // return request
          Route::post('/return-request', [ReturnRequestController::class, 'store'])
          ->name('return.store');
+
+        //  buy now 
+        Route::post('/buy-now', [CheckoutController::class, 'buyNow'])->name('buy.now')->middleware('auth');
 
     Route::prefix('cart')->name('cart.')->group(function () {
         Route::get('/', [CartController::class, 'index'])->name('index');

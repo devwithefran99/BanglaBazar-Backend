@@ -81,7 +81,7 @@
           <span class="stock-badge in"><i class="bi bi-check-circle-fill me-1"></i>In Stock</span>
           <div class="card-actions">
             <button class="btn-buy">
-              <a href="{{ route('product', $item->product->id) }}" style="text-decoration:none;color:#fff;">
+              <a href="{{ route('product', $item->product->slug) }}" style="text-decoration:none;color:#fff;">
                 <i class="bi bi-lightning-charge-fill"></i> Buy Now
               </a>
             </button>

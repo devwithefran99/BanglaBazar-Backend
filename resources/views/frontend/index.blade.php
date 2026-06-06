@@ -128,12 +128,18 @@
               <div class="overlay-icons">
                 <button class="wishlist-btn"
                         data-product-id="{{ $product->id }}"
+                        data-product-slug="{{ $product->slug }}"
                         data-product-type="product"
                         title="Wishlist">
                   <i class="bi bi-heart{{ $inWishlist ? '-fill' : '' }}"
                      style="{{ $inWishlist ? 'color:#e74c3c;' : '' }}"></i>
                 </button>
-                <button title="Quick View"><i class="bi bi-eye"></i></button>
+                <button title="Quick View"
+        data-id="{{ $product->id }}"
+        data-type="product"
+        data-stock="{{ $product->stock }}">
+  <i class="bi bi-eye"></i>
+</button>
               </div>
             </div>
             @if($product->image)
@@ -143,7 +149,7 @@
             @endif
           </div>
           <div class="card-body-custom">
-            <a href="{{ route('product', $product->id) }}"
+            <a href="{{ route('product', $product->slug) }}"
                class="product-name"
                style="text-decoration:none;color:inherit;display:block;">
               {{ $product->name }}
@@ -164,12 +170,14 @@
                 <button class="cart-btn show-qty-btn"
                         data-uid="{{ $uid }}"
                         data-product-id="{{ $product->id }}"
+                        data-product-slug="{{ $product->slug }}"
                         data-product-type="product">
                   <i class="bi bi-bag"></i>
                 </button>
                 <div class="qty-selector"
                      data-uid="{{ $uid }}"
                      data-product-id="{{ $product->id }}"
+                     data-product-slug="{{ $product->slug }}"
                      data-product-type="product"
                      style="display:none;">
                   <button class="qty-btn minus"><i class="bi bi-dash"></i></button>
@@ -178,6 +186,7 @@
                   <button class="add-to-cart-btn"
                           data-uid="{{ $uid }}"
                           data-product-id="{{ $product->id }}"
+                          data-product-slug="{{ $product->slug }}"
                           data-product-type="product">
                     <i class="bi bi-check-lg"></i>
                   </button>
@@ -238,15 +247,23 @@
               <button class="cart-btn show-qty-btn hot-btn"
                       data-uid="{{ $featuredUid }}"
                       data-product-id="{{ $featured->id }}"
-                      data-product-type="hotdeal">
+                      data-product-type="hotdeal"
+                      data-product-slug="{{ $featured->slug }}">
+                      
                 <i class="bi bi-bag">Add to Cart</i>
               </button>
-              <button title="Quick View" class="icon-btn"><i class="bi bi-eye"></i></button>
+             <button title="Quick View" class="icon-btn"
+        data-id="{{ $featured->id }}"
+        data-type="hotdeal"
+        data-stock="{{ $featured->stock }}">
+  <i class="bi bi-eye"></i>
+</button>
             </div>
             <div class="qty-selector"
                  data-uid="{{ $featuredUid }}"
                  data-product-id="{{ $featured->id }}"
                  data-product-type="hotdeal"
+                 data-product-slug="{{ $featured->slug }}"
                  style="display:none;">
               <button class="qty-btn minus"><i class="bi bi-dash"></i></button>
               <input type="number" class="qty-input" value="1" min="1" max="{{ $featured->stock }}">
@@ -254,7 +271,8 @@
               <button class="add-to-cart-btn"
                       data-uid="{{ $featuredUid }}"
                       data-product-id="{{ $featured->id }}"
-                      data-product-type="hotdeal">
+                      data-product-type="hotdeal"
+                      data-product-slug="{{ $featured->slug }}">
                 <i class="bi bi-check-lg"></i>
               </button>
             </div>
@@ -308,11 +326,17 @@
                       <button class="wishlist-btn"
                               data-product-id="{{ $deal->id }}"
                               data-product-type="hotdeal"
+                              data-product-slug="{{ $deal->slug }}"
                               title="Wishlist">
                         <i class="bi bi-heart{{ $inWishlistDeal ? '-fill' : '' }}"
                            style="{{ $inWishlistDeal ? 'color:#e74c3c;' : '' }}"></i>
                       </button>
-                      <button title="Quick View"><i class="bi bi-eye"></i></button>
+                     <button title="Quick View"
+        data-id="{{ $deal->id }}"
+        data-type="hotdeal"
+        data-stock="{{ $deal->stock }}">
+  <i class="bi bi-eye"></i>
+</button>
                     </div>
                   </div>
                   @if($deal->image)
@@ -322,7 +346,8 @@
                   @endif
                 </div>
                 <div class="card-body-custom">
-                  <a href="{{ route('product', ['id' => $deal->id, 'type' => 'hotdeal']) }}"
+                  <a href="{{ route('product', ['slug' => $deal->slug]) }}?type=hotdeal"
+                    data-product-slug="{{ $deal->slug }}"
                      class="product-name"
                      style="text-decoration:none;color:inherit;">
                     {{ $deal->name }}
@@ -400,11 +425,17 @@
                   <button class="wishlist-btn"
                           data-product-id="{{ $deal->id }}"
                           data-product-type="hotdeal"
+                          data-product-slug="{{ $deal->slug }}"
                           title="Wishlist">
                     <i class="bi bi-heart{{ $inWishlistBottom ? '-fill' : '' }}"
                        style="{{ $inWishlistBottom ? 'color:#e74c3c;' : '' }}"></i>
                   </button>
-                  <button title="Quick View"><i class="bi bi-eye"></i></button>
+                 <button title="Quick View"
+        data-id="{{ $deal->id }}"
+        data-type="hotdeal"
+        data-stock="{{ $deal->stock }}">
+  <i class="bi bi-eye"></i>
+</button>
                 </div>
               </div>
               @if($deal->image)
@@ -414,7 +445,8 @@
               @endif
             </div>
             <div class="card-body-custom">
-              <a href="{{ route('product', ['id' => $deal->id, 'type' => 'hotdeal']) }}"
+             <a href="{{ route('product', ['slug' => $deal->slug]) }}?type=hotdeal"
+              data-product-slug="{{ $deal->slug }}"
                  class="product-name"
                  style="text-decoration:none;color:inherit;">
                 {{ $deal->name }}
@@ -495,12 +527,18 @@
               <div class="overlay-icons">
                 <button class="wishlist-btn"
                         data-product-id="{{ $product->id }}"
+                        data-product-slug="{{ $product->slug }}"
                         data-product-type="product"
                         title="Wishlist">
                   <i class="bi bi-heart{{ $inWishlist ? '-fill' : '' }}"
                      style="{{ $inWishlist ? 'color:#e74c3c;' : '' }}"></i>
                 </button>
-                <button title="Quick View"><i class="bi bi-eye"></i></button>
+               <button title="Quick View" class="icon-btn"
+        data-id="{{ $featured->id }}"
+        data-type="hotdeal"
+        data-stock="{{ $featured->stock }}">
+  <i class="bi bi-eye"></i>
+</button>
               </div>
             </div>
             @if($product->image)
@@ -510,7 +548,8 @@
             @endif
           </div>
           <div class="card-body-custom">
-            <a href="{{ route('product', $product->id) }}"
+           <a href="{{ route('product', $product->slug) }}"
+            data-product-slug="{{ $product->slug }}"
                class="product-name"
                style="text-decoration:none;color:inherit;display:block;">
               {{ $product->name }}
@@ -531,12 +570,14 @@
                 <button class="cart-btn show-qty-btn"
                         data-uid="{{ $uid }}"
                         data-product-id="{{ $product->id }}"
+                        data-product-slug="{{ $product->slug }}"
                         data-product-type="product">
                   <i class="bi bi-bag"></i>
                 </button>
                 <div class="qty-selector"
                      data-uid="{{ $uid }}"
                      data-product-id="{{ $product->id }}"
+                     data-product-slug="{{ $product->slug }}"
                      data-product-type="product"
                      style="display:none;">
                   <button class="qty-btn minus"><i class="bi bi-dash"></i></button>
@@ -545,6 +586,7 @@
                   <button class="add-to-cart-btn"
                           data-uid="{{ $uid }}"
                           data-product-id="{{ $product->id }}"
+                          data-product-slug="{{ $product->slug }}"
                           data-product-type="product">
                     <i class="bi bi-check-lg"></i>
                   </button>
@@ -662,7 +704,6 @@
 @endsection
 
 @push('scripts')
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" defer></script>
-  <script src="{{ asset('frontend/js/wishlist.js') }}" defer></script>
+  <script src="{{ asset('frontend/js/wishlist.js') }}"></script>
   <script src="{{ asset('frontend/js/app.js') }}"></script>
 @endpush

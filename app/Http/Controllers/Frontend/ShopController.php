@@ -41,11 +41,36 @@ if ($searchText) {
     $hotDealsQuery->where('name', 'like', '%' . $searchText . '%');
 }
 
-$products = $productsQuery->get();
-$hotDeals = $hotDealsQuery->get();
+$perPage = 12;
+$page    = $request->query('page', 1);
 
-        $products = $productsQuery->get();
-        $hotDeals = $hotDealsQuery->get();
+$allProductItems = $productsQuery->get()->map(fn($p) => ['type' => 'product', 'item' => $p]);
+$allHotDealItems = $hotDealsQuery->get()->map(fn($h) => ['type' => 'hotdeal', 'item' => $h]);
+
+// Sort order query
+$sortBy = $request->query('sort', 'latest');
+$merged = $allProductItems->merge($allHotDealItems);
+
+if ($sortBy === 'name') {
+    $merged = $merged->sortBy(fn($r) => $r['item']->name);
+}
+
+// Manual paginate
+$total    = $merged->count();
+$offset   = ($page - 1) * $perPage;
+$sliced   = $merged->slice($offset, $perPage)->values();
+
+$paginatedItems = new \Illuminate\Pagination\LengthAwarePaginator(
+    $sliced,
+    $total,
+    $perPage,
+    $page,
+    ['path' => $request->url(), 'query' => $request->except('page')]
+);
+
+// Blade এর জন্য আলাদা করো
+$products = $sliced->where('type', 'product')->pluck('item');
+$hotDeals = $sliced->where('type', 'hotdeal')->pluck('item');
 
         // Sidebar এর count এর জন্য সব data
         $allProducts = Product::where('is_active', true)->get();
@@ -59,15 +84,16 @@ $hotDeals = $hotDealsQuery->get();
             Auth::user()->load('wishlists');
         }
 
-        return view('frontend.shop', compact(
-            'products',
-            'hotDeals',
-            'allProducts',
-            'allHotDeals',
-            'selectedCategory',
-            'selectedCategory', 
-            'dbCategories'
-        ));
+       return view('frontend.shop', compact(
+    'products',
+    'hotDeals',
+    'allProducts',
+    'allHotDeals',
+    'selectedCategory',
+    'dbCategories',
+    'paginatedItems',
+    'total'
+));
     }
 
     /**

@@ -6,22 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\HotDeal;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
-    public function show(Request $request, $id)
+    public function show(Request $request, string $slug)
     {
         $type = $request->query('type', 'product');
 
         if ($type === 'hotdeal') {
-            $item = HotDeal::find($id);
+            $item = HotDeal::where('slug', $slug)->firstOrFail();
         } else {
-            $item = Product::find($id);
+            $item = Product::where('slug', $slug)->firstOrFail();
         }
 
-        if (!$item) {
-            return redirect()->route('shop')
-                ->with('error', 'Product not found! Please buy something else.');
+        if (Auth::check()) {
+            Auth::user()->load('wishlists');
         }
 
         return view('frontend.singleProduct', compact('item', 'type'));

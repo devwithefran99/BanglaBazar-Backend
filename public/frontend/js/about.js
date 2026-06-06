@@ -73,43 +73,5 @@ responsive:{
 }
 });
 // feedback ends
-// our team starts
-$(document).ready(function(){
-  var owl = $("#teamCarousel").owlCarousel({
-    loop: true,
-    margin: 0,
-    nav: true,
-    dots: true,
-    autoplay: true,
-    autoplayTimeout: 2500,
-    autoplayHoverPause: true,
-    smartSpeed: 700,
-    animateOut: 'fadeOut',
-    navText: [
-      '<svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>',
-      '<svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>'
-    ],
-    responsive: {
-      0: {
-        items: 2,
-        margin: 10,
-        nav: false,
-        dots: true
-      },
-      576: {
-        items: 2,
-        margin: 12
-      },
-      768: {
-        items: 3,
-        margin: 14
-      },
-      992: {
-        items: 4,
-        margin: 16
-      }
-    }
-  });
-});
-// our team ends
+
 

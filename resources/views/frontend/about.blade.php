@@ -182,79 +182,8 @@
     </div>
   </section>
 
-  {{-- OUR TEAM --}}
-  <section class="team-section">
-    <div class="container">
-      <div class="text-center mb-2">
-        <span class="team-tag">Meet The People</span>
-        <h2 class="team-title">Our Awesome <span>Team</span></h2>
-        <p class="team-desc">Pellentesque a ante vulputate leo porttitor luctus sed eget eros.</p>
-      </div>
-      <div class="team-carousel-wrap">
-        <div class="owl-carousel owl-theme" id="teamCarousel">
-          @php
-          $team = [
-            ['name'=>'Marcus Holloway','role'=>'CEO Founder','img'=>'https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?w=500&q=80'],
-            ['name'=>'Priya Nair','role'=>'Head of Operations','img'=>'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=500&q=80'],
-            ['name'=>'Daniel Osei','role'=>'Senior Manager','img'=>'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=500&q=80'],
-            ['name'=>'Layla Benali','role'=>'Quality Lead','img'=>'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=500&q=80'],
-            ['name'=>'Ethan Caldwell','role'=>'Logistics Head','img'=>'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&q=80'],
-            ['name'=>'Sofia Marchetti','role'=>'Marketing Director','img'=>'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=500&q=80'],
-          ];
-          @endphp
-          @foreach($team as $member)
-          <div class="team-card">
-            <div class="team-img-box">
-              <img src="{{ $member['img'] }}" alt="{{ $member['name'] }}"/>
-              <div class="team-social">
-                <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
-                <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
-                <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg></a>
-              </div>
-            </div>
-            <div class="team-info">
-              <div class="team-name">{{ $member['name'] }}</div>
-              <div class="team-role">{{ $member['role'] }}</div>
-            </div>
-          </div>
-          @endforeach
-        </div>
-      </div>
-    </div>
-  </section>
-
-  {{-- CLIENT TESTIMONIALS --}}
-  <section id="feedback" class="py-2">
-    <div class="container">
-      <h2 class="section-title text-start">Client Testimonials</h2>
-      <div class="owl-carousel testimonial-slider">
-        @php
-        $testimonials = [
-          ['name'=>'Robert Fox','role'=>'Customer','img'=>'clients (1).png','text'=>'Pellentesque eu nibh eget mauris congue mattis mattis nec tellus. Phasellus imperdiet elit eu magna dictum.'],
-          ['name'=>'Dianne Russell','role'=>'Customer','img'=>'clients (2).png','text'=>'Pellentesque eu nibh eget mauris congue mattis mattis nec tellus. Phasellus imperdiet elit eu magna dictum.'],
-          ['name'=>'Eleanor Pena','role'=>'Customer','img'=>'clients (3).png','text'=>'Pellentesque eu nibh eget mauris congue mattis mattis nec tellus. Phasellus imperdiet elit eu magna dictum.'],
-          ['name'=>'Jenny Wilson','role'=>'Customer','img'=>'bigApple.png','text'=>'Pellentesque eu nibh eget mauris congue mattis mattis nec tellus. Phasellus imperdiet elit eu magna dictum.'],
-        ];
-        @endphp
-        @foreach($testimonials as $t)
-        <div class="testimonial-card">
-          <div class="quote">"</div>
-          <p class="testimonial-text">{{ $t['text'] }}</p>
-          <div class="client-info">
-            <div class="client-left">
-              <img src="{{ asset('frontend/image/'.$t['img']) }}" class="client-img">
-              <div>
-                <p class="client-name">{{ $t['name'] }}</p>
-                <p class="client-role">{{ $t['role'] }}</p>
-              </div>
-            </div>
-            <div class="stars">★★★★★</div>
-          </div>
-        </div>
-        @endforeach
-      </div>
-    </div>
-  </section>
+  
+ 
 
   {{-- CART DRAWER --}}
   <div class="cp-overlay" id="cpOverlay"></div>

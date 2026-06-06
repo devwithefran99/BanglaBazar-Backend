@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,8 +52,8 @@
     <div class="container">
       <div class="d-flex justify-content-between align-items-center">
         <div>
-          <i class="bi bi-geo-alt-fill text-success me-1"></i>
-          Store Location: 4th Floor, Kazi Complex, Beparipara, Agrabad Access Road, Chattogram
+          <i class="bi bi-bag-heart-fill text-success me-1"></i>
+          From Farmers to Your Family | Fresh, Natural & Trusted Foods
         </div>
         <div class="d-flex align-items-center gap-2">
          
@@ -235,7 +235,6 @@
         <ul class="footer-links">
           <li><a href="{{ route('userdashboard') }}">My Account</a></li>
           <li><a href="{{ route('userdashboard') }}">Order History</a></li>
-          <li><a href="{{ route('cart.index') }}">Shopping Cart</a></li>
           <li><a href="{{ route('wishlist') }}">Wishlist</a></li>
         </ul>
       </div>
@@ -256,15 +255,20 @@
           <li><a href="{{ route('home') }}">Home</a></li>
         </ul>
       </div>
-      <div class="col-lg-3 col-md-3 col-6 anim-fade-up d5">
-        <h6 class="footer-col-title">Categories</h6>
-        <ul class="footer-links">
-          <li><a href="{{ route('shop') }}">Fruit &amp; Vegetables</a></li>
-          <li><a href="{{ route('shop') }}">Meat &amp; Fish</a></li>
-          <li><a href="{{ route('shop') }}">Bread &amp; Bakery</a></li>
-          <li><a href="{{ route('shop') }}">Beauty &amp; Health</a></li>
-        </ul>
-      </div>
+    <div class="col-lg-3 col-md-3 col-6 anim-fade-up d5">
+  <h6 class="footer-col-title">Categories</h6>
+  <ul class="footer-links">
+    @forelse($navCategories ?? [] as $cat)
+      <li>
+        <a href="{{ route('shop') }}?category={{ $cat->slug }}">
+          {{ $cat->name }}
+        </a>
+      </li>
+    @empty
+      <li><a href="{{ route('shop') }}">All Products</a></li>
+    @endforelse
+  </ul>
+</div>
     </div>
   </div>
   <div class="footer-bottom mt-4">
@@ -281,11 +285,10 @@
 </footer>
 
 {{-- SCRIPTS --}}
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
-{{-- OwlCarousel আগে load করো --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
-<script src="{{ asset('frontend/js/common.js') }} "  defer></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ asset('frontend/js/common.js') }}"></script>
 @stack('scripts')
 
 </body>

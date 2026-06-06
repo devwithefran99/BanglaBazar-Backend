@@ -403,4 +403,30 @@
         }
     /* main content ends */
 
+    /* ── Pagination ── */
+.pagination-shop .page-link {
+  border: 1.5px solid #e2e8f0;
+  color: #2d6a4f;
+  border-radius: 8px !important;
+  margin: 0 3px;
+  min-width: 38px;
+  text-align: center;
+  font-weight: 500;
+  transition: all .2s;
+}
+.pagination-shop .page-item.active .page-link {
+  background: #2d6a4f;
+  border-color: #2d6a4f;
+  color: #fff;
+}
+.pagination-shop .page-link:hover {
+  background: #e9f5ee;
+  border-color: #2d6a4f;
+  color: #2d6a4f;
+}
+.pagination-shop .page-item.disabled .page-link {
+  color: #c0c0c0;
+  border-color: #e2e8f0;
+}
+
   

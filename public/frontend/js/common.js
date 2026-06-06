@@ -274,49 +274,148 @@ document.querySelectorAll('.main-navbar .nav-item').forEach((el, i) => {
   const backdrop = document.getElementById('qvBackdrop');
   if (!backdrop) return;
 
-  document.addEventListener('click', function (e) {
-    const eyeBtn = e.target.closest('button[title="Quick View"]');
-    if (!eyeBtn) return;
-    e.preventDefault();
-    e.stopPropagation();  // ✅ card-click redirect আটকাও
-
-    const card = eyeBtn.closest('.product-card, .hotProduct-card, .slider-product, .featured-card');
-    if (!card) return;
-
-    document.getElementById('qvImg').src           = card.querySelector('.product-img-wrap img')?.src || '';
-    document.getElementById('qvTitle').textContent = card.querySelector('.product-name')?.textContent.trim() || '';
-    document.getElementById('qvPrice').textContent = card.querySelector('.price-main')?.textContent.trim() || '';
-    document.getElementById('qvOld').textContent   = card.querySelector('.price-old')?.textContent.trim() || '';
-    document.getElementById('qvCat').textContent   = card.dataset.category || 'Fresh Produce';
-    document.getElementById('qvDesc').textContent  = card.dataset.desc || 'Fresh, naturally grown product. Perfect for everyday cooking.';
-    document.getElementById('qvQty').value = 1;
-
-    const badge  = card.querySelector('.sale-badge');
-    const discEl = document.getElementById('qvDiscount');
-    discEl.textContent   = badge ? badge.textContent.trim() : '';
-    discEl.style.display = badge ? 'inline-block' : 'none';
-
-    backdrop.classList.add('active');
-    document.body.style.overflow = 'hidden';
-  });
+  // Active product track
+  let _qvProductId   = null;
+  let _qvProductType = 'product';
+  let _qvMaxStock    = 99;
 
   function closeQV() {
     backdrop.classList.remove('active');
     document.body.style.overflow = '';
   }
 
+  // Eye button click — modal open + data set
+  document.addEventListener('click', function (e) {
+    const eyeBtn = e.target.closest('button[title="Quick View"]');
+    if (!eyeBtn) return;
+    e.preventDefault();
+    e.stopPropagation();
+
+    const card = eyeBtn.closest('.product-card, .hotProduct-card, .slider-product, .featured-card');
+    if (!card) return;
+
+    // Product ID & Type
+    _qvProductId   = eyeBtn.dataset.id   || card.dataset.productId   || null;
+    _qvProductType = eyeBtn.dataset.type || card.dataset.productType || 'product';
+    _qvMaxStock    = parseInt(eyeBtn.dataset.stock || card.dataset.stock || 99);
+
+    // Modal fill
+    document.getElementById('qvImg').src           = card.querySelector('.product-img-wrap img')?.src || '';
+    document.getElementById('qvTitle').textContent = card.querySelector('.product-name')?.textContent.trim() || '';
+    document.getElementById('qvPrice').textContent = card.querySelector('.price-main')?.textContent.trim() || '';
+    document.getElementById('qvOld').textContent   = card.querySelector('.price-old')?.textContent.trim() || '';
+    document.getElementById('qvCat').textContent   = card.dataset.category || 'Fresh Produce';
+    document.getElementById('qvDesc').textContent  = card.dataset.desc || 'Fresh, naturally grown product. Perfect for everyday cooking.';
+    document.getElementById('qvQty').value         = 1;
+    document.getElementById('qvQty').max           = _qvMaxStock;
+
+    const badge  = card.querySelector('.sale-badge');
+    const discEl = document.getElementById('qvDiscount');
+    discEl.textContent   = badge ? badge.textContent.trim() : '';
+    discEl.style.display = badge ? 'inline-block' : 'none';
+
+   // Stock check
+const buyBtn  = document.querySelector('.qv-btn-buy');
+const cartBtn = document.querySelector('.qv-btn-cart');
+
+if (_qvMaxStock <= 0) {
+  buyBtn.disabled   = true;
+  buyBtn.innerHTML  = '<i class="bi bi-slash-circle me-1"></i> Out of Stock';
+  buyBtn.style.background   = '#fee2e2';
+  buyBtn.style.color        = '#ef4444';
+  buyBtn.style.cursor       = 'not-allowed';
+  buyBtn.style.border       = '1px solid #fca5a5';
+  buyBtn.style.pointerEvents = 'none';
+
+  cartBtn.disabled  = true;
+  cartBtn.innerHTML = '<i class="bi bi-slash-circle me-1"></i> Out of Stock';
+  cartBtn.style.background   = '#fee2e2';
+  cartBtn.style.color        = '#ef4444';
+  cartBtn.style.cursor       = 'not-allowed';
+  cartBtn.style.border       = '1px solid #fca5a5';
+  cartBtn.style.pointerEvents = 'none';
+} else {
+  buyBtn.disabled   = false;
+  buyBtn.innerHTML  = '<i class="bi bi-lightning-charge-fill"></i> Buy Now';
+  buyBtn.removeAttribute('style');
+
+  cartBtn.disabled  = false;
+  cartBtn.innerHTML = '<i class="bi bi-cart3"></i> Add to Cart';
+  cartBtn.removeAttribute('style');
+}
+
+backdrop.classList.add('active');
+document.body.style.overflow = 'hidden';
+  });
+
+  // Close handlers
   document.getElementById('qvClose').addEventListener('click', closeQV);
   backdrop.addEventListener('click', (e) => { if (e.target === backdrop) closeQV(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeQV(); });
 
+  // Qty +/-
   document.getElementById('qvMinus').addEventListener('click', () => {
     const input = document.getElementById('qvQty');
     if (+input.value > 1) input.value = +input.value - 1;
   });
   document.getElementById('qvPlus').addEventListener('click', () => {
     const input = document.getElementById('qvQty');
-    if (+input.value < 99) input.value = +input.value + 1;
+    if (+input.value < _qvMaxStock) input.value = +input.value + 1;
   });
+
+  // Add to Cart
+  document.querySelector('.qv-btn-cart').addEventListener('click', function () {
+    if (document.querySelector('.qv-btn-cart').disabled) return;
+    if (!_qvProductId) { alert('Product not found'); return; }
+    const qty = parseInt(document.getElementById('qvQty').value) || 1;
+
+    fetch('/cart/add', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+      },
+      body: JSON.stringify({ product_id: _qvProductId, quantity: qty, product_type: _qvProductType })
+    })
+    .then(r => r.json())
+    .then(res => {
+      if (res.success) {
+        closeQV();
+        if (typeof updateCartCount === 'function') updateCartCount();
+        if (typeof showToast === 'function') showToast('success', res.message);
+        setTimeout(() => {
+          $('#cpDrawer').addClass('active');
+          $('#cpOverlay').addClass('active');
+          $('body').css('overflow', 'hidden');
+          if (typeof window.loadCartItems === 'function') window.loadCartItems();
+        }, 300);
+      } else {
+        if (typeof showToast === 'function') showToast('error', res.message || 'Failed');
+      }
+    })
+    .catch(() => {
+      if (typeof showToast === 'function') showToast('error', 'Please login first');
+      setTimeout(() => { window.location.href = '/signin'; }, 1500);
+    });
+  });
+
+  // Buy Now
+document.querySelector('.qv-btn-buy').addEventListener('click', function () {
+  if (document.querySelector('.qv-btn-buy').disabled) return;
+  if (!_qvProductId) { alert('Product not found'); return; }
+  
+  if (_qvMaxStock <= 0) {
+    if (typeof showToast === 'function') {
+      showToast('error', '⚠️ This product is currently out of stock!');
+    }
+    return;
+  }
+
+  const qty = parseInt(document.getElementById('qvQty').value) || 1;
+  const checkoutBase = window.checkoutUrl || '/checkout';
+  window.location.href = `${checkoutBase}?source=buynow&type=${_qvProductType}&id=${_qvProductId}&qty=${qty}`;
+});
+
 })();
 
 /* ─────────────────────────────────────────────────────
@@ -551,18 +650,13 @@ $(document).ready(function () {
 
 /* ─────────────────────────────────────────────────────
    8. CARD CLICK → Single Product Page
-   ✅ FIX: button বা তার ভেতরের <i> তে click করলে
-   redirect হবে না — শুধু card body তে হবে
 ───────────────────────────────────────────────────── */
 document.addEventListener('click', function (e) {
 
-  // ✅ KEY FIX: click যদি যেকোনো button বা <a> বা
-  // তার child (<i>, <span>) এর মধ্যে হয় — skip করো
   if (e.target.closest('button') || e.target.closest('a') || e.target.closest('.qty-selector') || e.target.closest('.qty-input')) {
     return;
   }
 
-  // Card এর clickable area চেক করো
   const clickable = e.target.closest(
     '.product-img-wrap, .card-body-custom, .product-name, ' +
     '.price-main, .stars, .featured-img-wrap, .featured-info'
@@ -574,12 +668,12 @@ document.addEventListener('click', function (e) {
   );
   if (!card) return;
 
-  const btn = card.querySelector('[data-product-id]');
+ const btn = card.querySelector('[data-product-slug]') || card.querySelector('[data-product-id]');
   if (!btn) return;
 
-  const productId   = btn.dataset.productId;
+  const productSlug = btn.dataset.productSlug || btn.dataset.productId;
   const productType = btn.dataset.productType || 'product';
-  if (!productId) return;
+  if (!productSlug) return;
 
-  window.location.href = `/product/${productId}?type=${productType}`;
+  window.location.href = `/product/${productSlug}?type=${productType}`;
 });

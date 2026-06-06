@@ -44,7 +44,7 @@ class HotDealController extends Controller
 
         $hotdeal = HotDeal::create([
             'name'                => $request->name,
-            'slug'                => Str::slug($request->name) . '-' . time(),
+            'slug'                => Str::slug($request->name),
             'description'         => $request->description,
             'price'               => $request->price,
             'old_price'           => $request->old_price ?: null,
@@ -105,7 +105,7 @@ class HotDealController extends Controller
 
         $hotdeal->update([
             'name'                => $request->name,
-            'slug'                => Str::slug($request->name) . '-' . $hotdeal->id,
+            'slug'                => Str::slug($request->name),
             'description'         => $request->description,
             'price'               => $request->price,
             'old_price'           => $request->old_price ?: null,
