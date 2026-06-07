@@ -26,19 +26,20 @@ class AdminAuthController extends Controller
         'password' => 'required',
     ]);
 
-    if (Auth::attempt([
-        'email'    => $request->email,
-        'password' => $request->password,
-    ], $request->boolean('remember'))) {
+   if (Auth::attempt([
+    'email'    => $request->email,
+    'password' => $request->password,
+], $request->boolean('remember'))) {
 
-        $user = Auth::user();
+    $user = Auth::user();
+   
 
         // super_admin, admin, staff — সবাই ঢুকতে পারবে
-        if (in_array($user->role, ['super_admin', 'admin', 'staff'])) {
-            $request->session()->regenerate();
-            return redirect()->route('backend.dashboard');
-        }
-
+      if (in_array($user->role, ['super_admin', 'admin', 'staff'])) {
+    // Auth::guard('web')->logout();  ← এই line টা comment বা delete করো
+    $request->session()->regenerate();
+    return redirect()->route('backend.dashboard');
+}
         // admin role না হলে logout করে ফেরত
         Auth::logout();
     }

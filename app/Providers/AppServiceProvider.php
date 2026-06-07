@@ -15,10 +15,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrap();
 
-        if (config('app.env') === 'production') {
-            \URL::forceScheme('https');
-        }
-
         View::composer('frontend.*', function ($view) {
             $view->with('navCategories', Category::where('is_active', true)
                 ->orderBy('sort_order')

@@ -1,12 +1,13 @@
 @extends('frontend.layouts.app')
 
 @section('title', 'Contact Us')
-@section('meta_description', 'BanglaBazar এর সাথে যোগাযোগ করুন। আমাদের office Chattogram এ। Phone: 01616-239896 | Email: banglabazar247bd@gmail.com')
+@section('meta_description', 'BanglaBazar এর সাথে যোগাযোগ করুন। আমাদের office Chattogram এ। Phone: +8801740604565 | Email: banglabazar247bd@gmail.com')
 @section('og_title', 'Contact Us | BanglaBazar24/7')
 @section('og_description', 'Get in touch with BanglaBazar. We are here to help you 24/7.')
 
 @push('styles')
   <link rel="stylesheet" href="{{ asset('frontend/css/contact.css') }}">
+  <link rel="stylesheet" href="{{ asset('frontend/css/responsive.css') }}">
 @endpush
 
 @section('content')
@@ -40,7 +41,7 @@
       <div class="info-item">
         <div class="icon-circle"><i class="bi bi-telephone-fill"></i></div>
         <div class="info-text">
-          01616-239896<br>
+          +8801740604565<br>
           (164) 333-0487
         </div>
       </div>
@@ -146,6 +147,6 @@
 @endsection
 
 @push('scripts')
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
-  <script src="{{ asset('frontend/js/contact.js') }}" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="{{ asset('frontend/js/contact.js') }}"></script>
 @endpush

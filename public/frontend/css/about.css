@@ -46,7 +46,7 @@
  
     .about-title {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(2rem, 4vw, 3rem);
+      /* font-size: clamp(2rem, 4vw, 3rem); */
       font-weight: 700;
       color: var(--text-dark);
       line-height: 1.2;
@@ -242,7 +242,7 @@
  
   .about-title {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(32px, 4vw, 52px);
+    /* font-size: clamp(32px, 4vw, 52px); */
     font-weight: 800;
     line-height: 1.13;
     color: var(--text-dark);
@@ -403,7 +403,7 @@
     .about-content { padding-left: 0; padding-top: 0; }
     .features-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
     .feature-card { padding: 14px 12px; }
-    .about-title { font-size: 30px; }
+    .about-title { font-size: 25px; }
   }
  
   @media (max-width: 480px) {

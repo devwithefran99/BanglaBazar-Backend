@@ -192,6 +192,6 @@
 @endsection
 
 @push('scripts')
-  <script src="{{ asset('frontend/js/wishlist.js') }}" defer></script>
-  <script src="{{ asset('frontend/js/pages.js') }}" defer></script>
+  <script src="{{ asset('frontend/js/wishlist.js') }}" ></script>
+  <script src="{{ asset('frontend/js/pages.js') }}" ></script>
 @endpush

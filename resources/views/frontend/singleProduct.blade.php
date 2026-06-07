@@ -9,7 +9,7 @@
     $inWishlist = Auth::check()
                     ? Auth::user()->wishlists->pluck('product_id')->contains($item->id)
                     : false;
-    $checkoutUrl = url('/checkout') . '?source=buynow&type=' . $type . '&id=' . $item->id . '&qty=1';
+ $checkoutUrl = url('/checkout') . '?source=buynow&type=' . $type . '&id=' . $item->id . '&qty=1';
 @endphp
 
 @section('title', $item->name ?? 'Product')
@@ -420,8 +420,8 @@
 @endsection
 
 @push('scripts')
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" defer></script>
-  <script src="{{ asset('frontend/js/pages.js') }}" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" ></script>
+  <script src="{{ asset('frontend/js/pages.js') }}" ></script>
   <script>
   const PD_MAX_STOCK  = {{ $item->stock ?? 1 }};
   const PD_PRODUCT_ID = {{ $item->id ?? 0 }};

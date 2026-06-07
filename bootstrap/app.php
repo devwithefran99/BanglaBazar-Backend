@@ -16,13 +16,16 @@ return Application::configure(basePath: dirname(__DIR__))
         }
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->redirectGuestsTo(fn() => route('signin'));
+    $middleware->redirectGuestsTo(fn() => route('signin'));
 
-        $middleware->alias([
-            'is_admin' => \App\Http\Middleware\IsAdmin::class,
-            'role'     => \App\Http\Middleware\CheckRole::class,  // ← এটা যোগ হয়েছে
-        ]);
-    })
+    $middleware->alias([
+        'is_admin' => \App\Http\Middleware\IsAdmin::class,
+        'role'     => \App\Http\Middleware\CheckRole::class,
+    ]);
+
+    // Admin routes এর জন্য আলাদা session
+   
+})
     ->withExceptions(function (Exceptions $exceptions): void {
 
         $exceptions->render(function (
@@ -33,11 +36,17 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         // 403 for unauthorized admin access
-        $exceptions->render(function (
-            \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException $e,
-            \Illuminate\Http\Request $request
-        ) {
-            return redirect()->route('signin')
-                ->with('error', 'You do not have permission to access that page.');
-        });
+      $exceptions->render(function (
+    \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException $e,
+    \Illuminate\Http\Request $request
+) {
+    $adminPaths = ['login', 'dashboard', 'dashboard/*', 'admin/*', 'orders', 'orders/*', 'messages', 'messages/*', 'profile', 'profile/*', 'notifications/*'];
+    
+    if ($request->is($adminPaths)) {
+        return redirect()->route('login')
+            ->with('error', 'You do not have permission to access that page.');
+    }
+    return redirect()->route('signin')
+        ->with('error', 'You do not have permission to access that page.');
+});
     })->create();

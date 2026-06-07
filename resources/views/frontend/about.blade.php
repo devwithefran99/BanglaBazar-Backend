@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
   <link rel="stylesheet" href="{{ asset('frontend/css/about.css') }}">
+  <link rel="stylesheet" href="{{ asset('frontend/css/responsive.css') }}">
 @endpush
 
 @section('content')
@@ -25,14 +26,24 @@
     <div class="container">
       <div class="about-row-wrapper">
         <div class="row g-0 flex-column-reverse flex-md-row">
-          <div class="col-md-6 about-text-col">
-            <p class="about-eyebrow">Our Story</p>
-            <h2 class="about-title">100% Trusted<br/><span>Organic</span> Food Store</h2>
-            <p class="about-body">
-              Morbi porttitor ligula in nunc varius sagittis. Proin dui nisi, laoreet ut tempor ac, cursus vitae eros. Cras quis ultricies elit. Proin ac lectus arcu. Maecenas aliquet vel tellus at accumsan. Donec a eros non massa vulputate ornare. Vivamus ornare commodo ante, at commodo felis congue vitae.
-            </p>
-            <a href="{{ route('contact') }}" class="about-cta">Learn More</a>
-          </div>
+         <div class="col-md-6 about-text-col">
+    <p class="about-eyebrow">আমাদের গল্প</p>
+
+    <h4 class="about-title">
+        ১০০% বিশ্বস্ত<br/>
+        <span>প্রাকৃতিক ও নিরাপদ</span> খাদ্যের বিশ্বস্ত ঠিকানা
+    </h4>
+
+    <p class="about-body">
+        বাংলাবাজার ২৪/৭-এ আমরা বিশ্বাস করি বিশুদ্ধ ও নিরাপদ খাদ্যই সুস্থ জীবনের ভিত্তি।
+        বাংলাদেশের বিভিন্ন অঞ্চল থেকে বাছাইকৃত মানসম্মত পণ্য সংগ্রহ করে আমরা
+        সরাসরি আপনার কাছে পৌঁছে দিই। সততা, গুণগত মান এবং গ্রাহক সন্তুষ্টিকে
+        সর্বোচ্চ গুরুত্ব দিয়ে আমরা প্রতিদিন কাজ করে যাচ্ছি, যাতে আপনার পরিবার
+        পায় নিরাপদ ও নির্ভরযোগ্য খাদ্যসামগ্রী।
+    </p>
+
+    <a href="{{ route('contact') }}" class="about-cta">আরও জানুন</a>
+</div>
           <div class="col-md-6 about-img-col">
             <img class="slide-img active" src="https://images.unsplash.com/photo-1540420773420-3366772f4999?w=900&q=80" alt="Fresh vegetables from the farm"/>
             <img class="slide-img" src="{{ asset('frontend/image/trusted1.png') }}" alt="Organic farmer in the field"/>
@@ -53,9 +64,9 @@
     <div class="container">
       <div class="cta-row">
         <div class="cta-text">
-          <h3>Ready to Eat Fresher, Live Healthier?</h3>
-          <p>Join 25,000+ families who switched to organic. First box ships free.</p>
-        </div>
+    <h3>আজই বেছে নিন নিরাপদ ও বিশুদ্ধ খাবার</h3>
+    <p>৭১২+ সন্তুষ্ট পরিবারের বিশ্বস্ত পছন্দ বাংলাবাজার ২৪/৭।</p>
+</div>
         <div class="cta-btns">
           <a href="{{ route('shop') }}" class="btn-primary-g">
             Shop Now
@@ -83,10 +94,17 @@
         <div class="col-lg-6">
           <div class="about-content">
             <span class="section-tag">about</span>
-            <h2 class="about-title">We Delivered, You <br><span>Enjoy Your Order.</span></h2>
-            <p class="about-desc">
-              Pellentesque a ante vulputate leo porttitor luctus sed eget eros. Nulla et rhoncus neque. Duis non diam eget est luctus tincidunt a a mi. Nulla eu eros consequat tortor tincidunt feugiat.
-            </p>
+            <h2 class="about-title">
+    আমরা পৌঁছে দিই,<br>
+    আপনি উপভোগ করুন <span><br>বিশুদ্ধ খাদ্য</span>। 
+</h2>
+
+<p class="about-desc">
+    বাংলাবাজার ২৪/৭ আপনার জন্য দেশের বিভিন্ন অঞ্চল থেকে সংগ্রহ করা
+    নিরাপদ, মানসম্মত ও তাজা খাদ্যপণ্য সরাসরি ঘরে পৌঁছে দেয়।
+    আমাদের লক্ষ্য হলো বিশ্বস্ত সেবা, সঠিক মান এবং আপনার পরিবারের
+    সুস্থ জীবন নিশ্চিত করা।
+</p>
             <div class="features-grid">
               <div class="feature-card">
                 <div class="feature-icon"><img src="{{ asset('frontend/gif/organic.gif') }}" alt=""></div>
@@ -214,6 +232,6 @@
 @endsection
 
 @push('scripts')
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" defer></script>
-  <script src="{{ asset('frontend/js/about.js') }} " defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+  <script src="{{ asset('frontend/js/about.js') }} "></script>
 @endpush

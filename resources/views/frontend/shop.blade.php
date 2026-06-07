@@ -6,7 +6,8 @@
 @section('og_description', 'Fresh groceries at the best price. Shop now at BanglaBazar.')
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset('frontend/css/shop.css') }}">
+<link rel="stylesheet" href="{{ asset('frontend/css/shop.css') }}">
+<link rel="stylesheet" href="{{ asset('frontend/css/responsive.css') }}">
 @endpush
 
 @section('content')
@@ -406,7 +407,7 @@
 </script>
 
 @push('scripts')
-  <script src="https://cdn.jsdelivr.net/npm/mixitup@3/dist/mixitup.min.js" defer></script>
-  <script src="{{ asset('frontend/js/wishlist.js') }}" defer></script>
-  <script src="{{ asset('frontend/js/shop.js') }}" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/mixitup@3/dist/mixitup.min.js" ></script>
+  <script src="{{ asset('frontend/js/wishlist.js') }}" ></script>
+  <script src="{{ asset('frontend/js/shop.js') }}" ></script>
 @endpush

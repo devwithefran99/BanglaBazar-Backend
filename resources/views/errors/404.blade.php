@@ -121,7 +121,7 @@
           </li>
         </ul>
         <div class="nav-phone d-none d-lg-flex">
-          <i class="bi bi-telephone-fill"></i> 01616-239896
+          <i class="bi bi-telephone-fill"></i> +8801740604565
         </div>
       </div>
     </div>
@@ -173,7 +173,7 @@
         </a>
       </nav>
       <div class="offcanvas-phone">
-        <i class="bi bi-telephone-fill"></i> 01616-239896
+        <i class="bi bi-telephone-fill"></i> +8801740604565
       </div>
     </div>
   </div>
@@ -300,7 +300,7 @@
           সুস্থ জীবনযাপনের জন্য বিশুদ্ধ ও প্রাকৃতিক পণ্যের কোনো বিকল্প নেই। তাই আমরা প্রতিটি পণ্য যত্নসহকারে নির্বাচন করে আপনার দোরগোড়ায় পৌঁছে দেওয়ার অঙ্গীকার করি।
         </p>
         <div class="footer-contact d-flex align-items-center flex-wrap">
-          <a href="tel:01616239896">01616-239896</a>
+          <a href="tel:01616239896">+8801740604565</a>
           
           <a href="mailto:banglabazar247bd@gmail.com">banglabazar247bd@gmail.com</a>
         </div>

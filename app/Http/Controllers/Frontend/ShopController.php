@@ -44,8 +44,8 @@ if ($searchText) {
 $perPage = 12;
 $page    = $request->query('page', 1);
 
-$allProductItems = $productsQuery->get()->map(fn($p) => ['type' => 'product', 'item' => $p]);
-$allHotDealItems = $hotDealsQuery->get()->map(fn($h) => ['type' => 'hotdeal', 'item' => $h]);
+$allProductItems = collect($productsQuery->get()->map(fn($p) => ['type' => 'product', 'item' => $p])->all());
+$allHotDealItems = collect($hotDealsQuery->get()->map(fn($h) => ['type' => 'hotdeal', 'item' => $h])->all());
 
 // Sort order query
 $sortBy = $request->query('sort', 'latest');
@@ -61,13 +61,12 @@ $offset   = ($page - 1) * $perPage;
 $sliced   = $merged->slice($offset, $perPage)->values();
 
 $paginatedItems = new \Illuminate\Pagination\LengthAwarePaginator(
-    $sliced,
+    $sliced->values()->all(),
     $total,
     $perPage,
     $page,
     ['path' => $request->url(), 'query' => $request->except('page')]
 );
-
 // Blade এর জন্য আলাদা করো
 $products = $sliced->where('type', 'product')->pluck('item');
 $hotDeals = $sliced->where('type', 'hotdeal')->pluck('item');

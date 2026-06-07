@@ -27,11 +27,14 @@
   <section id="userDash" class="udb-wrap">
     <div class="container">
 
-      {{-- Greeting --}}
-      <div class="udb-greeting">
-        <h2 id="udbGreeting">Good evening, {{ Auth::user()->name }} ✦</h2>
-        <p>Here's a summary of your account activity</p>
-      </div>
+     {{-- Greeting --}}
+<div class="udb-greeting">
+  <h2 id="udbGreeting">Hello, {{ Auth::user()->name }} ✦</h2>
+  <p>Here's a summary of your account activity</p>
+</div>
+
+{{-- Hidden: pass user name to JS --}}
+<span id="udbUserName" style="display:none">{{ Auth::user()->name }}</span>
 
       {{-- Stats --}}
       <div class="udb-stats">
@@ -389,7 +392,7 @@
 @endsection
 
 @push('scripts')
-  <script src="{{ asset('frontend/js/userDashboard.js') }}" defer></script>
+  <script src="{{ asset('frontend/js/userDashboard.js') }}" ></script>
   <script>
   const PROFILE_UPDATE_URL = "{{ route('profile.update') }}";
   const ADDRESS_UPDATE_URL = "{{ route('address.update') }}";
