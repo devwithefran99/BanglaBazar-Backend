@@ -26,8 +26,8 @@ class ShopController extends Controller
     {
         $selectedCategory = $request->query('category', 'all');
 
-        $productsQuery = Product::where('is_active', true)->latest();
-        $hotDealsQuery = HotDeal::where('is_active', true)->latest();
+        $productsQuery = Product::where('is_active', true)->with('variations')->latest();
+$hotDealsQuery = HotDeal::where('is_active', true)->with('variations')->latest();
 
         // Category filter
         if ($selectedCategory !== 'all') {

@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\HotDeal;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\ProductVariation;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OrderMail;
 use Illuminate\Support\Facades\Auth;
@@ -28,15 +29,22 @@ class CheckoutController extends Controller
             $product = $type === 'hotdeal' ? HotDeal::find($id) : Product::find($id);
 
             if ($product) {
-                $qty = min($qty, $product->stock);
+                $variationId = $request->query('variation_id');
+                $variation   = $variationId ? ProductVariation::find($variationId) : null;
+                $price       = $variation ? $variation->price : $product->price;
+                $stockLimit  = $variation ? $variation->stock : $product->stock;
+                $qty         = min($qty, $stockLimit);
+
                 $items->push([
-                    'product'      => $product,
-                    'product_type' => $type,
-                    'quantity'     => $qty,
-                    'price'        => $product->price,
-                    'subtotal'     => $product->price * $qty,
+                    'product'         => $product,
+                    'product_type'    => $type,
+                    'variation_id'    => $variation?->id,
+                    'variation_label' => $variation?->label,
+                    'quantity'        => $qty,
+                    'price'           => $price,
+                    'subtotal'        => $price * $qty,
                 ]);
-                $total = $product->price * $qty;
+                $total = $price * $qty;
             }
 
         } elseif ($source === 'wishlist') {
@@ -46,11 +54,13 @@ class CheckoutController extends Controller
                     $product = $wish->product;
                     if (!$product || $product->stock <= 0) continue;
                     $items->push([
-                        'product'      => $product,
-                        'product_type' => $wish->product_type ?? 'product',
-                        'quantity'     => 1,
-                        'price'        => $product->price,
-                        'subtotal'     => $product->price,
+                        'product'         => $product,
+                        'product_type'    => $wish->product_type ?? 'product',
+                        'variation_id'    => null,
+                        'variation_label' => null,
+                        'quantity'        => 1,
+                        'price'           => $product->price,
+                        'subtotal'        => $product->price,
                     ]);
                     $total += $product->price;
                 }
@@ -58,21 +68,24 @@ class CheckoutController extends Controller
 
         } else {
             if (Auth::check()) {
-                $cartItems = Auth::user()->carts()->get();
+                $cartItems = Auth::user()->carts()->with('variation')->get();
                 foreach ($cartItems as $cartItem) {
                     $product = $cartItem->product_type === 'hotdeal'
                         ? HotDeal::find($cartItem->product_id)
                         : Product::find($cartItem->product_id);
                     if (!$product) continue;
-                    $qty = $cartItem->quantity;
+                    $qty   = $cartItem->quantity;
+                    $price = $cartItem->variation ? $cartItem->variation->price : $product->price;
                     $items->push([
-                        'product'      => $product,
-                        'product_type' => $cartItem->product_type,
-                        'quantity'     => $qty,
-                        'price'        => $product->price,
-                        'subtotal'     => $product->price * $qty,
+                        'product'         => $product,
+                        'product_type'    => $cartItem->product_type,
+                        'variation_id'    => $cartItem->variation_id,
+                        'variation_label' => $cartItem->variation?->label,
+                        'quantity'        => $qty,
+                        'price'           => $price,
+                        'subtotal'        => $price * $qty,
                     ]);
-                    $total += $product->price * $qty;
+                    $total += $price * $qty;
                 }
             }
         }
@@ -106,47 +119,37 @@ class CheckoutController extends Controller
 
         DB::beginTransaction();
         try {
-            // ── Subtotal calculate ──
-           $subtotal = 0;
-foreach ($orderData as $item) {
-    $product = $item['product_type'] === 'hotdeal'
-        ? \App\Models\HotDeal::find($item['product_id'])
-        : \App\Models\Product::find($item['product_id']);
-    if (!$product) continue;
-    $subtotal += $product->price * $item['quantity'];
-}
+            // ── Subtotal calculate — item price ব্যবহার করো (variation price সহ সঠিক) ──
+            $subtotal = 0;
+            foreach ($orderData as $item) {
+                $subtotal += $item['price'] * $item['quantity'];
+            }
 
             // ── Coupon discount apply ──
-$discount   = 0;
-$couponCode = null;
+            $discount   = 0;
+            $couponCode = null;
 
-if ($request->filled('coupon_code')) {
-    $coupon = \App\Models\Coupon::where('code', strtoupper($request->coupon_code))
-                                ->first();
+            if ($request->filled('coupon_code')) {
+                $coupon = \App\Models\Coupon::where('code', strtoupper($request->coupon_code))
+                                            ->first();
+                if ($coupon) {
+                    $result = $coupon->isValid($subtotal);
+                    if ($result['valid']) {
+                        $discount   = $coupon->calculateDiscount($subtotal);
+                        $couponCode = $coupon->code;
+                    }
+                }
+            }
 
-    if ($coupon) {
-        $result = $coupon->isValid($subtotal);
-
-        if ($result['valid']) {
-            // ✅ Server এ নিজে calculate করছে — client এর value ignore
-            $discount   = $coupon->calculateDiscount($subtotal);
-            $couponCode = $coupon->code;
-        }
-        // invalid হলে discount = 0, silently skip
-    }
-}
-
-$total = max(0, $subtotal - $discount);
+            $total = max(0, $subtotal - $discount);
 
             $order = Order::create([
-                'user_id'         => Auth::id(),
-                'total_price'     => $total,
-                  'discount_amount' => $discount,
-                'coupon_code'     => $couponCode,
-                'status'          => 'pending',
-                'payment_method'  => $request->payment,
-
-                // ✅ Billing info from form (NOT from logged-in user)
+                'user_id'            => Auth::id(),
+                'total_price'        => $total,
+                'discount_amount'    => $discount,
+                'coupon_code'        => $couponCode,
+                'status'             => 'pending',
+                'payment_method'     => $request->payment,
                 'billing_first_name' => $request->first_name,
                 'billing_last_name'  => $request->last_name,
                 'billing_email'      => $request->email,
@@ -155,64 +158,77 @@ $total = max(0, $subtotal - $discount);
                 'billing_state'      => $request->state,
                 'billing_zip'        => $request->zip,
                 'billing_address'    => $request->address,
-
-                // legacy columns — same data, for backward compatibility
-                'address' => $request->first_name . ' ' . $request->last_name
-                             . ', ' . $request->address
-                             . ', ' . $request->state
-                             . ', ' . $request->country
-                             . ' - ' . $request->zip,
-                'phone'   => $request->phone,
+                'address'            => $request->first_name . ' ' . $request->last_name
+                                       . ', ' . $request->address
+                                       . ', ' . $request->state
+                                       . ', ' . $request->country
+                                       . ' - ' . $request->zip,
+                'phone'              => $request->phone,
             ]);
 
             foreach ($orderData as $item) {
 
-                // ✅ lockForUpdate() — transaction এর মধ্যে row lock করো
-                // এতে দুজন একসাথে order দিলেও একজনকে অপেক্ষা করতে হবে
+                // lockForUpdate() — race condition prevent
                 if ($item['product_type'] === 'hotdeal') {
                     $product = HotDeal::lockForUpdate()->find($item['product_id']);
                 } else {
                     $product = Product::lockForUpdate()->find($item['product_id']);
                 }
 
-                // ✅ Product exist করে কিনা check
                 if (!$product) {
                     throw new \Exception("'{$item['product_name']}' আর পাওয়া যাচ্ছে না।");
                 }
 
-                // ✅ Stock পর্যাপ্ত আছে কিনা check — race condition এর আসল fix এখানে
-                if ($product->stock < $item['quantity']) {
-                    throw new \Exception(
-                        "'{$product->name}' এর পর্যাপ্ত stock নেই। " .
-                        "চাহিদা: {$item['quantity']}, বর্তমান stock: {$product->stock}"
-                    );
+                // Stock check — variation থাকলে variation stock, না হলে product stock
+                if (!empty($item['variation_id'])) {
+                    $variation = ProductVariation::lockForUpdate()->find($item['variation_id']);
+                    if (!$variation || $variation->stock < $item['quantity']) {
+                        throw new \Exception(
+                            "'{$product->name} ({$item['variation_label']})' এর পর্যাপ্ত stock নেই।"
+                        );
+                    }
+                } else {
+                    if ($product->stock < $item['quantity']) {
+                        throw new \Exception(
+                            "'{$product->name}' এর পর্যাপ্ত stock নেই। " .
+                            "চাহিদা: {$item['quantity']}, বর্তমান stock: {$product->stock}"
+                        );
+                    }
                 }
 
-                // ✅ OrderItem তৈরি
+                // OrderItem তৈরি
                 OrderItem::create([
-                    'order_id'     => $order->id,
-                    'product_id'   => $item['product_id'],
-                    'product_type' => $item['product_type'],
-                    'product_name' => $item['product_name'],
-                    'quantity'     => $item['quantity'],
-                    'price'        => $item['price'],
+                    'order_id'        => $order->id,
+                    'product_id'      => $item['product_id'],
+                    'product_type'    => $item['product_type'],
+                    'product_name'    => $item['product_name'],
+                    'variation_id'    => $item['variation_id'] ?? null,
+                    'variation_label' => $item['variation_label'] ?? null,
+                    'quantity'        => $item['quantity'],
+                    'price'           => $item['price'],
                 ]);
 
-                // ✅ Main product/hotdeal table stock decrement — check এর পরেই
+                // Variation stock decrement (variation থাকলে)
+                if (!empty($item['variation_id'])) {
+                    ProductVariation::where('id', $item['variation_id'])
+                        ->decrement('stock', $item['quantity']);
+                }
+
+                // Main product stock decrement (একবারই)
                 $product->decrement('stock', $item['quantity']);
 
-                // ✅ Linked Inventory table stock ও decrement করো
+                // Linked Inventory stock sync
                 \App\Models\Inventory::where('product_id', $item['product_id'])
-                        ->where('product_type', $item['product_type'])
-                        ->lockForUpdate()
-                        ->first()
-                        ?->decrement('stock', $item['quantity']);
+                    ->where('product_type', $item['product_type'])
+                    ->lockForUpdate()
+                    ->first()
+                    ?->decrement('stock', $item['quantity']);
             }
 
-            // ── Coupon use count বাড়াও ──
+            // Coupon use count বাড়াও
             if ($couponCode) {
-    \App\Models\Coupon::where('code', $couponCode)->increment('used_count');
-}
+                \App\Models\Coupon::where('code', $couponCode)->increment('used_count');
+            }
 
             if ($source === 'cart' && Auth::check()) {
                 Auth::user()->carts()->delete();
@@ -231,12 +247,13 @@ $total = max(0, $subtotal - $discount);
             return redirect()->route('order.success', ['id' => $order->id]);
 
         } catch (\Exception $e) {
-           \Log::error('Checkout error: ' . $e->getMessage());
-return back()->with('error', 'Something went wrong. Please try again.');
+            DB::rollBack();
+            \Log::error('Checkout error: ' . $e->getMessage());
+            return back()->with('error', 'Something went wrong. Please try again.');
         }
     }
 
-    // ✅ Order Success Page
+    // Order Success Page
     public function success($id)
     {
         $order = Order::with('items')->findOrFail($id);
@@ -249,22 +266,21 @@ return back()->with('error', 'Something went wrong. Please try again.');
     }
 
     public function buyNow(Request $request)
-{
-    $request->validate([
-        'product_id'   => 'required|integer',
-        'product_type' => 'required|string',
-        'quantity'     => 'required|integer|min:1',
-    ]);
+    {
+        $request->validate([
+            'product_id'   => 'required|integer',
+            'product_type' => 'required|string',
+            'quantity'     => 'required|integer|min:1',
+        ]);
 
-    // Session এ buy now data store করো
-    session([
-        'buy_now' => [
-            'product_id'   => $request->product_id,
-            'product_type' => $request->product_type,
-            'quantity'     => $request->quantity,
-        ]
-    ]);
+        session([
+            'buy_now' => [
+                'product_id'   => $request->product_id,
+                'product_type' => $request->product_type,
+                'quantity'     => $request->quantity,
+            ]
+        ]);
 
-    return response()->json(['success' => true]);
-}
+        return response()->json(['success' => true]);
+    }
 }

@@ -7,7 +7,8 @@ class OrderItem extends Model
 {
     protected $fillable = [
         'order_id', 'product_id', 'product_type',
-        'product_name', 'quantity', 'price'
+        'product_name', 'variation_id', 'variation_label',
+        'quantity', 'price',
     ];
 
     public function order()
@@ -18,5 +19,18 @@ class OrderItem extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function productModel()
+    {
+        if ($this->product_type === 'hotdeal') {
+            return $this->belongsTo(HotDeal::class, 'product_id');
+        }
+        return $this->belongsTo(Product::class, 'product_id');
+    }
+
+    public function variation()
+    {
+        return $this->belongsTo(ProductVariation::class, 'variation_id');
     }
 }

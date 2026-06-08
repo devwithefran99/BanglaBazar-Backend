@@ -47,7 +47,12 @@
                                          onerror="this.src='{{ asset('backend/assets/img/avatars/1.png') }}'">
                                     <div>
                                         <div class="fw-semibold">{{ $item->product_name }}</div>
-                                        <small class="text-muted">ID: #{{ $item->product_id }}</small>
+                                        @if($item->variation_label)
+                                            <span class="badge bg-label-info mt-1" style="font-size:11px;">
+                                                <i class="bx bx-purchase-tag me-1"></i>{{ $item->variation_label }}
+                                            </span>
+                                        @endif
+                                        <small class="text-muted d-block">ID: #{{ $item->product_id }}</small>
                                     </div>
                                 </div>
                             </td>

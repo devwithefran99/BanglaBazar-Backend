@@ -159,6 +159,16 @@
               <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
               <i class="bi bi-star empty"></i>
             </div>
+            @if($product->variations->count() > 0)
+            <div class="var-badges">
+              @foreach($product->variations->take(3) as $var)
+                <span class="var-badge">{{ $var->label }}</span>
+              @endforeach
+              @if($product->variations->count() > 3)
+                <span class="var-badge var-more">+{{ $product->variations->count() - 3 }}</span>
+              @endif
+            </div>
+            @endif
             <div class="price-row">
               <div class="price-block">
                 <span class="price-main">৳{{ number_format($product->price, 2) }}</span>
@@ -357,6 +367,16 @@
                     <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
                     <i class="bi bi-star empty"></i>
                   </div>
+                  @if($deal->variations->count() > 0)
+                  <div class="var-badges">
+                    @foreach($deal->variations->take(3) as $var)
+                      <span class="var-badge">{{ $var->label }}</span>
+                    @endforeach
+                    @if($deal->variations->count() > 3)
+                      <span class="var-badge var-more">+{{ $deal->variations->count() - 3 }}</span>
+                    @endif
+                  </div>
+                  @endif
                   <div class="price-row">
                     <div class="price-block">
                       <span class="price-main">৳{{ number_format($deal->price, 2) }}</span>

@@ -1441,6 +1441,30 @@ body{
 }
 /* end add to cart  */
 
+/* ── Variation Badges on Product Cards ── */
+.var-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 5px 0 4px;
+}
+.var-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 20px;
+  background: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+.var-badge.var-more {
+  background: #f1f5f9;
+  color: #64748b;
+  border-color: #e2e8f0;
+}
+
     /* footer css starts */
     /* ── Main Footer ── */
     .main-footer {

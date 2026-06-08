@@ -25,6 +25,7 @@
 
   {{-- CSS --}}
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
@@ -226,8 +227,11 @@
           সুস্থ জীবনযাপনের জন্য বিশুদ্ধ ও প্রাকৃতিক পণ্যের কোনো বিকল্প নেই। তাই আমরা প্রতিটি পণ্য যত্নসহকারে নির্বাচন করে আপনার দোরগোড়ায় পৌঁছে দেওয়ার অঙ্গীকার করি।
         </p>
         <div class="footer-contact d-flex align-items-center flex-wrap">
-          <a href="tel:01616239896">+8801740604565</a>
+          <div class="flex-column">
+            <a href="tel:01616239896">+8801740604565</a>
+          <br>
           <a href="mailto:banglabazar247bd@gmail.com">banglabazar247bd@gmail.com</a>
+          </div>
         </div>
       </div>
       <div class="col-lg-2 col-md-3 col-6 anim-fade-up d2">

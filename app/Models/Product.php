@@ -8,7 +8,7 @@ class Product extends Model
     protected $fillable = [
         'name', 'slug', 'description', 'price', 'old_price',
         'stock', 'low_stock_threshold', 'image',
-        'category', 'is_featured', 'is_active','supplier_id'
+        'category', 'is_featured', 'is_active', 'supplier_id'
     ];
 
     public function hasSale(): bool
@@ -26,35 +26,55 @@ class Product extends Model
     {
         return $this->stock <= $this->low_stock_threshold;
     }
+
     public function supplier()
     {
         return $this->belongsTo(\App\Models\Supplier::class);
     }
-    // ── Reviews ──────────────────────────────────────────
 
-public function reviews()
-{
-    return $this->hasMany(Review::class, 'product_id')
-                ->where('product_type', 'product');
-}
+    // ── Variations ──
+    public function variations()
+    {
+        return $this->hasMany(\App\Models\ProductVariation::class, 'product_id')
+                    ->where('product_type', 'product')
+                    ->orderBy('id');
+    }
 
-public function approvedReviews()
-{
-    return $this->hasMany(Review::class, 'product_id')
-                ->where('product_type', 'product')
-                ->where('status', 'approved');
-}
+    public function defaultVariation()
+    {
+        return $this->hasOne(\App\Models\ProductVariation::class, 'product_id')
+                    ->where('product_type', 'product')
+                    ->where('is_default', true)
+                    ->orderBy('id');
+    }
 
-// average rating — review না থাকলে null
-public function getAvgRatingAttribute(): ?float
-{
-    $avg = $this->approvedReviews()->avg('rating');
-    return $avg ? round($avg, 1) : null;
-}
+    public function hasVariations(): bool
+    {
+        return $this->variations()->exists();
+    }
 
-// total approved review count
-public function getReviewCountAttribute(): int
-{
-    return $this->approvedReviews()->count();
-}
+    // ── Reviews ──
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'product_id')
+                    ->where('product_type', 'product');
+    }
+
+    public function approvedReviews()
+    {
+        return $this->hasMany(Review::class, 'product_id')
+                    ->where('product_type', 'product')
+                    ->where('status', 'approved');
+    }
+
+    public function getAvgRatingAttribute(): ?float
+    {
+        $avg = $this->approvedReviews()->avg('rating');
+        return $avg ? round($avg, 1) : null;
+    }
+
+    public function getReviewCountAttribute(): int
+    {
+        return $this->approvedReviews()->count();
+    }
 }

@@ -5,25 +5,38 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\HotDeal;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
-    public function show(Request $request, string $slug)
+    public function show($slug)
     {
-        $type = $request->query('type', 'product');
+        // Product হলে variations সহ load করো
+        $product = Product::where('slug', $slug)
+                          ->where('is_active', true)
+                          ->with('variations')
+                          ->first();
 
-        if ($type === 'hotdeal') {
-            $item = HotDeal::where('slug', $slug)->firstOrFail();
-        } else {
-            $item = Product::where('slug', $slug)->firstOrFail();
+        if ($product) {
+            return view('frontend.singleProduct', [
+                'item' => $product,
+                'type' => 'product',
+            ]);
         }
 
-        if (Auth::check()) {
-            Auth::user()->load('wishlists');
+       // HotDeal check
+$hotDeal = HotDeal::where('slug', $slug)
+                  ->where('is_active', true)
+                  ->with('variations')  
+                  ->first();
+
+        if ($hotDeal) {
+            return view('frontend.singleProduct', [
+                'item' => $hotDeal,
+                'type' => 'hotdeal',
+            ]);
         }
 
-        return view('frontend.singleProduct', compact('item', 'type'));
+        abort(404);
     }
 }

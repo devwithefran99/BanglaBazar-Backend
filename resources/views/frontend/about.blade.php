@@ -147,23 +147,28 @@
     <div class="blob blob-2"></div>
     <div class="container position-relative">
       <div class="text-center mb-2">
-        <span class="wcu-tag">Why Choose Us</span>
-        <h2 class="wcu-title mx-auto" style="max-width:620px">
-          Nature's Best, Delivered<br><span>Fresh To Your Door</span>
-        </h2>
-        <p class="wcu-sub mx-auto">
-          We source directly from certified organic farms — no middlemen, no chemicals, just pure goodness picked at peak freshness and delivered within 24 hours.
-        </p>
-      </div>
+    <span class="wcu-tag">কেন বাংলাবাজার ২৪/৭</span>
+
+    <h4 class="wcu-title mx-auto" style="max-width:620px">
+        বাংলার ঐতিহ্যবাহী খাদ্য,<br>
+        <span>বিশ্বাসের সাথে আপনার ঘরে</span>
+    </h4>
+
+    <p class="wcu-sub mx-auto">
+        দেশের বিভিন্ন প্রান্তের খাঁটি ও নিরাপদ খাদ্যপণ্য এক প্ল্যাটফর্মে এনে
+        আমরা সহজে আপনার কাছে পৌঁছে দিই। গুণগত মান, সততা এবং গ্রাহক সন্তুষ্টিই
+        আমাদের প্রধান অঙ্গীকার।
+    </p>
+</div>
       <div class="stats-row">
         <div class="stat-card">
           <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
-          <div class="stat-num"><span class="counter" data-target="25000">0</span><span class="plus">+</span></div>
+          <div class="stat-num"><span class="counter" data-target="1367">0</span><span class="plus">+</span></div>
           <div class="stat-label">Happy Customers</div>
         </div>
         <div class="stat-card">
           <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
-          <div class="stat-num"><span class="counter" data-target="150">0</span><span class="plus">+</span></div>
+          <div class="stat-num"><span class="counter" data-target="23">0</span><span class="plus">+</span></div>
           <div class="stat-label">Partner Farms</div>
         </div>
         <div class="stat-card">

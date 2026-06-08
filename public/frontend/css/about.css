@@ -468,7 +468,7 @@
 }
 .wcu-title{
   font-family:'Playfair Display',serif;
-  font-size:clamp(30px,4.5vw,52px);
+  font-size:33px;
   font-weight:800;line-height:1.12;
   color:var(--text-dark);margin-bottom:18px;
   opacity:0;animation:fadeUp .65s .2s forwards;

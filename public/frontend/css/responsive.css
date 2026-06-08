@@ -63,3 +63,50 @@
     font-size: 22px;
   }
 }
+
+/* FAQ image responsive */
+.faq-section .col-lg-6 img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  display: block;
+}
+
+@media (max-width: 992px) {
+  .section-title {
+    font-size: 2rem;
+  }
+  .image-placeholder {
+    height: 420px;
+  }
+}
+
+@media (max-width: 768px) {
+  .faq-section {
+    padding: 40px 0;
+     overflow-x: hidden;
+  }
+  .section-title {
+    font-size: 1.6rem;
+    margin-bottom: 24px;
+  }
+  .image-placeholder {
+    height: 280px;
+  }
+  .faq-section .row {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  /* Image column mobile এ উপরে দেখাবে না, নিচে ঠিকমতো fit হবে */
+  .faq-section .col-lg-6:last-child {
+    margin-top: 20px;
+  }
+  .accordion-button {
+    padding: 15px 18px;
+    font-size: 0.92rem;
+  }
+  .faq-answer {
+    padding: 0 18px 18px;
+    font-size: 0.9rem;
+  }
+}

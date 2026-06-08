@@ -9,7 +9,20 @@
     $inWishlist = Auth::check()
                     ? Auth::user()->wishlists->pluck('product_id')->contains($item->id)
                     : false;
- $checkoutUrl = url('/checkout') . '?source=buynow&type=' . $type . '&id=' . $item->id . '&qty=1';
+
+    // Variation support
+   $variations = $item->variations()->orderBy('id')->get();
+    $hasVariations  = $variations->count() > 0;
+    $defaultVar     = $hasVariations ? ($variations->where('is_default', true)->first() ?? $variations->first()) : null;
+
+    // Default price/stock (variation থাকলে default variation এর, না হলে product এর)
+    $initPrice      = $hasVariations ? $defaultVar->price    : $item->price;
+    $initOldPrice   = $hasVariations ? $defaultVar->old_price : $item->old_price;
+    $initStock      = $hasVariations ? $defaultVar->stock    : $item->stock;
+    $initVariationId = $hasVariations ? $defaultVar->id      : null;
+
+    $checkoutUrl = url('/checkout') . '?source=buynow&type=' . $type . '&id=' . $item->id . '&qty=1'
+                 . ($hasVariations ? '&variation_id=' . $initVariationId : '');
 @endphp
 
 @section('title', $item->name ?? 'Product')
@@ -45,10 +58,11 @@
 
             {{-- PRODUCT INFO --}}
             <div class="pd-info">
-                @if($item->stock > 0)
-                    <span class="pd-badge">In Stock</span>
+                {{-- Stock badge --}}
+                @if($initStock > 0)
+                    <span class="pd-badge" id="pdStockBadge">In Stock</span>
                 @else
-                    <span class="pd-badge" style="background:#fee2e2;color:#dc2626;">Out of Stock</span>
+                    <span class="pd-badge" id="pdStockBadge" style="background:#fee2e2;color:#dc2626;">Out of Stock</span>
                 @endif
                 @if($type === 'hotdeal')
                     <span class="pd-badge" style="background:#fff7ed;color:#ea580c;margin-left:6px;">🔥 Hot Deal</span>
@@ -71,17 +85,62 @@
                     <span class="pd-sku">• SKU: {{ str_pad($item->id, 6, '0', STR_PAD_LEFT) }}</span>
                 </div>
 
+                {{-- PRICE ROW --}}
                 <div class="pd-price-row">
-                    @if($hasSale)
-                        <span class="pd-price-old">৳{{ number_format($item->old_price, 2) }}</span>
-                        <span class="pd-price-now" id="pdPriceNow">৳{{ number_format($item->price, 2) }}</span>
-                        <span class="pd-discount">{{ $salePct }}% Off</span>
+                    @if($initOldPrice && $initOldPrice > $initPrice)
+                        <span class="pd-price-old" id="pdPriceOld">৳{{ number_format($initOldPrice, 2) }}</span>
+                        <span class="pd-price-now" id="pdPriceNow">৳{{ number_format($initPrice, 2) }}</span>
+                        <span class="pd-discount" id="pdDiscount">
+                            {{ round((($initOldPrice - $initPrice) / $initOldPrice) * 100) }}% Off
+                        </span>
                     @else
-                        <span class="pd-price-now" id="pdPriceNow">৳{{ number_format($item->price, 2) }}</span>
+                        <span class="pd-price-old" id="pdPriceOld" style="display:none"></span>
+                        <span class="pd-price-now" id="pdPriceNow">৳{{ number_format($initPrice, 2) }}</span>
+                        <span class="pd-discount" id="pdDiscount" style="display:none"></span>
                     @endif
                 </div>
 
                 <div class="pd-divider"></div>
+
+                {{-- ══ VARIATION SELECTOR ══ --}}
+                @if($hasVariations)
+                <div class="pd-variations" style="margin-bottom:16px;">
+                    <div style="font-size:13px;font-weight:600;color:#374151;margin-bottom:8px;">
+                        পরিমাণ / Size বেছে নিন:
+                    </div>
+                    <div style="display:flex;flex-wrap:wrap;gap:8px;" id="variationBtns">
+                        @foreach($variations as $var)
+                        <button type="button"
+                                class="pd-var-btn {{ $var->is_default ? 'pd-var-active' : '' }}"
+                                data-id="{{ $var->id }}"
+                                data-price="{{ $var->price }}"
+                                data-old-price="{{ $var->old_price ?? '' }}"
+                                data-stock="{{ $var->stock }}"
+                                data-label="{{ $var->label }}"
+                                onclick="selectVariation(this)"
+                                style="
+                                    padding:7px 16px;
+                                    border-radius:8px;
+                                    border:2px solid {{ $var->is_default ? '#16a34a' : '#e2e8f0' }};
+                                    background:{{ $var->is_default ? '#f0fdf4' : '#fff' }};
+                                    color:{{ $var->is_default ? '#16a34a' : '#374151' }};
+                                    font-size:13px;
+                                    font-weight:600;
+                                    cursor:pointer;
+                                    transition:all .2s;
+                                    line-height:1.3;
+                                    text-align:center;
+                                ">
+                            {{ $var->label }}
+                            <br>
+                            <span style="font-size:12px;font-weight:700;">৳{{ number_format($var->price, 0) }}</span>
+                        </button>
+                        @endforeach
+                    </div>
+                    <input type="hidden" id="selectedVariationId" value="{{ $initVariationId }}">
+                </div>
+                @endif
+                {{-- ══ END VARIATION ══ --}}
 
                 <p class="pd-desc">
                     @if($item->description)
@@ -98,11 +157,11 @@
                         <span class="pd-qty-num" id="qtyNum">1</span>
                         <button class="pd-qty-btn" onclick="changeQty(1)">+</button>
                     </div>
-                    <span style="font-size:12px;color:#94a3b8;margin-left:8px;">({{ $item->stock }} available)</span>
+                    <span style="font-size:12px;color:#94a3b8;margin-left:8px;" id="pdStockCount">({{ $initStock }} available)</span>
                 </div>
 
                 <div class="pd-btns">
-                    @if($item->stock > 0)
+                    @if($initStock > 0)
                         <button class="pd-btn-cart" id="pdCartBtn"
                                 data-product-id="{{ $item->id }}"
                                 data-product-type="{{ $type }}"
@@ -120,7 +179,8 @@
                             Buy Now
                         </a>
                     @else
-                        <button class="pd-btn-cart" disabled style="opacity:.5;cursor:not-allowed;">Out of Stock</button>
+                        <button class="pd-btn-cart" id="pdCartBtn" disabled style="opacity:.5;cursor:not-allowed;">Out of Stock</button>
+                        <button class="pd-btn-buy" id="pdBuyNowBtn" disabled style="opacity:.5;cursor:not-allowed;">Buy Now</button>
                     @endif
 
                     <button class="wishlist-btn"
@@ -184,7 +244,11 @@
                         <ul class="desc-list">
                             <li>Premium quality — carefully selected</li>
                             <li>Fast and safe delivery</li>
-                            <li>{{ $item->stock }} units currently available</li>
+                            @if($hasVariations)
+                                <li>{{ $variations->count() }}টি size/weight option available</li>
+                            @else
+                                <li>{{ $item->stock }} units currently available</li>
+                            @endif
                             @if($hasSale)
                             <li>Save ৳{{ $saleAmt }} — {{ $salePct }}% discount applied</li>
                             @endif
@@ -226,17 +290,31 @@
                     @if($item->category)
                     <tr><td>Category</td><td><span class="info-chip green">{{ ucfirst($item->category) }}</span></td></tr>
                     @endif
+                    @if($hasVariations)
+                    <tr>
+                        <td>Available Sizes</td>
+                        <td>
+                            @foreach($variations as $var)
+                                <span style="background:#f0fdf4;color:#16a34a;padding:2px 8px;border-radius:20px;
+                                             font-size:12px;font-weight:600;margin-right:4px;">
+                                    {{ $var->label }} — ৳{{ number_format($var->price, 0) }}
+                                </span>
+                            @endforeach
+                        </td>
+                    </tr>
+                    @else
                     <tr><td>Sale Price</td><td style="color:#22c55e;font-weight:700;">৳{{ number_format($item->price, 2) }}</td></tr>
                     @if($hasSale)
                     <tr><td>Original Price</td><td style="text-decoration:line-through;color:#94a3b8;">৳{{ number_format($item->old_price, 2) }}</td></tr>
                     <tr><td>You Save</td><td style="color:#ef4444;font-weight:700;">৳{{ $saleAmt }} ({{ $salePct }}% OFF)</td></tr>
                     @endif
+                    @endif
                     <tr>
                         <td>Stock Status</td>
                         <td>
-                            @if($item->stock > 0)
+                            @if($initStock > 0)
                                 <span class="info-stock">Available</span>
-                                <span class="info-count">({{ $item->stock }} units)</span>
+                                <span class="info-count">({{ $initStock }} units)</span>
                             @else
                                 <span style="color:#ef4444;font-weight:600;">Out of Stock</span>
                             @endif
@@ -420,14 +498,20 @@
 @endsection
 
 @push('scripts')
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" ></script>
-  <script src="{{ asset('frontend/js/pages.js') }}" ></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+  <script src="{{ asset('frontend/js/pages.js') }}"></script>
   <script>
-  const PD_MAX_STOCK  = {{ $item->stock ?? 1 }};
+  // ── Base data ──
   const PD_PRODUCT_ID = {{ $item->id ?? 0 }};
   const PD_TYPE       = '{{ $type }}';
-  const PD_BASE_PRICE = {{ $item->price ?? 0 }};
+  const HAS_VARIATIONS = {{ $hasVariations ? 'true' : 'false' }};
 
+  // Mutable state — variation select করলে এগুলো update হবে
+  let PD_MAX_STOCK  = {{ $initStock }};
+  let PD_BASE_PRICE = {{ $initPrice }};
+  let PD_VARIATION_ID = {{ $initVariationId ?? 'null' }};
+
+  // ── Toast ──
   function showPdToast(msg, type = 'success') {
       const toast = document.getElementById('toast');
       if (!toast) return;
@@ -438,45 +522,124 @@
       toast._t = setTimeout(() => toast.classList.remove('show'), 2800);
   }
 
-  function changeQty(delta) {
-      const el = document.getElementById('qtyNum');
-      let qty  = parseInt(el.textContent) + delta;
-      if (qty > PD_MAX_STOCK) {
-          showPdToast('⚠️ স্টকে মাত্র ' + PD_MAX_STOCK + 'টি পণ্য আছে!', 'error');
-          qty = PD_MAX_STOCK;
-      }
-      qty = Math.max(1, qty);
-      el.textContent = qty;
-      updatePrice(qty);
-      updateBuyNow(qty);
-  }
-
-  function updatePrice(qty) {
-      const priceEl = document.getElementById('pdPriceNow');
-      if (priceEl) priceEl.textContent = '৳' + (PD_BASE_PRICE * qty).toFixed(2);
-  }
+  // ── Qty ──
+ function changeQty(delta) {
+    const el  = document.getElementById('qtyNum');
+    let qty   = parseInt(el.textContent) + delta;
+    if (qty > PD_MAX_STOCK) {
+        showPdToast('⚠️ স্টকে মাত্র ' + PD_MAX_STOCK + 'টি পণ্য আছে!', 'error');
+        qty = PD_MAX_STOCK;
+    }
+    qty = Math.max(1, qty);
+    el.textContent = qty;
+    // ✅ এই line টা add করো
+    const priceEl = document.getElementById('pdPriceNow');
+    if (priceEl) priceEl.textContent = '৳' + (PD_BASE_PRICE * qty).toLocaleString('en-IN');
+    updateBuyNow(qty);
+}
 
   function updateBuyNow(qty) {
       const buyBtn = document.getElementById('pdBuyNowBtn');
-      if (buyBtn) buyBtn.href = '/checkout?source=buynow&type=' + PD_TYPE + '&id=' + PD_PRODUCT_ID + '&qty=' + qty;
+      if (!buyBtn) return;
+      let url = '/checkout?source=buynow&type=' + PD_TYPE + '&id=' + PD_PRODUCT_ID + '&qty=' + qty;
+      if (PD_VARIATION_ID) url += '&variation_id=' + PD_VARIATION_ID;
+      buyBtn.href = url;
   }
 
+  // ── Variation select ──
+  function selectVariation(btn) {
+      // সব buttons reset
+      document.querySelectorAll('.pd-var-btn').forEach(b => {
+          b.style.borderColor  = '#e2e8f0';
+          b.style.background   = '#fff';
+          b.style.color        = '#374151';
+      });
+      // selected highlight
+      btn.style.borderColor = '#16a34a';
+      btn.style.background  = '#f0fdf4';
+      btn.style.color       = '#16a34a';
+
+      const price    = parseFloat(btn.dataset.price);
+      const oldPrice = btn.dataset.oldPrice ? parseFloat(btn.dataset.oldPrice) : null;
+      const stock    = parseInt(btn.dataset.stock);
+      const varId    = parseInt(btn.dataset.id);
+
+      // State update
+      PD_BASE_PRICE   = price;
+      PD_MAX_STOCK    = stock;
+      PD_VARIATION_ID = varId;
+      document.getElementById('selectedVariationId').value = varId;
+
+      // Price update
+      const priceEl    = document.getElementById('pdPriceNow');
+      const oldPriceEl = document.getElementById('pdPriceOld');
+      const discEl     = document.getElementById('pdDiscount');
+
+      priceEl.textContent = '৳' + price.toLocaleString('en-IN');
+
+      if (oldPrice && oldPrice > price) {
+          const pct = Math.round(((oldPrice - price) / oldPrice) * 100);
+          oldPriceEl.textContent = '৳' + oldPrice.toLocaleString('en-IN');
+          oldPriceEl.style.display = '';
+          discEl.textContent = pct + '% Off';
+          discEl.style.display = '';
+      } else {
+          oldPriceEl.style.display = 'none';
+          discEl.style.display = 'none';
+      }
+
+      // Stock badge + count
+      const stockBadge = document.getElementById('pdStockBadge');
+      const stockCount = document.getElementById('pdStockCount');
+      const cartBtn    = document.getElementById('pdCartBtn');
+      const buyBtn     = document.getElementById('pdBuyNowBtn');
+
+      if (stock > 0) {
+          stockBadge.textContent   = 'In Stock';
+          stockBadge.style.background = '';
+          stockBadge.style.color      = '';
+          if (stockCount) stockCount.textContent = '(' + stock + ' available)';
+          if (cartBtn) { cartBtn.disabled = false; cartBtn.style.opacity = '1'; cartBtn.style.cursor = 'pointer'; }
+          if (buyBtn)  { buyBtn.style.opacity = '1'; buyBtn.style.pointerEvents = ''; }
+      } else {
+          stockBadge.textContent      = 'Out of Stock';
+          stockBadge.style.background = '#fee2e2';
+          stockBadge.style.color      = '#dc2626';
+          if (stockCount) stockCount.textContent = '(0 available)';
+          if (cartBtn) { cartBtn.disabled = true; cartBtn.style.opacity = '.5'; cartBtn.style.cursor = 'not-allowed'; }
+          if (buyBtn)  { buyBtn.style.opacity = '.5'; buyBtn.style.pointerEvents = 'none'; }
+      }
+
+      // qty reset to 1
+      document.getElementById('qtyNum').textContent = 1;
+      updateBuyNow(1);
+  }
+
+  // ── Add to Cart ──
   function pdAddToCart() {
       const qty = parseInt(document.getElementById('qtyNum').textContent) || 1;
       if (PD_MAX_STOCK <= 0) { showPdToast('❌ পণ্যটি স্টকে নেই!', 'error'); return; }
+
+      const payload = {
+          product_id:   PD_PRODUCT_ID,
+          product_type: PD_TYPE,
+          quantity:     qty,
+      };
+      if (PD_VARIATION_ID) payload.variation_id = PD_VARIATION_ID;
+
       fetch('{{ route("cart.add") }}', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
               'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
           },
-          body: JSON.stringify({ product_id: PD_PRODUCT_ID, product_type: PD_TYPE, quantity: qty }),
+          body: JSON.stringify(payload),
       })
       .then(r => r.json())
       .then(data => {
           if (data.success) {
               const badge = document.getElementById('cartCount');
-              if (badge) badge.textContent = data.cart_count ?? (parseInt(badge.textContent) + 1);
+              if (badge) badge.textContent = data.cart_count ?? (parseInt(badge.textContent || '0') + 1);
               showPdToast('✅ Cart এ যোগ হয়েছে!');
           } else {
               showPdToast('❌ ' + (data.message || 'Failed to add'), 'error');
@@ -485,12 +648,14 @@
       .catch(() => showPdToast('⚠️ Please login first.', 'error'));
   }
 
+  // ── Image switch ──
   function switchMain(thumb, src) {
       document.getElementById('mainImg').src = src;
       document.querySelectorAll('.pd-thumb').forEach(t => t.classList.remove('active'));
       thumb.classList.add('active');
   }
 
+  // ── Tab switch ──
   function switchTab(id, btn) {
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -498,6 +663,7 @@
       btn.classList.add('active');
   }
 
+  // ── Reviews ──
   (function () {
       const PRODUCT_ID   = {{ $item->id }};
       const PRODUCT_TYPE = '{{ $type }}';

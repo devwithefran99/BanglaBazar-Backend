@@ -14,17 +14,20 @@ class HomeController extends Controller
     public function index()
     {
         $popularProducts = Product::where('is_active', true)
+                                  ->with('variations')
                                   ->latest()
                                   ->take(10)
                                   ->get();
 
         $featureProducts = Product::where('is_featured', true)
                                   ->where('is_active', true)
+                                  ->with('variations')
                                   ->latest()
                                   ->take(12)
                                   ->get();
 
         $hotDeals = HotDeal::where('is_active', true)
+                           ->with('variations')
                            ->where(function($q) {
                                $q->whereNull('deal_ends_at')
                                  ->orWhere('deal_ends_at', '>', now());
