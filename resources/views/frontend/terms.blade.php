@@ -115,7 +115,7 @@
           <div class="tc-card-head"><div class="tc-icon"><i class="bi bi-arrow-return-left"></i></div><h3>6. Returns &amp; Refunds</h3></div>
           <p><strong>Return eligibility:</strong></p>
           <ul>
-            <li>Return requests must be submitted within <strong>7 days</strong> of delivery.</li>
+            <li>Return requests must be submitted within <strong>24 hours</strong> of delivery.</li>
             <li>Items must be <strong>unused, in original condition</strong>, and in their original packaging.</li>
             <li><strong>Perishable goods</strong> are not eligible for return unless they arrived damaged or incorrect.</li>
           </ul>

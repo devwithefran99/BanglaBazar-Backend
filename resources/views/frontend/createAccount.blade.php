@@ -15,7 +15,7 @@
       <div id="register-card">
 
         <div id="register-brand">
-          <img src="{{ asset('frontend/image/Logo.png') }}" alt="BanglaBazar">
+           <img src="{{ asset('frontend/image/ourlogo.png') }}" width="120px" alt="BanglaBazar Logo">
         </div>
 
         <div id="register-heading">

@@ -516,6 +516,112 @@
   </div>
 </section>
 
+
+{{-- ═══════════════════════════════════════════════
+     YouTube Section — home.blade.php এ paste করো
+     ════════════════════════════════════════════════
+     👉 $ytVideoId    → তোমার YouTube Video ID
+     👉 $ytChannelUrl → তোমার Channel URL
+═══════════════════════════════════════════════ --}}
+
+@php
+    $ytVideoId    = 'Je5AVa_RZaA';
+    $ytChannelUrl = 'https://www.youtube.com/@Banglabazar247';
+    $ytThumb      = 'https://img.youtube.com/vi/' . $ytVideoId . '/maxresdefault.jpg';
+@endphp
+
+<section class="yt-section">
+  <div class="container">
+    <div class="yt-inner">
+
+      {{-- ── বাম পাশ: Content ── --}}
+      <div class="yt-content">
+
+        <div class="yt-badge">
+          <span class="yt-badge-dot"></span>
+          আমাদের YouTube চ্যানেল
+        </div>
+
+        <h2>আমাদের YouTube চ্যানেলে স্বাগতম!</h2>
+
+        <p>
+          প্রতিদিনের খাবারের মাধ্যমে অজান্তেই আমরা নানা রোগের দিকে এগিয়ে যাচ্ছি।
+          তাই এখনই সচেতন হওয়ার সময়। খাবার কেনার আগে এর উৎস, মান ও নিরাপত্তা
+          সম্পর্কে নিশ্চিত হোন। নিজের এবং পরিবারের সুস্বাস্থ্যের জন্য নিরাপদ,
+          বিশুদ্ধ ও ভেজালমুক্ত খাদ্য বেছে নিন।
+        </p>
+
+        <div class="yt-btns">
+          <button class="btn-yt-watch" onclick="ytPlay()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+            ভিডিও দেখুন
+          </button>
+          <a class="btn-yt-subscribe" href="{{ $ytChannelUrl }}" target="_blank" rel="noopener">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/>
+            </svg>
+            Subscribe করুন
+          </a>
+        </div>
+
+      </div>
+
+      {{-- ── ডান পাশ: Video ── --}}
+      <div class="yt-video-box" id="ytVideoBox" onclick="ytPlay()">
+
+        {{-- Thumbnail --}}
+        <div class="yt-thumbnail" id="ytThumbnail">
+          <img
+            src="{{ $ytThumb }}"
+            alt="YouTube ভিডিও থাম্বনেইল"
+            onerror="this.src='https://img.youtube.com/vi/{{ $ytVideoId }}/hqdefault.jpg'"
+          >
+          <div class="yt-thumb-overlay"></div>
+        </div>
+
+        {{-- Play Button (centered) --}}
+        <div class="yt-play-center" id="ytPlayCenter">
+          <div class="yt-play-btn">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+
+        <span class="yt-hover-label" id="ytHoverLabel">▶ ক্লিক করুন দেখতে</span>
+
+        {{-- iframe — click এ load হবে --}}
+        <div class="yt-iframe-wrap" id="ytIframeWrap">
+          <iframe id="ytIframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+@push('scripts')
+<script>
+(function () {
+  var VIDEO_ID  = '{{ $ytVideoId }}';
+  var playing   = false;
+
+  window.ytPlay = function () {
+    if (playing) return;
+    playing = true;
+
+    document.getElementById('ytIframe').src =
+      'https://www.youtube.com/embed/' + VIDEO_ID + '?autoplay=1&rel=0';
+
+    document.getElementById('ytIframeWrap').classList.add('playing');
+    document.getElementById('ytThumbnail').style.opacity  = '0';
+    document.getElementById('ytPlayCenter').style.display = 'none';
+    document.getElementById('ytHoverLabel').style.display = 'none';
+    document.getElementById('ytVideoBox').style.cursor    = 'default';
+  };
+})();
+</script>
+@endpush
+
 {{-- FEATURE PRODUCTS --}}
 <section id="featureProduct" class="new-trends-section">
   <div class="container">

@@ -677,3 +677,164 @@ document.addEventListener('click', function (e) {
 
   window.location.href = `/product/${productSlug}?type=${productType}`;
 });
+
+/* ─────────────────────────────────────────────────────
+   9. STICKY NAVBAR 
+───────────────────────────────────────────────────── */
+(function () {
+  const navbar = document.querySelector('.main-navbar');
+  if (!navbar) return;
+
+  const placeholder = document.createElement('div');
+  placeholder.id = 'navbar-placeholder';
+  placeholder.style.display = 'none';
+  navbar.parentNode.insertBefore(placeholder, navbar);
+
+  let isSticky = false;
+
+  window.addEventListener('scroll', function () {
+    const threshold = window.innerHeight * 0.20;
+
+    if (window.scrollY >= threshold && !isSticky) {
+      isSticky = true;
+      placeholder.style.height = navbar.offsetHeight + 'px';
+      placeholder.style.display = 'block';
+      navbar.classList.add('navbar-sticky');
+    } else if (window.scrollY < threshold && isSticky) {
+      isSticky = false;
+      placeholder.style.display = 'none';
+      navbar.classList.remove('navbar-sticky');
+    }
+  }, { passive: true });
+})();
+
+/* ── Bottom Nav Search ── */
+(function () {
+  const toggle = document.getElementById('bnSearchToggle');
+  const popup  = document.getElementById('bnSearchPopup');
+  const close  = document.getElementById('bnSearchClose');
+  const input  = document.getElementById('bnSearchInput');
+  if (!toggle) return;
+
+  toggle.addEventListener('click', function () {
+    const open = popup.style.display === 'block';
+    popup.style.display = open ? 'none' : 'block';
+    if (!open) input.focus();
+  });
+
+  close.addEventListener('click', function () {
+    popup.style.display = 'none';
+    input.value = '';
+    hideDropdown();
+  });
+
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && this.value.trim()) {
+      window.location.href = '/shop?search=' + encodeURIComponent(this.value.trim());
+    }
+    if (e.key === 'Escape') {
+      popup.style.display = 'none';
+      hideDropdown();
+    }
+  });
+
+  // Suggestion dropdown
+  const dropdown = document.createElement('div');
+  dropdown.className = 'search-dropdown';
+  input.parentNode.appendChild(dropdown);
+
+  let debounceTimer = null;
+  let currentQuery  = '';
+
+  input.addEventListener('input', function () {
+    const q = this.value.trim();
+    currentQuery = q;
+    clearTimeout(debounceTimer);
+    hideDropdown();
+    if (q.length < 3) return;
+
+    showLoading();
+    debounceTimer = setTimeout(() => {
+      if (currentQuery === q) fetchSuggestions(q);
+    }, 400);
+  });
+
+  function fetchSuggestions(q) {
+    fetch('/search/suggestions?q=' + encodeURIComponent(q))
+      .then(res => res.json())
+      .then(data => {
+        if (currentQuery !== q) return;
+        renderResults(data, q);
+      })
+      .catch(() => hideDropdown());
+  }
+
+  function showLoading() {
+    dropdown.innerHTML = `
+      <div class="search-dd-loading">
+        <div class="search-dd-skeleton"></div>
+        <div class="search-dd-skeleton"></div>
+        <div class="search-dd-skeleton short"></div>
+      </div>`;
+    dropdown.classList.add('active');
+  }
+
+  function renderResults(items, q) {
+    if (!items || items.length === 0) {
+      dropdown.innerHTML = `
+        <div class="search-dd-empty">
+          <i class="bi bi-search me-2"></i>
+          "<strong>${escHtml(q)}</strong>" কোনো পণ্য পাওয়া যায়নি।
+        </div>`;
+      dropdown.classList.add('active');
+      return;
+    }
+
+    const html = items.map(item => `
+      <div class="search-dd-item"
+           data-id="${item.id}"
+           data-type="${item.type}"
+           data-category="${item.category || ''}">
+        <img src="${item.image}" alt="${escHtml(item.name)}"
+             onerror="this.src='/frontend/image/Product Image (1).png'">
+        <div class="search-dd-info">
+          <div class="search-dd-name">${highlightMatch(item.name, q)}</div>
+          <div class="search-dd-meta">
+            <span class="search-dd-cat"><i class="bi bi-tag-fill me-1"></i>${escHtml(item.category || 'Product')}</span>
+            <span class="search-dd-price">${item.price}</span>
+          </div>
+        </div>
+        <i class="bi bi-arrow-right search-dd-arrow"></i>
+      </div>`).join('');
+
+    dropdown.innerHTML = html;
+    dropdown.classList.add('active');
+
+    dropdown.querySelectorAll('.search-dd-item').forEach(el => {
+      el.addEventListener('click', function () {
+        const id       = this.dataset.id;
+        const type     = this.dataset.type;
+        const category = this.dataset.category;
+        hideDropdown();
+        input.value = '';
+        popup.style.display = 'none';
+        const cat = category || 'all';
+        window.location.href = `/shop?category=${encodeURIComponent(cat)}&highlight=${id}&type=${type || 'product'}`;
+      });
+    });
+  }
+
+  function hideDropdown() {
+    dropdown.classList.remove('active');
+    dropdown.innerHTML = '';
+  }
+
+  function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function highlightMatch(text, q) {
+    const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return escHtml(text).replace(new RegExp('(' + escaped + ')', 'gi'), '<mark>$1</mark>');
+  }
+})();

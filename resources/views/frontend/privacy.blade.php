@@ -155,11 +155,11 @@
             <li><strong>Opt-out of marketing:</strong> Unsubscribe from promotional emails at any time.</li>
             <li><strong>Data portability:</strong> Request your data in a structured, machine-readable format.</li>
           </ul>
-          <p class="mt-3 mb-0">To exercise any of these rights, email us at <a href="mailto:privacy@banglabaazar.com" style="color:var(--green,#4caf50);font-weight:600;">privacy@banglabaazar.com</a> or use our <a href="{{ route('contact') }}" style="color:var(--green,#4caf50);font-weight:600;">Contact Page</a>. We will respond within <strong>7 business days</strong>.</p>
+          <p class="mt-3 mb-0">To exercise any of these rights, email us at <a href="mailto:banglabazar247bd@gmail.com" style="color:var(--green,#4caf50);font-weight:600;">banglabazar247bd@gmail.com</a> or use our <a href="{{ route('contact') }}" style="color:var(--green,#4caf50);font-weight:600;">Contact Page</a>. We will respond within <strong>7 business days</strong>.</p>
         </div>
         <div class="pp-card" id="pp-children">
           <div class="pp-card-head"><div class="pp-icon"><i class="bi bi-emoji-smile-fill"></i></div><h3>7. Children's Privacy</h3></div>
-          <p class="mb-0">Our platform is not intended for children under the age of 13. If you are a parent or guardian and believe your child has provided us with personal data, please contact us at <a href="mailto:privacy@banglabaazar.com" style="color:var(--green,#4caf50);font-weight:600;">privacy@banglabaazar.com</a>.</p>
+          <p class="mb-0">Our platform is not intended for children under the age of 13. If you are a parent or guardian and believe your child has provided us with personal data, please contact us at <a href="mailto:banglabazar247bd@gmail.com" style="color:var(--green,#4caf50);font-weight:600;">banglabazar247bd@gmail.com</a>.</p>
         </div>
         <div class="pp-card" id="pp-changes">
           <div class="pp-card-head"><div class="pp-icon"><i class="bi bi-arrow-repeat"></i></div><h3>8. Changes to This Policy</h3></div>

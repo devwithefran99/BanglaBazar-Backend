@@ -161,11 +161,11 @@
             </td>
 
             {{-- Wishlist count --}}
-            <td class="text-center">
-              <span class="badge bg-label-danger">
-                {{ $customer->wishlist_items_count ?? 0 }}
-              </span>
-            </td>
+           <td class="text-center">
+  <span class="badge bg-label-danger">
+    {{ $customer->wishlists_count }}
+  </span>
+</td>
 
             {{-- Joined --}}
             <td style="font-size:.85rem; color:#888">

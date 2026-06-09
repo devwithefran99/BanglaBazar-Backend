@@ -18,19 +18,32 @@ class CustomerController extends Controller
     }
 
     public function show(User $user)
-    {
-        // Admin কে কখনো customer হিসেবে দেখাবে না
-        if ($user->role === 'admin') {
-            return redirect()->route('backend.customers.index')
-                ->with('error', 'Admin users cannot be viewed here.');
-        }
-
-$user->load([
-    'orders.items.product',  // ✅ product পর্যন্ত load
-    'wishlists.product',     // ✅ wishlist এর product
-    'carts.product',         // ✅ cart এর product
-]);
-
-        return view('backend.customers.show', compact('user'));
+{
+    if ($user->role === 'admin') {
+        return redirect()->route('backend.customers.index')
+            ->with('error', 'Admin users cannot be viewed here.');
     }
+
+    // orders ঠিকঠাক আছে
+    $user->load(['orders.items.product']);
+
+    // carts & wishlists — product_type conditional, তাই manually resolve
+    $user->load(['carts', 'wishlists']);
+
+    foreach ($user->carts as $cart) {
+        $productModel = $cart->product_type === 'hotdeal'
+            ? \App\Models\HotDeal::find($cart->product_id)
+            : \App\Models\Product::find($cart->product_id);
+        $cart->setRelation('product', $productModel);
+    }
+
+    foreach ($user->wishlists as $wishlist) {
+        $productModel = $wishlist->product_type === 'hotdeal'
+            ? \App\Models\HotDeal::find($wishlist->product_id)
+            : \App\Models\Product::find($wishlist->product_id);
+        $wishlist->setRelation('product', $productModel);
+    }
+
+    return view('backend.customers.show', compact('user'));
+}
 }

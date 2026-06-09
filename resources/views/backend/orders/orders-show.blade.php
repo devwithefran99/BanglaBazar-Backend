@@ -93,7 +93,7 @@
 <div class="card mb-4">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0"><i class="bx bx-map me-2"></i>Billing & Delivery Info</h5>
-        <small class="text-muted">checkout form থেকে</small>
+        <small class="text-muted">checkout form </small>
     </div>
     <div class="card-body">
         <div class="row g-3">
@@ -130,6 +130,7 @@
                     @endif
                 </div>
             </div>
+   
             @if($order->payment_method)
             <div class="col-sm-6">
                 <label class="form-label text-muted small">Payment Method</label>
@@ -138,7 +139,17 @@
                 </div>
             </div>
             @endif
+
+             @if($order->notes)
+<div class="col-12">
+    <label class="form-label text-muted small">Order Notes</label>
+    <div class="fw-semibold text-warning">
+        <i class="bx bx-note me-1"></i>{{ $order->notes }}
+    </div>
+</div>
+@endif
         </div>
+            
     </div>
 </div>
 

@@ -22,6 +22,7 @@ class Order extends Model
         'billing_state',
         'billing_zip',
         'billing_address',
+        'notes',
 
         // legacy columns (still in use)
         'address',

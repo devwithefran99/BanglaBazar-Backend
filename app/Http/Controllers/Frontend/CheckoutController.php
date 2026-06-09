@@ -96,6 +96,7 @@ class CheckoutController extends Controller
 
     public function place(Request $request)
     {
+       
         $request->validate([
             'first_name' => 'required|string|max:100',
             'last_name'  => 'required|string|max:100',
@@ -158,6 +159,7 @@ class CheckoutController extends Controller
                 'billing_state'      => $request->state,
                 'billing_zip'        => $request->zip,
                 'billing_address'    => $request->address,
+                'notes'              => $request->notes,
                 'address'            => $request->first_name . ' ' . $request->last_name
                                        . ', ' . $request->address
                                        . ', ' . $request->state

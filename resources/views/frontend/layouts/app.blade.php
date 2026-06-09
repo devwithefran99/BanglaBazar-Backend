@@ -214,6 +214,41 @@
 </section>
 </header>
 
+{{-- BOTTOM NAV --}}
+<div id="bottomNav">
+  <button class="bn-search-float" id="bnSearchToggle">
+    <i class="bi bi-search"></i>
+  </button>
+
+  <div id="bnSearchPopup">
+    <div class="bn-search-inner">
+      <i class="bi bi-search"></i>
+      <input type="text" id="bnSearchInput" placeholder="Search products...">
+      <i class="bi bi-x-lg" id="bnSearchClose"></i>
+    </div>
+  </div>
+
+  <nav>
+    <a href="{{ route('home') }}" class="bn-btn {{ request()->routeIs('home') ? 'active' : '' }}">
+      <i class="bi bi-house-door-fill"></i>
+      <span>Home</span>
+    </a>
+    <a href="{{ route('shop') }}" class="bn-btn {{ request()->routeIs('shop') ? 'active' : '' }}">
+      <i class="bi bi-shop"></i>
+      <span>Shop</span>
+    </a>
+    <div class="bn-spacer"></div>
+    <a href="{{ route('about') }}" class="bn-btn {{ request()->routeIs('about') ? 'active' : '' }}">
+      <i class="bi bi-info-circle"></i>
+      <span>About</span>
+    </a>
+    <a href="{{ route('userdashboard') }}" class="bn-btn {{ request()->routeIs('userdashboard') ? 'active' : '' }}">
+      <i class="bi bi-person-circle"></i>
+      <span>Account</span>
+    </a>
+  </nav>
+</div>
+
 {{-- PAGE CONTENT --}}
 @yield('content')
 
@@ -278,7 +313,7 @@
   <div class="footer-bottom mt-4">
     <div class="container">
       <div class="row align-items-center anim-fade-in d6">
-        <div class="col-md-6 mySign">
+        <div class="col-md-6 mySign mb-5">
           <p>BanglaBazar24/7 eCommerce &copy; {{ date('Y') }}. All Rights Reserved
             <span>Powered By <a href="https://github.com/devwithefran99">devwithErfan</a></span>
           </p>
