@@ -3,7 +3,6 @@
    ============================================================ */
 $(document).ready(function () {
 
-  console.log('owl check:', typeof $.fn.owlCarousel, $('.testimonial-slider').length);
 
   $('.testimonial-slider').owlCarousel({
   loop: true,

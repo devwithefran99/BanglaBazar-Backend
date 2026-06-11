@@ -151,13 +151,16 @@ class CartController extends Controller
         }
     }
 
-    public function count()
-    {
-        try {
-            $count = Auth::user()->carts()->count();
-            return response()->json(['success' => true, 'data' => $count]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+   public function count()
+{
+    try {
+        if (!Auth::check()) {
+            return response()->json(['success' => true, 'data' => 0]);
         }
+        $count = Auth::user()->carts()->count();
+        return response()->json(['success' => true, 'data' => $count]);
+    } catch (\Exception $e) {
+        return response()->json(['success' => true, 'data' => 0]);
     }
+}
 }

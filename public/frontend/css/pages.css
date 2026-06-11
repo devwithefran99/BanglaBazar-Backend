@@ -2,6 +2,15 @@
 
     /* main wishlist css  */
   /* ── Header ── */
+
+  #shopBanner .shopBnr{
+    background-image: url(../image/faqBanner.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 500px;
+
+}
    /* ── Wishlist Header New Design ── */
    /* green glow blobs */
 

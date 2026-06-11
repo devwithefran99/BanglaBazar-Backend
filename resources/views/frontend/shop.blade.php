@@ -296,7 +296,7 @@
                     <i class="bi bi-hourglass-split text-success" style="font-size:3.5rem;"></i>
                     <h4 class="mt-3 fw-bold">Coming Soon!</h4>
                     <p class="text-muted mt-2">
-                      <strong>{{ ucfirst($selectedCategory) }}</strong> category-তে শীঘ্রই products আসছে 🚀
+                      <strong>{{ ucfirst($selectedCategory) }}</strong> category-তে শীঘ্রই products আসছে 
                     </p>
                     <a href="{{ route('shop') }}" class="btn btn-success mt-2 px-4">
                       <i class="bi bi-arrow-left me-1"></i> সব Products দেখুন

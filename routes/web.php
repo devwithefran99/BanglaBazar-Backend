@@ -17,8 +17,7 @@ use App\Http\Controllers\Frontend\ReturnRequestController;
 
 
 
-// ── Password Reset Routes ──────────────────────────
-Auth::routes(['register' => false, 'login' => false, 'logout' => false]);
+
 
 // ── Public Pages ──────────────────────────────
 Route::get('/',        [HomeController::class, 'index'])->name('home');
@@ -82,7 +81,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/update/{id}', [CartController::class, 'updateQuantity'])->name('update');
         Route::delete('/remove/{id}', [CartController::class, 'remove'])->name('remove');
         Route::delete('/clear', [CartController::class, 'clear'])->name('clear');
-        Route::get('/count', [CartController::class, 'count'])->name('count');
+       
 
     });
 
@@ -90,6 +89,8 @@ Route::middleware(['auth'])->group(function () {
       Route::post('/profile/update',  [UserDashboardController::class, 'updateProfile'])->name('profile.update');
     Route::post('/address/update',  [UserDashboardController::class, 'updateAddress'])->name('address.update');
 });
+
+Route::get('/cart/count', [CartController::class, 'count'])->name('cart.count');
 
 // checkout 
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.show')->middleware('auth');

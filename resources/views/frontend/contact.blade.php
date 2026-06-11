@@ -24,9 +24,9 @@
     {{-- Info Card --}}
     <div class="info-card">
       <div class="info-item">
-        <div class="icon-circle"><i class="bi bi-geo-alt-fill"></i></div>
+        <div class="icon-circle"><i class="bi bi-whatsapp"></i></div>
         <div class="info-text">
-          4th Floor, Kazi Complex<br>Beparipara, Agrabad Access Road, Chattogram
+          +8801740604565
         </div>
       </div>
       <div class="info-divider"></div>
@@ -34,15 +34,13 @@
         <div class="icon-circle"><i class="bi bi-envelope-fill"></i></div>
         <div class="info-text">
           <a href="mailto:banglabazar247bd@gmail.com">banglabazar247bd@gmail.com</a><br>
-          <a href="mailto:Help.banglabazar247bd@gmail.com">Help.banglabazar247bd@gmail.com</a>
         </div>
       </div>
       <div class="info-divider"></div>
       <div class="info-item">
         <div class="icon-circle"><i class="bi bi-telephone-fill"></i></div>
         <div class="info-text">
-          +8801740604565<br>
-          (164) 333-0487
+          +8801740604565
         </div>
       </div>
     </div>
@@ -87,38 +85,7 @@
   </div>
 </section>
 
-{{-- MAP SECTION --}}
-<div class="map-section">
-  <div class="container">
-    <div class="map-topbar">
-      <div class="map-topbar-left">
-        <i class="bi bi-geo-alt-fill text-success"></i>
-        <span>Our Office Location</span>
-      </div>
-      <div class="map-topbar-right">
-        <a href="https://www.google.com/maps/dir/?api=1&destination=5th+Floor,+Kazi+Complex,+Beparipara,+Agrabad+Access+Road,+Chattogram"
-           target="_blank" class="btn btn-success btn-sm">
-          <i class="bi bi-arrow-right-circle me-1"></i> Get Directions
-        </a>
-      </div>
-    </div>
-    <div class="office-address-card">
-      <div class="address-icon"><i class="bi bi-building"></i></div>
-      <div class="address-content">
-        <h5>Office Address</h5>
-        <p>4th Floor, Kazi Complex<br>Beparipara, Agrabad Access Road<br>Chattogram, Bangladesh</p>
-        <small class="text-muted"><i class="bi bi-pin-map"></i> Near Agrabad Commercial Area</small>
-      </div>
-    </div>
-    <div style="width:100%; height:450px; border-radius:12px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.10);">
-      <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3689.5!2d91.812!3d22.32!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30ad8a986cb63b5%3A0x7d9c5f0b2b3c4d5e!2sKazi+Complex%2C+Agrabad+Access+Road%2C+Beparipara%2C+Chattogram!5e0!3m2!1sen!2sbd!4v1745000000000"
-        style="width:100%; height:100%; border:0; display:block;"
-        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-      </iframe>
-    </div>
-  </div>
-</div>
+
 
 {{-- CART DRAWER --}}
 <div class="cp-overlay" id="cpOverlay"></div>

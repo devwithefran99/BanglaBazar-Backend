@@ -32,17 +32,14 @@ class AdminAuthController extends Controller
 ], $request->boolean('remember'))) {
 
     $user = Auth::user();
-   
 
-        // super_admin, admin, staff — সবাই ঢুকতে পারবে
-      if (in_array($user->role, ['super_admin', 'admin', 'staff'])) {
-    // Auth::guard('web')->logout();  ← এই line টা comment বা delete করো
-    $request->session()->regenerate();
-    return redirect()->route('backend.dashboard');
-}
-        // admin role না হলে logout করে ফেরত
-        Auth::logout();
+    if (in_array($user->role, ['super_admin', 'admin', 'staff'])) {
+        $request->session()->regenerate();
+        return redirect()->route('backend.dashboard');
     }
+
+    Auth::logout();
+}
 
     return back()
         ->withInput($request->only('email'))
@@ -51,10 +48,10 @@ class AdminAuthController extends Controller
 
     // Admin logout
     public function logout(Request $request)
-    {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        return redirect()->route('login');
-    }
+{
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return redirect()->route('home'); 
+}
 }

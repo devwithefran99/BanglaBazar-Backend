@@ -24,7 +24,7 @@
               <a href="{{ route('shop') }}"><img src="{{ asset('frontend/image/sorishaBnr.png') }}" class="w-100" alt="সরিষা তেল ও মশলা — BanglaBazar এ সেরা দামে"></a>
             </div>
             <div class="slide">
-              <a href="{{ route('shop') }}"><img src="{{ asset('frontend/image/hilshaBnr.png') }}" class="w-100" alt="তাজা ইলিশ মাছ — BanglaBazar এ অর্ডার করুন"></a>
+              <a href="{{ route('shop') }}"><img src="{{ asset('frontend/image/elishBanner.png') }}" class="w-100" alt="তাজা ইলিশ মাছ — BanglaBazar এ অর্ডার করুন"></a>
             </div>
             <div class="slide">
               <a href="{{ route('shop') }}"><img src="{{ asset('frontend/image/bannerOffer.png') }}" class="w-100" alt="BanglaBazar বিশেষ অফার — সীমিত সময়ের ছাড়"></a>

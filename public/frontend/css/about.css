@@ -2,14 +2,11 @@
 
     /* Breadcrumbs css starts */
 #shopBanner .shopBnr{
-    background-image: url(../image/Header.png);
+    background-image: url(../image/aboutBanner.png);
     background-position: center;
     background-repeat: no-repeat;
-    background-size: contain;
-    height: 400px;
-    border-radius: 10px ;
-    margin-bottom: 20px;
-    margin-top: 30px;
+    background-size: cover;
+    height: 530px;
 }
     /* Breadcrumbs css ends */
  /* ── Section wrapper ── */

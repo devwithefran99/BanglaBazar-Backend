@@ -22,9 +22,9 @@ use App\Http\Controllers\Backend\ReturnRequestController as AdminReturnControlle
 // ── Admin Login (guest only) ─────────────────────────────────────────────────
 Route::middleware('guest')->group(function () {
     Route::get('/login',  [AdminAuthController::class, 'showLogin'])->name('login');
-   Route::post('/login', [AdminAuthController::class, 'login'])
-     ->name('login.post')
-     ->middleware('throttle:5,1');
+    Route::post('/login', [AdminAuthController::class, 'login'])
+        ->name('login.post')
+        ->middleware('throttle:5,1');
 });
 
 // ── Admin Logout ─────────────────────────────────────────────────────────────

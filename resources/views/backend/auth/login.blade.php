@@ -23,12 +23,12 @@
 
             <div class="app-brand justify-content-center mb-4">
               <a href="{{ route('home') }}">
-                <img src="{{ asset('frontend/image/Logo.png') }}" alt="BanglaBazar" height="40">
+                <img src="{{ asset('frontend/image/ourlogo.png') }}" alt="BanglaBazar" width="120px" >
               </a>
             </div>
 
-            <h4 class="mb-2">Welcome Back Admin! 👋</h4>
-            <p class="mb-4">Admin panel এ login করুন</p>
+            <h4 class="mb-2">Welcome Back Admin!</h4>
+            <p class="mb-4">Log-in As an Admin</p>
 
             {{-- Error --}}
             @if($errors->any())
@@ -62,10 +62,6 @@
               </div>
               <button class="btn btn-primary d-grid w-100" type="submit">Sign In</button>
             </form>
-
-            <p class="text-center">
-              <a href="{{ route('signin') }}">Customer হলে এখানে Login করুন →</a>
-            </p>
 
           </div>
         </div>

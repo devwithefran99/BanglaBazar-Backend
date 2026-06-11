@@ -12,6 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
         then: function () {
             Route::middleware('web')
+            ->prefix('mypanel')
                 ->group(base_path('routes/admin.php'));
         }
     )

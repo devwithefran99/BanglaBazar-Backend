@@ -11,6 +11,11 @@
 
 @section('content')
 
+{{-- FAQ BANNER --}}
+<section id="shopBanner">
+  <div class="shopBnr"></div>
+</section>
+
 <main>
  <section class="faq-section">
     <div class="container">
