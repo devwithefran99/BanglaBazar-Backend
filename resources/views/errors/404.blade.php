@@ -129,7 +129,7 @@
 
   <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileNav">
     <div class="offcanvas-header">
-      <img src="{{ asset('frontend/image/Logo.png') }}" alt="">
+      <img src=" {{ asset('frontend/image/ourlogo.png') }}" alt="">
       <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
     </div>
     <div class="offcanvas-body">
@@ -230,7 +230,7 @@
 <div class="cp-drawer" id="cpDrawer">
   <div class="cp-header">
     <div class="cp-title">
-      <img src="{{ asset('frontend/image/Logo.png') }}" alt="">
+      <img src=" {{ asset('frontend/image/ourlogo.png') }}" alt="">
     </div>
     <button class="cp-close" id="cpClose" aria-label="Close cart">
       <i class="bi bi-x-lg"></i>

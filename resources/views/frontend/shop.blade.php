@@ -362,7 +362,7 @@
 <div class="cp-drawer" id="cpDrawer">
   <div class="cp-header">
     <div class="cp-title">
-      <img src="{{ asset('frontend/image/Logo.png') }}" alt="">
+      <img src=" {{ asset('frontend/image/ourlogo.png') }}" alt="">
     </div>
     <button class="cp-close" id="cpClose" aria-label="Close cart">
       <i class="bi bi-x-lg"></i>

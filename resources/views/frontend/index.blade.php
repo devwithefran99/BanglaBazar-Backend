@@ -49,25 +49,25 @@
     </div>
 
     <div class="bg-light border border-secondary-subtle rounded-3 mt-3 p-2">
-      <div class="row text-center g-0">
-        <div class="col-3 border-end border-secondary-subtle d-flex flex-column align-items-center justify-content-center py-2 px-1">
-          <img src="{{ asset('frontend/gif/wallet-security.gif') }}" alt="wallet" class="mb-1" style="width:36px;height:36px;object-fit:contain;">
-          <p class="mb-0 text-dark" style="font-size:10px;line-height:1.3;">Cash On<br>Delivery</p>
-        </div>
-        <div class="col-3 border-end border-secondary-subtle d-flex flex-column align-items-center justify-content-center py-2 px-1">
-          <img src="{{ asset('frontend/gif/truck.gif') }}" alt="truck" class="mb-1" style="width:36px;height:36px;object-fit:contain;">
-          <p class="mb-0 text-dark" style="font-size:10px;line-height:1.3;">Fast<br>Delivery</p>
-        </div>
-        <div class="col-3 border-end border-secondary-subtle d-flex flex-column align-items-center justify-content-center py-2 px-1">
-          <img src="{{ asset('frontend/gif/helpdesk.gif') }}" alt="helpdesk" class="mb-1" style="width:36px;height:36px;object-fit:contain;">
-          <p class="mb-0 text-dark" style="font-size:10px;line-height:1.3;">Customer<br>Support</p>
-        </div>
-        <div class="col-3 d-flex flex-column align-items-center justify-content-center py-2 px-1">
-          <img src="{{ asset('frontend/gif/deal.gif') }}" alt="deal" class="mb-1" style="width:36px;height:36px;object-fit:contain;">
-          <p class="mb-0 text-dark" style="font-size:10px;line-height:1.3;">Best<br>Deals</p>
-        </div>
-      </div>
+  <div class="row text-center g-0">
+    <div class="col-3 border-end border-secondary-subtle d-flex flex-column align-items-center justify-content-center py-2 px-1">
+      <i class="bi bi-wallet2" style="font-size:22px; color:#6f42c1;"></i>
+      <p class="mb-0 mt-1" style="font-size:9px; line-height:1.3; color:#555; font-weight:600;">Cash On<br>Delivery</p>
     </div>
+    <div class="col-3 border-end border-secondary-subtle d-flex flex-column align-items-center justify-content-center py-2 px-1">
+      <i class="bi bi-truck" style="font-size:22px; color:#0d6efd;"></i>
+      <p class="mb-0 mt-1" style="font-size:9px; line-height:1.3; color:#555; font-weight:600;">Fast<br>Delivery</p>
+    </div>
+    <div class="col-3 border-end border-secondary-subtle d-flex flex-column align-items-center justify-content-center py-2 px-1">
+      <i class="bi bi-headset" style="font-size:22px; color:#198754;"></i>
+      <p class="mb-0 mt-1" style="font-size:9px; line-height:1.3; color:#555; font-weight:600;">Customer<br>Support</p>
+    </div>
+    <div class="col-3 d-flex flex-column align-items-center justify-content-center py-2 px-1">
+      <i class="bi bi-tags" style="font-size:22px; color:#fd7e14;"></i>
+      <p class="mb-0 mt-1" style="font-size:9px; line-height:1.3; color:#555; font-weight:600;">Best<br>Deals</p>
+    </div>
+  </div>
+</div>
 
   </div>
 </section>
@@ -807,7 +807,7 @@
 <div class="cp-overlay" id="cpOverlay"></div>
 <div class="cp-drawer" id="cpDrawer">
   <div class="cp-header">
-    <div class="cp-title"><img src="{{ asset('frontend/image/Logo.png') }}" alt="Logo"></div>
+    <div class="cp-title"><img src=" {{ asset('frontend/image/ourlogo.png') }}" alt="Logo"></div>
     <button class="cp-close" id="cpClose"><i class="bi bi-x-lg"></i></button>
   </div>
   <div class="cp-items" id="cpItems"></div>

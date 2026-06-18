@@ -170,7 +170,7 @@
 <div class="cp-overlay" id="cpOverlay"></div>
 <div class="cp-drawer" id="cpDrawer">
   <div class="cp-header">
-    <div class="cp-title"><img src="{{ asset('frontend/image/Logo.png') }}" alt=""></div>
+    <div class="cp-title"><img src=" {{ asset('frontend/image/ourlogo.png') }}" alt=""></div>
     <button class="cp-close" id="cpClose"><i class="bi bi-x-lg"></i></button>
   </div>
   <div class="cp-items" id="cpItems"></div>

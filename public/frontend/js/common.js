@@ -32,6 +32,8 @@ document.querySelectorAll('.main-navbar .nav-item').forEach((el, i) => {
   }, 50);
 });
 
+
+
 /* ─────────────────────────────────────────────────────
    3. NAVBAR – Active page detector (desktop + mobile)
 ───────────────────────────────────────────────────── */
@@ -440,10 +442,10 @@ $(document).ready(function () {
     $('body').css('overflow', '');
   }
 
-  $('#navCartBtn').on('click', function (e) {
+ $('#navCartBtn, #bnCartBtn').on('click', function (e) {
     e.preventDefault();
     openDrawer();
-  });
+});
 
   $('#cpClose, #cpOverlay').on('click', closeDrawer);
 

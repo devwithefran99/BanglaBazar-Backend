@@ -14,10 +14,16 @@ use App\Http\Controllers\Frontend\ContactController;
 use App\Http\Controllers\Frontend\ReviewController;
 use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\Frontend\ReturnRequestController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 
 
-
+// password
+Route::get('/password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('/password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('/password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 
 // ── Public Pages ──────────────────────────────
 Route::get('/',        [HomeController::class, 'index'])->name('home');
@@ -111,3 +117,10 @@ Route::post('/coupon/apply', [CouponController::class, 'apply'])
 Route::post('/review', [ReviewController::class, 'store'])
      ->name('review.store')
      ->middleware('auth');
+
+     // Social Auth
+Route::get('/auth/google',          [App\Http\Controllers\Frontend\SocialAuthController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('/auth/google/callback', [App\Http\Controllers\Frontend\SocialAuthController::class, 'handleGoogleCallback']);
+
+Route::get('/auth/facebook',          [App\Http\Controllers\Frontend\SocialAuthController::class, 'redirectToFacebook'])->name('auth.facebook');
+Route::get('/auth/facebook/callback', [App\Http\Controllers\Frontend\SocialAuthController::class, 'handleFacebookCallback']);

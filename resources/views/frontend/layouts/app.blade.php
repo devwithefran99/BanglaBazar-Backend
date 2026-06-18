@@ -237,15 +237,18 @@
       <i class="bi bi-shop"></i>
       <span>Shop</span>
     </a>
-    <div class="bn-spacer"></div>
-    <a href="{{ route('about') }}" class="bn-btn {{ request()->routeIs('about') ? 'active' : '' }}">
-      <i class="bi bi-info-circle"></i>
-      <span>About</span>
-    </a>
-    <a href="{{ route('userdashboard') }}" class="bn-btn {{ request()->routeIs('userdashboard') ? 'active' : '' }}">
-      <i class="bi bi-person-circle"></i>
-      <span>Account</span>
-    </a>
+   <div class="bn-spacer"></div>
+<a href="#" class="bn-btn" id="bnCartBtn">
+  <i class="bi bi-cart"></i>
+  <span class="badge-dot" id="cartCount">
+    {{ Auth::check() ? Auth::user()->carts()->count() : 0 }}
+  </span>
+  <span>Cart</span>
+</a>
+<a href="{{ route('userdashboard') }}" class="bn-btn {{ request()->routeIs('userdashboard') ? 'active' : '' }}">
+  <i class="bi bi-person-circle"></i>
+  <span>Account</span>
+</a>
   </nav>
 </div>
 

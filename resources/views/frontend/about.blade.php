@@ -105,32 +105,32 @@
     আমাদের লক্ষ্য হলো বিশ্বস্ত সেবা, সঠিক মান এবং আপনার পরিবারের
     সুস্থ জীবন নিশ্চিত করা।
 </p>
-            <div class="features-grid">
-              <div class="feature-card">
-                <div class="feature-icon"><img src="{{ asset('frontend/gif/organic.gif') }}" alt=""></div>
-                <div class="feature-text"><h6>100% Organic Food</h6><p>100% healthy &amp; fresh food.</p></div>
-              </div>
-              <div class="feature-card">
-                <div class="feature-icon"><img src="{{ asset('frontend/gif/support.gif') }}" alt=""></div>
-                <div class="feature-text"><h6>Great Support 24/7</h6><p>Instant access to contact.</p></div>
-              </div>
-              <div class="feature-card">
-                <div class="feature-icon"><img src="{{ asset('frontend/gif/rating.gif') }}" alt=""></div>
-                <div class="feature-text"><h6>Customer Feedback</h6><p>Our happy customers.</p></div>
-              </div>
-              <div class="feature-card">
-                <div class="feature-icon"><img src="{{ asset('frontend/gif/credit-card.gif') }}" alt=""></div>
-                <div class="feature-text"><h6>100% Secure Payment</h6><p>We ensure your money is safe.</p></div>
-              </div>
-              <div class="feature-card">
-                <div class="feature-icon"><img src="{{ asset('frontend/gif/transport.gif') }}" alt=""></div>
-                <div class="feature-text"><h6>Free Shipping</h6><p>Free shipping with discount.</p></div>
-              </div>
-              <div class="feature-card">
-                <div class="feature-icon"><img src="{{ asset('frontend/gif/best-price.gif') }}" alt=""></div>
-                <div class="feature-text"><h6>Best Deal</h6><p>100% healthy &amp; fresh food.</p></div>
-              </div>
-            </div>
+           <div class="features-grid">
+  <div class="feature-card">
+    <div class="feature-icon"><i class="bi bi-flower1" style="font-size:28px; color:#198754;"></i></div>
+    <div class="feature-text"><h6>100% Organic Food</h6><p>100% healthy &amp; fresh food.</p></div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon"><i class="bi bi-headset" style="font-size:28px; color:#0d6efd;"></i></div>
+    <div class="feature-text"><h6>Great Support 24/7</h6><p>Instant access to contact.</p></div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon"><i class="bi bi-star-fill" style="font-size:28px; color:#ffc107;"></i></div>
+    <div class="feature-text"><h6>Customer Feedback</h6><p>Our happy customers.</p></div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon"><i class="bi bi-shield-lock-fill" style="font-size:28px; color:#6f42c1;"></i></div>
+    <div class="feature-text"><h6>100% Secure Payment</h6><p>We ensure your money is safe.</p></div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon"><i class="bi bi-truck" style="font-size:28px; color:#fd7e14;"></i></div>
+    <div class="feature-text"><h6>Free Shipping</h6><p>Free shipping with discount.</p></div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon"><i class="bi bi-tags-fill" style="font-size:28px; color:#dc3545;"></i></div>
+    <div class="feature-text"><h6>Best Deal</h6><p>100% healthy &amp; fresh food.</p></div>
+  </div>
+</div>
             <a href="{{ route('contact') }}" class="btn-about">
               Discover More
               <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
@@ -212,7 +212,7 @@
   <div class="cp-overlay" id="cpOverlay"></div>
   <div class="cp-drawer" id="cpDrawer">
     <div class="cp-header">
-      <div class="cp-title"><img src="{{ asset('frontend/image/Logo.png') }}" alt=""></div>
+      <div class="cp-title"><img src=" {{ asset('frontend/image/ourlogo.png') }}" alt=""></div>
       <button class="cp-close" id="cpClose"><i class="bi bi-x-lg"></i></button>
     </div>
     <div class="cp-items" id="cpItems"></div>

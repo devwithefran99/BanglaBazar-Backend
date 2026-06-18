@@ -27,7 +27,7 @@
       <div class="card">
 
         <div class="brand">
-          <img src="{{ asset('frontend/image/Logo.png') }}" alt="">
+          <img src="{{ asset('frontend/image/ourlogo.png') }}" alt="">
         </div>
 
         <div class="heading">

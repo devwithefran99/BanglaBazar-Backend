@@ -1531,6 +1531,16 @@ body{
 #bottomNav .bn-spacer {
   flex: 1;
 }
+#bottomNav .bn-btn {
+  position: relative;
+}
+
+#bottomNav .bn-btn .badge-dot {
+  position: absolute;
+  top: 2px;
+  right: 18px;
+  transform: none;
+}
 
 /* Floating search button */
 #bottomNav .bn-search-float {
